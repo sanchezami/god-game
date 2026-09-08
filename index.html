@@ -1,1 +1,4942 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#090b12">
+<title>ВОЗВЫШЕННЫЙ — Последний Алтарь</title>
 
+<style>
+/* ================================================================
+   ВОЗВЫШЕННЫЙ — ПОСЛЕДНИЙ АЛТАРЬ
+   Полностью автономная браузерная версия.
+   Никаких внешних библиотек.
+   ================================================================ */
+
+:root {
+    --bg: #070910;
+    --panel: #0d111c;
+    --panel2: #111725;
+    --border: #27324a;
+    --border-bright: #465777;
+    --text: #d9dfeb;
+    --muted: #7f8ba2;
+    --gold: #e7c66a;
+    --gold2: #ffe59a;
+    --blue: #72a7ff;
+    --cyan: #6de2e2;
+    --green: #73d69b;
+    --red: #ef7070;
+    --purple: #ba8cff;
+    --shadow: 0 18px 60px rgba(0,0,0,.38);
+}
+
+* {
+    box-sizing: border-box;
+}
+
+html {
+    scroll-behavior: smooth;
+}
+
+body {
+    margin: 0;
+    min-height: 100vh;
+    background:
+        radial-gradient(circle at 50% -10%, rgba(100,120,180,.12), transparent 38%),
+        radial-gradient(circle at 20% 80%, rgba(80,60,150,.06), transparent 35%),
+        var(--bg);
+    color: var(--text);
+    font-family:
+        ui-monospace,
+        SFMono-Regular,
+        Menlo,
+        Monaco,
+        Consolas,
+        "Liberation Mono",
+        monospace;
+}
+
+button,
+input {
+    font: inherit;
+}
+
+button {
+    -webkit-tap-highlight-color: transparent;
+}
+
+::selection {
+    background: rgba(231,198,106,.25);
+}
+
+/* ================================================================
+   SCROLLBAR
+   ================================================================ */
+
+::-webkit-scrollbar {
+    width: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: #080b12;
+}
+
+::-webkit-scrollbar-thumb {
+    background: #29344b;
+    border-radius: 8px;
+}
+
+/* ================================================================
+   INTRO
+   ================================================================ */
+
+#intro {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 24px;
+}
+
+.intro-inner {
+    width: min(900px, 100%);
+    text-align: center;
+}
+
+.ascii-logo {
+    color: var(--gold);
+    font-size: clamp(9px, 1.8vw, 16px);
+    line-height: 1.15;
+    white-space: pre;
+    overflow: hidden;
+    text-shadow: 0 0 20px rgba(231,198,106,.14);
+}
+
+.game-title {
+    margin-top: 26px;
+    font-size: clamp(28px, 6vw, 64px);
+    letter-spacing: .16em;
+    font-weight: 800;
+    color: #f0ead9;
+}
+
+.game-subtitle {
+    color: var(--muted);
+    margin: 14px auto 35px;
+    max-width: 680px;
+    line-height: 1.7;
+}
+
+.intro-buttons {
+    display: flex;
+    gap: 12px;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+.big-btn {
+    min-width: 210px;
+    padding: 15px 22px;
+    border: 1px solid var(--border-bright);
+    background: linear-gradient(180deg,#171e2d,#0d121e);
+    color: var(--text);
+    cursor: pointer;
+    transition: .18s;
+}
+
+.big-btn:hover {
+    transform: translateY(-2px);
+    border-color: var(--gold);
+    color: var(--gold2);
+    box-shadow: 0 10px 35px rgba(0,0,0,.3);
+}
+
+.big-btn.primary {
+    border-color: rgba(231,198,106,.55);
+    color: var(--gold2);
+}
+
+.intro-hint {
+    margin-top: 28px;
+    color: #5e687c;
+    font-size: 12px;
+}
+
+/* ================================================================
+   APP
+   ================================================================ */
+
+#app {
+    display: none;
+    min-height: 100vh;
+}
+
+.topbar {
+    position: sticky;
+    top: 0;
+    z-index: 50;
+    background: rgba(7,9,16,.92);
+    backdrop-filter: blur(14px);
+    border-bottom: 1px solid var(--border);
+}
+
+.topbar-inner {
+    width: min(1400px, calc(100% - 28px));
+    margin: auto;
+    min-height: 70px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 20px;
+}
+
+.brand {
+    color: var(--gold);
+    font-weight: 800;
+    letter-spacing: .08em;
+}
+
+.brand small {
+    display: block;
+    color: var(--muted);
+    font-size: 10px;
+    letter-spacing: .04em;
+    margin-top: 4px;
+}
+
+.top-actions {
+    display: flex;
+    gap: 7px;
+}
+
+.icon-btn {
+    border: 1px solid var(--border);
+    background: #0c1019;
+    color: var(--muted);
+    padding: 9px 11px;
+    cursor: pointer;
+}
+
+.icon-btn:hover {
+    border-color: var(--border-bright);
+    color: var(--text);
+}
+
+/* ================================================================
+   MAIN GRID
+   ================================================================ */
+
+.layout {
+    width: min(1400px, calc(100% - 28px));
+    margin: 22px auto 50px;
+    display: grid;
+    grid-template-columns: 270px minmax(0,1fr) 300px;
+    gap: 18px;
+}
+
+.panel {
+    background:
+        linear-gradient(180deg, rgba(255,255,255,.018), transparent 25%),
+        var(--panel);
+    border: 1px solid var(--border);
+    box-shadow: var(--shadow);
+}
+
+.panel-header {
+    padding: 14px 16px;
+    border-bottom: 1px solid var(--border);
+    color: var(--gold);
+    font-size: 12px;
+    letter-spacing: .08em;
+}
+
+.panel-body {
+    padding: 16px;
+}
+
+/* ================================================================
+   GOD CARD
+   ================================================================ */
+
+.god-card {
+    text-align: center;
+}
+
+.god-symbol {
+    width: 90px;
+    height: 90px;
+    margin: 5px auto 14px;
+    border: 1px solid #45506a;
+    display: grid;
+    place-items: center;
+    color: var(--gold);
+    font-size: 38px;
+    border-radius: 50%;
+    box-shadow: 0 0 45px rgba(231,198,106,.06);
+}
+
+.god-name {
+    color: #f1ebdc;
+    font-size: 19px;
+    font-weight: 800;
+}
+
+.god-rank {
+    margin-top: 6px;
+    color: var(--muted);
+    font-size: 11px;
+}
+
+.stat {
+    margin-top: 17px;
+    text-align: left;
+}
+
+.stat-row {
+    display: flex;
+    justify-content: space-between;
+    font-size: 12px;
+    margin-bottom: 6px;
+}
+
+.stat-label {
+    color: var(--muted);
+}
+
+.stat-value {
+    color: var(--text);
+}
+
+.progress {
+    height: 6px;
+    background: #070a11;
+    border: 1px solid #20283a;
+    overflow: hidden;
+}
+
+.progress > span {
+    display: block;
+    height: 100%;
+    transition: width .3s;
+}
+
+.gold-fill {
+    background: var(--gold);
+}
+
+.green-fill {
+    background: var(--green);
+}
+
+.blue-fill {
+    background: var(--blue);
+}
+
+.purple-fill {
+    background: var(--purple);
+}
+
+.red-fill {
+    background: var(--red);
+}
+
+/* ================================================================
+   CENTER
+   ================================================================ */
+
+.hero {
+    padding: 24px;
+    border-bottom: 1px solid var(--border);
+    background:
+        radial-gradient(circle at 50% 0%, rgba(114,167,255,.08), transparent 45%);
+}
+
+.hero-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 15px;
+}
+
+.village-name {
+    font-size: clamp(24px, 4vw, 38px);
+    color: #eee9dc;
+    margin: 0;
+}
+
+.season {
+    color: var(--muted);
+    margin-top: 8px;
+    font-size: 12px;
+}
+
+.season-badge {
+    border: 1px solid var(--border);
+    padding: 9px 12px;
+    color: var(--gold);
+    white-space: nowrap;
+}
+
+.village-art {
+    margin: 24px auto 6px;
+    max-width: 580px;
+    overflow: hidden;
+    text-align: center;
+    color: #7384a3;
+    font-size: clamp(7px, 1.4vw, 12px);
+    line-height: 1.05;
+    white-space: pre;
+}
+
+/* ================================================================
+   RESOURCE GRID
+   ================================================================ */
+
+.resource-grid {
+    display: grid;
+    grid-template-columns: repeat(4,1fr);
+    gap: 9px;
+    padding: 16px;
+}
+
+.resource {
+    border: 1px solid var(--border);
+    background: #0b0f18;
+    padding: 13px;
+}
+
+.resource-icon {
+    color: var(--muted);
+    font-size: 11px;
+}
+
+.resource-value {
+    margin-top: 5px;
+    font-size: 21px;
+    color: #eee;
+}
+
+.resource-name {
+    color: var(--muted);
+    font-size: 10px;
+    margin-top: 3px;
+}
+
+/* ================================================================
+   ACTIONS
+   ================================================================ */
+
+.actions {
+    padding: 16px;
+}
+
+.action-grid {
+    display: grid;
+    grid-template-columns: repeat(2,1fr);
+    gap: 9px;
+}
+
+.action-btn {
+    min-height: 54px;
+    text-align: left;
+    padding: 11px 13px;
+    background: #0c111b;
+    color: var(--text);
+    border: 1px solid var(--border);
+    cursor: pointer;
+    transition: .15s;
+}
+
+.action-btn:hover {
+    border-color: var(--border-bright);
+    background: #111827;
+    transform: translateY(-1px);
+}
+
+.action-btn .key {
+    display: inline-grid;
+    place-items: center;
+    width: 22px;
+    height: 22px;
+    border: 1px solid #364158;
+    color: var(--gold);
+    margin-right: 8px;
+    font-size: 11px;
+}
+
+.action-btn .desc {
+    display: block;
+    color: var(--muted);
+    font-size: 10px;
+    margin: 7px 0 0 31px;
+}
+
+/* ================================================================
+   EVENT LOG
+   ================================================================ */
+
+.log {
+    margin: 16px;
+    border: 1px solid var(--border);
+    background: #080c14;
+}
+
+.log-header {
+    padding: 11px 13px;
+    color: var(--gold);
+    border-bottom: 1px solid var(--border);
+    font-size: 11px;
+}
+
+.log-list {
+    max-height: 240px;
+    overflow-y: auto;
+}
+
+.log-item {
+    padding: 10px 13px;
+    border-bottom: 1px solid rgba(39,50,74,.55);
+    font-size: 11px;
+    line-height: 1.55;
+}
+
+.log-item:last-child {
+    border-bottom: 0;
+}
+
+.log-time {
+    color: #5f6b80;
+    margin-right: 8px;
+}
+
+/* ================================================================
+   RIGHT SIDE
+   ================================================================ */
+
+.info-row {
+    display: flex;
+    justify-content: space-between;
+    gap: 10px;
+    margin-bottom: 12px;
+    font-size: 12px;
+}
+
+.info-row span:first-child {
+    color: var(--muted);
+}
+
+.info-row span:last-child {
+    color: var(--text);
+    text-align: right;
+}
+
+.temple-art {
+    color: #8290ac;
+    white-space: pre;
+    font-size: 9px;
+    line-height: 1.05;
+    overflow: hidden;
+    text-align: center;
+    margin: 10px 0 18px;
+}
+
+.upgrade-btn {
+    width: 100%;
+    padding: 12px;
+    background: #111827;
+    border: 1px solid var(--border-bright);
+    color: var(--gold2);
+    cursor: pointer;
+}
+
+.upgrade-btn:hover {
+    border-color: var(--gold);
+}
+
+.upgrade-btn:disabled {
+    opacity: .4;
+    cursor: not-allowed;
+}
+
+.cost-list {
+    margin-top: 13px;
+    font-size: 11px;
+    color: var(--muted);
+    line-height: 1.8;
+}
+
+/* ================================================================
+   MODAL
+   ================================================================ */
+
+.modal-backdrop {
+    position: fixed;
+    inset: 0;
+    z-index: 100;
+    background: rgba(0,0,0,.72);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    padding: 16px;
+}
+
+.modal-backdrop.open {
+    display: flex;
+}
+
+.modal {
+    width: min(780px,100%);
+    max-height: 90vh;
+    overflow-y: auto;
+    background: #0c111b;
+    border: 1px solid var(--border-bright);
+    box-shadow: 0 30px 100px rgba(0,0,0,.6);
+}
+
+.modal-title {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 17px;
+    border-bottom: 1px solid var(--border);
+    color: var(--gold);
+    font-weight: 800;
+}
+
+.close-btn {
+    border: 0;
+    background: transparent;
+    color: var(--muted);
+    cursor: pointer;
+    font-size: 18px;
+}
+
+.close-btn:hover {
+    color: white;
+}
+
+.modal-content {
+    padding: 18px;
+}
+
+/* ================================================================
+   MIRACLE CARDS
+   ================================================================ */
+
+.miracle-grid {
+    display: grid;
+    grid-template-columns: repeat(2,1fr);
+    gap: 10px;
+}
+
+.miracle-card {
+    padding: 15px;
+    border: 1px solid var(--border);
+    background: #0a0f18;
+    cursor: pointer;
+    transition: .15s;
+}
+
+.miracle-card:hover {
+    border-color: var(--gold);
+    transform: translateY(-2px);
+}
+
+.miracle-card.disabled {
+    opacity: .4;
+    cursor: not-allowed;
+}
+
+.miracle-name {
+    color: #eee9dc;
+    font-weight: 800;
+}
+
+.miracle-desc {
+    margin-top: 7px;
+    color: var(--muted);
+    font-size: 11px;
+    line-height: 1.5;
+}
+
+.miracle-cost {
+    margin-top: 11px;
+    color: var(--gold);
+    font-size: 11px;
+}
+
+/* ================================================================
+   VILLAGER CARDS
+   ================================================================ */
+
+.villager-grid {
+    display: grid;
+    grid-template-columns: repeat(2,1fr);
+    gap: 10px;
+}
+
+.villager-card {
+    border: 1px solid var(--border);
+    background: #0a0f18;
+    padding: 13px;
+    cursor: pointer;
+}
+
+.villager-card:hover {
+    border-color: var(--border-bright);
+}
+
+.villager-top {
+    display: flex;
+    justify-content: space-between;
+}
+
+.villager-name {
+    color: #eee;
+    font-weight: 800;
+}
+
+.villager-prof {
+    color: var(--muted);
+    font-size: 10px;
+}
+
+.villager-stats {
+    margin-top: 12px;
+    display: grid;
+    grid-template-columns: repeat(3,1fr);
+    gap: 6px;
+}
+
+.mini-stat {
+    border: 1px solid #20283a;
+    padding: 7px;
+    text-align: center;
+}
+
+.mini-stat label {
+    display: block;
+    color: var(--muted);
+    font-size: 9px;
+}
+
+.mini-stat strong {
+    display: block;
+    margin-top: 4px;
+    font-size: 12px;
+}
+
+/* ================================================================
+   EVENT MODAL
+   ================================================================ */
+
+.event-icon {
+    font-size: 45px;
+    text-align: center;
+    margin: 10px 0 18px;
+}
+
+.event-title {
+    text-align: center;
+    color: var(--gold2);
+    font-size: 21px;
+    font-weight: 800;
+}
+
+.event-description {
+    text-align: center;
+    color: var(--muted);
+    line-height: 1.7;
+    margin: 14px auto;
+    max-width: 560px;
+}
+
+.event-result {
+    border-left: 2px solid var(--gold);
+    padding: 10px 13px;
+    margin: 15px 0;
+    background: rgba(231,198,106,.04);
+    color: var(--text);
+    line-height: 1.6;
+}
+
+.event-close {
+    width: 100%;
+    padding: 13px;
+    border: 1px solid var(--border-bright);
+    background: #111827;
+    color: var(--gold2);
+    cursor: pointer;
+}
+
+/* ================================================================
+   TOAST
+   ================================================================ */
+
+#toast {
+    position: fixed;
+    z-index: 200;
+    right: 18px;
+    bottom: 18px;
+    width: min(380px, calc(100% - 36px));
+    background: #101624;
+    border: 1px solid var(--border-bright);
+    padding: 13px 15px;
+    box-shadow: 0 18px 60px rgba(0,0,0,.45);
+    transform: translateY(120px);
+    opacity: 0;
+    transition: .25s;
+    pointer-events: none;
+}
+
+#toast.show {
+    transform: translateY(0);
+    opacity: 1;
+}
+
+.toast-title {
+    color: var(--gold);
+    font-weight: 800;
+    font-size: 11px;
+}
+
+.toast-text {
+    margin-top: 5px;
+    color: var(--text);
+    font-size: 11px;
+    line-height: 1.5;
+}
+
+/* ================================================================
+   ENDING
+   ================================================================ */
+
+.ending {
+    text-align: center;
+}
+
+.ending-symbol {
+    font-size: 60px;
+    color: var(--gold);
+    margin: 20px;
+}
+
+.ending-title {
+    color: var(--gold2);
+    font-size: 28px;
+    font-weight: 800;
+}
+
+.ending-text {
+    color: var(--muted);
+    max-width: 580px;
+    margin: 20px auto;
+    line-height: 1.8;
+    white-space: pre-line;
+}
+
+.ending-stats {
+    display: grid;
+    grid-template-columns: repeat(3,1fr);
+    gap: 8px;
+    margin: 25px 0;
+}
+
+.ending-stat {
+    border: 1px solid var(--border);
+    padding: 12px;
+}
+
+.ending-stat b {
+    display: block;
+    color: var(--gold);
+    font-size: 20px;
+}
+
+.ending-stat span {
+    color: var(--muted);
+    font-size: 9px;
+}
+
+/* ================================================================
+   RESPONSIVE
+   ================================================================ */
+
+@media (max-width: 1100px) {
+    .layout {
+        grid-template-columns: 230px minmax(0,1fr);
+    }
+
+    .right-column {
+        grid-column: 1 / -1;
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 18px;
+    }
+}
+
+@media (max-width: 760px) {
+    .topbar-inner {
+        min-height: 60px;
+    }
+
+    .brand {
+        font-size: 12px;
+    }
+
+    .brand small {
+        display: none;
+    }
+
+    .layout {
+        display: block;
+        width: calc(100% - 16px);
+        margin-top: 10px;
+    }
+
+    .left-column,
+    .right-column {
+        display: block;
+    }
+
+    .left-column,
+    .center-column,
+    .right-column {
+        margin-bottom: 12px;
+    }
+
+    .resource-grid {
+        grid-template-columns: repeat(2,1fr);
+    }
+
+    .action-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .miracle-grid,
+    .villager-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .hero {
+        padding: 17px;
+    }
+
+    .hero-top {
+        flex-direction: column;
+    }
+
+    .season-badge {
+        align-self: flex-start;
+    }
+
+    .village-art {
+        font-size: 6px;
+    }
+
+    .top-actions .icon-btn {
+        padding: 8px;
+    }
+
+    .game-title {
+        letter-spacing: .08em;
+    }
+
+    .ascii-logo {
+        font-size: 7px;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<!-- ================================================================
+     INTRO
+     ================================================================ -->
+
+<section id="intro">
+
+    <div class="intro-inner">
+
+<pre class="ascii-logo">
+                         ✦
+                        / \
+                       /   \
+                  ____/_____ \____
+                 /               \
+                /      ✧          \
+               /___________________\
+                    |       |
+                    |       |
+                 ___|_______|___
+</pre>
+
+        <div class="game-title">
+            ВОЗВЫШЕННЫЙ
+        </div>
+
+        <div style="
+            color:var(--gold);
+            letter-spacing:.35em;
+            font-size:12px;
+            margin-top:7px;
+        ">
+            ПОСЛЕДНИЙ АЛТАРЬ
+        </div>
+
+        <div class="game-subtitle">
+            Вы — молодое божество, получившее маленькую деревню
+            на краю забытого леса. Люди молятся вам, но вера не бесконечна.
+            Решайте, когда даровать чудо, когда ждать и что важнее —
+            могущество, милосердие или выживание.
+        </div>
+
+        <div class="intro-buttons">
+            <button class="big-btn primary" onclick="startNewGame()">
+                ✦ НОВАЯ ИГРА
+            </button>
+
+            <button
+                class="big-btn"
+                id="continueButton"
+                onclick="loadGame()"
+            >
+                ↻ ПРОДОЛЖИТЬ
+            </button>
+
+            <button class="big-btn" onclick="showHelp()">
+                ? КАК ИГРАТЬ
+            </button>
+        </div>
+
+        <div class="intro-hint">
+            Один файл · GitHub Pages · без сервера · сохранение в браузере
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- ================================================================
+     APP
+     ================================================================ -->
+
+<section id="app">
+
+    <header class="topbar">
+
+        <div class="topbar-inner">
+
+            <div class="brand">
+                ВОЗВЫШЕННЫЙ
+                <small>ПОСЛЕДНИЙ АЛТАРЬ</small>
+            </div>
+
+            <div class="top-actions">
+                <button class="icon-btn" onclick="saveGame()" title="Сохранить">
+                    ↓
+                </button>
+
+                <button class="icon-btn" onclick="showHelp()" title="Помощь">
+                    ?
+                </button>
+
+                <button class="icon-btn" onclick="returnToTitle()" title="Меню">
+                    ☰
+                </button>
+            </div>
+
+        </div>
+
+    </header>
+
+
+    <main class="layout">
+
+        <!-- ========================================================
+             LEFT
+             ======================================================== -->
+
+        <aside class="left-column">
+
+            <section class="panel god-card">
+
+                <div class="panel-header">
+                    БОЖЕСТВО
+                </div>
+
+                <div class="panel-body">
+
+                    <div class="god-symbol">
+                        ✦
+                    </div>
+
+                    <div class="god-name" id="uiGodName">
+                        Безымянный
+                    </div>
+
+                    <div class="god-rank" id="uiGodRank">
+                        Юное божество
+                    </div>
+
+                    <div class="stat">
+
+                        <div class="stat-row">
+                            <span class="stat-label">Вера</span>
+                            <span class="stat-value" id="uiFaith">0</span>
+                        </div>
+
+                        <div class="progress">
+                            <span
+                                id="faithBar"
+                                class="gold-fill"
+                                style="width:0%"
+                            ></span>
+                        </div>
+
+                    </div>
+
+
+                    <div class="stat">
+
+                        <div class="stat-row">
+                            <span class="stat-label">Благосклонность</span>
+                            <span class="stat-value" id="uiFavor">
+                                0
+                            </span>
+                        </div>
+
+                        <div class="progress">
+                            <span
+                                id="favorBar"
+                                class="green-fill"
+                                style="width:0%"
+                            ></span>
+                        </div>
+
+                    </div>
+
+
+                    <div class="stat">
+
+                        <div class="stat-row">
+                            <span class="stat-label">Слава</span>
+                            <span class="stat-value" id="uiGlory">
+                                0
+                            </span>
+                        </div>
+
+                    </div>
+
+
+                    <div class="stat">
+
+                        <div class="stat-row">
+                            <span class="stat-label">Милосердие</span>
+                            <span class="stat-value" id="uiMercy">
+                                0
+                            </span>
+                        </div>
+
+                    </div>
+
+
+                    <div class="stat">
+
+                        <div class="stat-row">
+                            <span class="stat-label">Гнев</span>
+                            <span class="stat-value" id="uiWrath">
+                                0
+                            </span>
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </section>
+
+        </aside>
+
+
+        <!-- ========================================================
+             CENTER
+             ======================================================== -->
+
+        <section class="center-column panel">
+
+            <div class="hero">
+
+                <div class="hero-top">
+
+                    <div>
+                        <h1 class="village-name" id="uiVillageName">
+                            Лунная Долина
+                        </h1>
+
+                        <div class="season" id="uiSeason">
+                            Весна · год 1 · ход 1
+                        </div>
+                    </div>
+
+                    <div class="season-badge">
+                        ХРАМ <span id="uiTempleLevel">I</span>
+                    </div>
+
+                </div>
+
+
+<pre class="village-art">
+                 /\                         /\
+                /  \          ☼            /  \
+           /\  /____\                    /____\
+          /  \/      \       /\          | [] |
+         /____\  []   \     /  \         |    |
+            ||        ||   /____\        |____|
+            ||________||      ||
+                 ||            ||
+        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+</pre>
+
+            </div>
+
+
+            <!-- RESOURCES -->
+
+            <div class="resource-grid">
+
+                <div class="resource">
+                    <div class="resource-icon">🍞</div>
+                    <div class="resource-value" id="uiFood">0</div>
+                    <div class="resource-name">ЕДА</div>
+                </div>
+
+                <div class="resource">
+                    <div class="resource-icon">▥</div>
+                    <div class="resource-value" id="uiWood">0</div>
+                    <div class="resource-name">ДЕРЕВО</div>
+                </div>
+
+                <div class="resource">
+                    <div class="resource-icon">◆</div>
+                    <div class="resource-value" id="uiStone">0</div>
+                    <div class="resource-name">КАМЕНЬ</div>
+                </div>
+
+                <div class="resource">
+                    <div class="resource-icon">◇</div>
+                    <div class="resource-value" id="uiGold">0</div>
+                    <div class="resource-name">ЗОЛОТО</div>
+                </div>
+
+            </div>
+
+
+            <!-- ACTIONS -->
+
+            <div class="actions">
+
+                <div class="panel-header" style="margin:-16px -16px 16px;">
+                    ДЕЙСТВИЯ
+                </div>
+
+                <div class="action-grid">
+
+                    <button class="action-btn" onclick="showVillage()">
+                        <span class="key">1</span>
+                        Состояние деревни
+                        <span class="desc">
+                            Ресурсы, мораль и производство
+                        </span>
+                    </button>
+
+                    <button class="action-btn" onclick="showVillagers()">
+                        <span class="key">2</span>
+                        Жители
+                        <span class="desc">
+                            Судьбы людей вашей долины
+                        </span>
+                    </button>
+
+                    <button class="action-btn" onclick="showMiracles()">
+                        <span class="key">3</span>
+                        Чудеса
+                        <span class="desc">
+                            Изменить мир ценой веры
+                        </span>
+                    </button>
+
+                    <button class="action-btn" onclick="showAltar()">
+                        <span class="key">4</span>
+                        Алтарь
+                        <span class="desc">
+                            Молитвы и дары жителей
+                        </span>
+                    </button>
+
+                    <button class="action-btn" onclick="upgradeTemple()">
+                        <span class="key">5</span>
+                        Улучшить храм
+                        <span class="desc">
+                            Усилить связь с долиной
+                        </span>
+                    </button>
+
+                    <button
+                        class="action-btn"
+                        onclick="endTurn()"
+                        style="border-color:#4b4d35;"
+                    >
+                        <span class="key">6</span>
+                        Завершить ход
+                        <span class="desc">
+                            Пусть мир проживёт ещё один сезон
+                        </span>
+                    </button>
+
+                </div>
+
+            </div>
+
+
+            <!-- LOG -->
+
+            <div class="log">
+
+                <div class="log-header">
+                    ЛЕТОПИСЬ АЛТАРЯ
+                </div>
+
+                <div
+                    class="log-list"
+                    id="logList"
+                ></div>
+
+            </div>
+
+        </section>
+
+
+        <!-- ========================================================
+             RIGHT
+             ======================================================== -->
+
+        <aside class="right-column">
+
+            <section class="panel">
+
+                <div class="panel-header">
+                    ДЕРЕВНЯ
+                </div>
+
+                <div class="panel-body">
+
+                    <div class="info-row">
+                        <span>Население</span>
+                        <span id="uiPopulation">0</span>
+                    </div>
+
+                    <div class="info-row">
+                        <span>Среднее счастье</span>
+                        <span id="uiHappiness">0</span>
+                    </div>
+
+                    <div class="info-row">
+                        <span>Средняя вера</span>
+                        <span id="uiAvgFaith">0</span>
+                    </div>
+
+                    <div class="info-row">
+                        <span>Мораль</span>
+                        <span id="uiMorale">0</span>
+                    </div>
+
+                    <div class="info-row">
+                        <span>Больные</span>
+                        <span id="uiSick">0</span>
+                    </div>
+
+                    <div class="info-row">
+                        <span>Чудес</span>
+                        <span id="uiMiracles">0</span>
+                    </div>
+
+                    <div class="info-row">
+                        <span>Бедствий</span>
+                        <span id="uiDisasters">0</span>
+                    </div>
+
+                </div>
+
+            </section>
+
+
+            <section class="panel" style="margin-top:18px;">
+
+                <div class="panel-header">
+                    ХРАМ
+                </div>
+
+                <div class="panel-body">
+
+<pre class="temple-art">
+             ✦
+            / \
+           /___\
+          |  ✧  |
+      ____|     |____
+     /               \
+    /_________________\
+        |       |
+        |       |
+     ___|_______|___
+</pre>
+
+                    <div class="info-row">
+                        <span>Уровень</span>
+                        <span id="uiTempleText">1 / 7</span>
+                    </div>
+
+                    <div class="info-row">
+                        <span>Бонус молитв</span>
+                        <span id="uiTempleBonus">+2</span>
+                    </div>
+
+                    <button
+                        class="upgrade-btn"
+                        id="upgradeButton"
+                        onclick="upgradeTemple()"
+                    >
+                        УЛУЧШИТЬ ХРАМ
+                    </button>
+
+                    <div
+                        class="cost-list"
+                        id="templeCost"
+                    ></div>
+
+                </div>
+
+            </section>
+
+        </aside>
+
+    </main>
+
+</section>
+
+
+<!-- ================================================================
+     MODAL
+     ================================================================ -->
+
+<div
+    class="modal-backdrop"
+    id="modalBackdrop"
+    onclick="backdropClick(event)"
+>
+
+    <div class="modal">
+
+        <div class="modal-title">
+
+            <span id="modalTitle">
+                ОКНО
+            </span>
+
+            <button
+                class="close-btn"
+                onclick="closeModal()"
+            >
+                ×
+            </button>
+
+        </div>
+
+        <div
+            class="modal-content"
+            id="modalContent"
+        ></div>
+
+    </div>
+
+</div>
+
+
+<!-- ================================================================
+     TOAST
+     ================================================================ -->
+
+<div id="toast">
+
+    <div class="toast-title" id="toastTitle">
+        Летопись
+    </div>
+
+    <div class="toast-text" id="toastText">
+        ...
+    </div>
+
+</div>
+
+
+<script>
+/* ==================================================================
+   ВОЗВЫШЕННЫЙ — GAME ENGINE
+   ================================================================== */
+
+
+/* ================================================================
+   УТИЛИТЫ
+   ================================================================ */
+
+const SAVE_KEY = "elevated_last_altar_save_v1";
+
+const seasons = [
+    "Весна",
+    "Лето",
+    "Осень",
+    "Зима"
+];
+
+const roman = [
+    "0",
+    "I",
+    "II",
+    "III",
+    "IV",
+    "V",
+    "VI",
+    "VII"
+];
+
+function clamp(value, min, max) {
+    return Math.max(min, Math.min(max, value));
+}
+
+function randomInt(min, max) {
+    return Math.floor(
+        Math.random() * (max - min + 1)
+    ) + min;
+}
+
+function choice(array) {
+    return array[
+        Math.floor(Math.random() * array.length)
+    ];
+}
+
+function average(array) {
+    if (!array.length) return 0;
+
+    return Math.round(
+        array.reduce((a,b) => a + b, 0) / array.length
+    );
+}
+
+
+/* ================================================================
+   НАЧАЛЬНЫЕ ИМЕНА
+   ================================================================ */
+
+const NAMES = [
+    "Арина",
+    "Борис",
+    "Вера",
+    "Глеб",
+    "Дарья",
+    "Егор",
+    "Злата",
+    "Илья",
+    "Кира",
+    "Лука",
+    "Мирон",
+    "Ника",
+    "Олег",
+    "Рада",
+    "Савва",
+    "Тая",
+    "Фёдор",
+    "Яна",
+    "Марк",
+    "Лея",
+    "Роман",
+    "Элина",
+    "Степан",
+    "Мила",
+    "Надя",
+    "Вадим",
+    "Лидия",
+    "Павел",
+    "София",
+    "Алексей"
+];
+
+const PROFESSIONS = [
+    "Фермер",
+    "Фермер",
+    "Фермер",
+    "Дровосек",
+    "Каменщик",
+    "Торговец",
+    "Рыбак",
+    "Жрец"
+];
+
+
+/* ================================================================
+   СОЗДАНИЕ ЖИТЕЛЯ
+   ================================================================ */
+
+function createVillager(
+    name,
+    age,
+    profession,
+    happiness,
+    faith,
+    health
+) {
+    return {
+        id: crypto.randomUUID
+            ? crypto.randomUUID()
+            : String(Date.now() + Math.random()),
+
+        name,
+        age,
+        profession,
+        happiness,
+        faith,
+        health,
+
+        sick: false,
+        alive: true
+    };
+}
+
+
+/* ================================================================
+   СОЗДАНИЕ НОВОЙ ИГРЫ
+   ================================================================ */
+
+function createGame(godName) {
+
+    const villagers = [];
+
+    const starting = [
+        ["Арина",34,"Фермер"],
+        ["Борис",42,"Дровосек"],
+        ["Вера",28,"Фермер"],
+        ["Глеб",51,"Каменщик"],
+        ["Кира",31,"Торговец"],
+        ["Мирон",23,"Фермер"],
+        ["Злата",46,"Фермер"],
+        ["Лука",39,"Жрец"],
+        ["Рада",19,"Ученик"],
+        ["Егор",27,"Дровосек"]
+    ];
+
+    starting.forEach(item => {
+
+        villagers.push(
+            createVillager(
+                item[0],
+                item[1],
+                item[2],
+                randomInt(55,75),
+                randomInt(45,75),
+                randomInt(75,100)
+            )
+        );
+
+    });
+
+
+    const variant = choice([
+        "rich",
+        "poor",
+        "balanced"
+    ]);
+
+
+    let food = 80;
+    let wood = 60;
+    let stone = 45;
+    let gold = 20;
+
+    let faith = 45;
+
+    if (variant === "rich") {
+
+        food += 20;
+        wood += 10;
+        gold += 8;
+
+    } else if (variant === "poor") {
+
+        food -= 15;
+        wood -= 10;
+        faith += 12;
+
+    } else {
+
+        stone += 8;
+
+    }
+
+
+    return {
+
+        version: 1,
+
+        god: {
+            name: godName || "Безымянный",
+            faith,
+            favor: 50,
+            glory: 0,
+            mercy: 0,
+            wrath: 0,
+            miraclesUsed: 0,
+            answeredPrayers: 0,
+            ignoredPrayers: 0,
+            secretPoints: 0
+        },
+
+        village: {
+
+            name: "Лунная Долина",
+
+            food,
+            wood,
+            stone,
+            gold,
+
+            templeLevel: 1,
+            morale: 65,
+
+            year: 1,
+            season: 1,
+
+            villagers,
+
+            totalBlessings: 0,
+            totalOfferings: 0,
+            disastersSurvived: 0
+
+        },
+
+        turn: 1,
+
+        eventInterval: 3,
+
+        log: [],
+
+        ending: null
+    };
+}
+
+
+/* ================================================================
+   ТЕКУЩАЯ ИГРА
+   ================================================================ */
+
+let game = null;
+
+
+/* ================================================================
+   ДАННЫЕ ДЕРЕВНИ
+   ================================================================ */
+
+function aliveVillagers() {
+
+    return game.village.villagers.filter(
+        v => v.alive
+    );
+
+}
+
+function population() {
+
+    return aliveVillagers().length;
+
+}
+
+function averageFaith() {
+
+    return average(
+        aliveVillagers().map(v => v.faith)
+    );
+
+}
+
+function averageHappiness() {
+
+    return average(
+        aliveVillagers().map(v => v.happiness)
+    );
+
+}
+
+function sickCount() {
+
+    return aliveVillagers().filter(
+        v => v.sick
+    ).length;
+
+}
+
+
+/* ================================================================
+   РАНГ БОЖЕСТВА
+   ================================================================ */
+
+function godRank() {
+
+    const g = game.god;
+
+    if (g.glory >= 100)
+        return "Владыка долины";
+
+    if (g.glory >= 60)
+        return "Великий хранитель";
+
+    if (g.glory >= 30)
+        return "Пробуждённое божество";
+
+    if (g.glory >= 10)
+        return "Молодой хранитель";
+
+    return "Юное божество";
+
+}
+
+
+/* ================================================================
+   РЕНДЕР
+   ================================================================ */
+
+function render() {
+
+    if (!game) return;
+
+    const g = game.god;
+    const v = game.village;
+
+    document.getElementById("uiGodName").textContent =
+        g.name;
+
+    document.getElementById("uiGodRank").textContent =
+        godRank();
+
+    document.getElementById("uiFaith").textContent =
+        g.faith;
+
+    document.getElementById("uiFavor").textContent =
+        g.favor + "/100";
+
+    document.getElementById("uiGlory").textContent =
+        g.glory;
+
+    document.getElementById("uiMercy").textContent =
+        g.mercy;
+
+    document.getElementById("uiWrath").textContent =
+        g.wrath;
+
+
+    document.getElementById("faithBar").style.width =
+        Math.min(100, g.faith) + "%";
+
+    document.getElementById("favorBar").style.width =
+        g.favor + "%";
+
+
+    document.getElementById("uiVillageName").textContent =
+        v.name;
+
+    document.getElementById("uiSeason").textContent =
+        `${seasons[v.season - 1]} · год ${v.year} · ход ${game.turn}`;
+
+    document.getElementById("uiTempleLevel").textContent =
+        roman[v.templeLevel];
+
+
+    document.getElementById("uiFood").textContent =
+        v.food;
+
+    document.getElementById("uiWood").textContent =
+        v.wood;
+
+    document.getElementById("uiStone").textContent =
+        v.stone;
+
+    document.getElementById("uiGold").textContent =
+        v.gold;
+
+
+    document.getElementById("uiPopulation").textContent =
+        population();
+
+    document.getElementById("uiHappiness").textContent =
+        averageHappiness() + "/100";
+
+    document.getElementById("uiAvgFaith").textContent =
+        averageFaith() + "/100";
+
+    document.getElementById("uiMorale").textContent =
+        v.morale + "/100";
+
+    document.getElementById("uiSick").textContent =
+        sickCount();
+
+    document.getElementById("uiMiracles").textContent =
+        g.miraclesUsed;
+
+    document.getElementById("uiDisasters").textContent =
+        v.disastersSurvived;
+
+
+    document.getElementById("uiTempleText").textContent =
+        `${v.templeLevel} / 7`;
+
+    document.getElementById("uiTempleBonus").textContent =
+        "+" + v.templeLevel * 2;
+
+
+    updateTempleCost();
+    renderLog();
+
+}
+
+
+/* ================================================================
+   ЛОГ
+   ================================================================ */
+
+function addLog(text, type = "normal") {
+
+    if (!game) return;
+
+    game.log.unshift({
+        text,
+        type,
+        turn: game.turn
+    });
+
+    game.log = game.log.slice(0, 60);
+
+    renderLog();
+
+}
+
+function renderLog() {
+
+    const container =
+        document.getElementById("logList");
+
+    if (!container || !game) return;
+
+    if (!game.log.length) {
+
+        container.innerHTML =
+            `<div class="log-item">
+                <span style="color:#5e687c;">
+                    Летопись пока пуста. Первый ход ещё впереди.
+                </span>
+            </div>`;
+
+        return;
+    }
+
+
+    container.innerHTML =
+        game.log.map(item => {
+
+            let color = "#d9dfeb";
+
+            if (item.type === "good")
+                color = "var(--green)";
+
+            if (item.type === "bad")
+                color = "var(--red)";
+
+            if (item.type === "divine")
+                color = "var(--gold)";
+
+            if (item.type === "mystery")
+                color = "var(--purple)";
+
+            return `
+                <div class="log-item">
+                    <span class="log-time">
+                        [${item.turn}]
+                    </span>
+                    <span style="color:${color}">
+                        ${escapeHTML(item.text)}
+                    </span>
+                </div>
+            `;
+
+        }).join("");
+
+}
+
+
+/* ================================================================
+   HTML ESCAPE
+   ================================================================ */
+
+function escapeHTML(value) {
+
+    return String(value)
+        .replaceAll("&","&amp;")
+        .replaceAll("<","&lt;")
+        .replaceAll(">","&gt;")
+        .replaceAll('"',"&quot;")
+        .replaceAll("'","&#039;");
+
+}
+
+
+/* ================================================================
+   TOAST
+   ================================================================ */
+
+let toastTimer = null;
+
+function toast(title, text) {
+
+    const el =
+        document.getElementById("toast");
+
+    document.getElementById("toastTitle").textContent =
+        title;
+
+    document.getElementById("toastText").textContent =
+        text;
+
+    el.classList.add("show");
+
+    clearTimeout(toastTimer);
+
+    toastTimer = setTimeout(() => {
+        el.classList.remove("show");
+    }, 3500);
+
+}
+
+
+/* ================================================================
+   МОДАЛЬНОЕ ОКНО
+   ================================================================ */
+
+function openModal(title, html) {
+
+    document.getElementById("modalTitle").textContent =
+        title;
+
+    document.getElementById("modalContent").innerHTML =
+        html;
+
+    document.getElementById("modalBackdrop")
+        .classList.add("open");
+
+}
+
+function closeModal() {
+
+    document.getElementById("modalBackdrop")
+        .classList.remove("open");
+
+}
+
+function backdropClick(event) {
+
+    if (event.target.id === "modalBackdrop") {
+        closeModal();
+    }
+
+}
+
+
+/* ================================================================
+   НОВАЯ ИГРА
+   ================================================================ */
+
+function startNewGame() {
+
+    const name = prompt(
+        "Назовите своё божество:",
+        "Безымянный"
+    );
+
+    if (name === null) return;
+
+    const godName =
+        name.trim().slice(0,24) || "Безымянный";
+
+    game = createGame(godName);
+
+    addLog(
+        `Вы пробудились над ${game.village.name}.`,
+        "divine"
+    );
+
+    addLog(
+        "Люди пока не знают, услышите ли вы их.",
+        "normal"
+    );
+
+    document.getElementById("intro").style.display =
+        "none";
+
+    document.getElementById("app").style.display =
+        "block";
+
+    render();
+
+    toast(
+        "Алтарь пробудился",
+        "Ваша история начинается."
+    );
+
+}
+
+
+/* ================================================================
+   СОХРАНЕНИЕ
+   ================================================================ */
+
+function saveGame() {
+
+    if (!game) return;
+
+    try {
+
+        localStorage.setItem(
+            SAVE_KEY,
+            JSON.stringify(game)
+        );
+
+        toast(
+            "Сохранено",
+            "Состояние долины записано в летопись."
+        );
+
+    } catch(error) {
+
+        toast(
+            "Ошибка",
+            "Браузер не позволил сохранить игру."
+        );
+
+    }
+
+}
+
+
+/* ================================================================
+   ЗАГРУЗКА
+   ================================================================ */
+
+function loadGame() {
+
+    try {
+
+        const raw =
+            localStorage.getItem(SAVE_KEY);
+
+        if (!raw) {
+
+            toast(
+                "Сохранения нет",
+                "Сначала начните новую игру."
+            );
+
+            return false;
+        }
+
+        const parsed =
+            JSON.parse(raw);
+
+        if (
+            !parsed ||
+            !parsed.god ||
+            !parsed.village
+        ) {
+            throw new Error("Invalid save");
+        }
+
+        game = parsed;
+
+        document.getElementById("intro").style.display =
+            "none";
+
+        document.getElementById("app").style.display =
+            "block";
+
+        render();
+
+        toast(
+            "Загружено",
+            "Летопись восстановлена."
+        );
+
+        return true;
+
+    } catch(error) {
+
+        toast(
+            "Ошибка загрузки",
+            "Сохранение повреждено."
+        );
+
+        return false;
+
+    }
+
+}
+
+
+/* ================================================================
+   МЕНЮ
+   ================================================================ */
+
+function returnToTitle() {
+
+    if (!game) return;
+
+    const yes =
+        confirm(
+            "Вернуться в главное меню?\n\n" +
+            "Сохранение не будет потеряно."
+        );
+
+    if (!yes) return;
+
+    saveGame();
+
+    document.getElementById("app").style.display =
+        "none";
+
+    document.getElementById("intro").style.display =
+        "flex";
+
+}
+
+
+/* ================================================================
+   СПРАВКА
+   ================================================================ */
+
+function showHelp() {
+
+    openModal(
+        "КАК ИГРАТЬ",
+        `
+        <div style="line-height:1.8;color:var(--muted);">
+
+            <p>
+                <strong style="color:var(--gold);">
+                    Ваша цель
+                </strong><br>
+                Сохранить и развить Лунную Долину.
+                Ваша сила зависит от веры людей.
+            </p>
+
+            <p>
+                <strong style="color:var(--gold);">
+                    Вера
+                </strong><br>
+                Главная валюта чудес. Жители генерируют
+                её через молитвы, счастье и личную веру.
+            </p>
+
+            <p>
+                <strong style="color:var(--gold);">
+                    Ресурсы
+                </strong><br>
+                Еда нужна для выживания.
+                Дерево и камень используются для храма.
+                Золото — редкий ресурс.
+            </p>
+
+            <p>
+                <strong style="color:var(--gold);">
+                    Люди
+                </strong><br>
+                У каждого есть профессия, здоровье,
+                счастье и личная вера.
+                Слишком несчастные жители могут уйти.
+            </p>
+
+            <p>
+                <strong style="color:var(--gold);">
+                    Храм
+                </strong><br>
+                Чем выше уровень храма, тем сильнее
+                молитвы и экономика веры.
+            </p>
+
+            <p>
+                <strong style="color:var(--gold);">
+                    Чудеса
+                </strong><br>
+                Помогают людям, но стоят веры.
+                Некоторые чудеса влияют на скрытые
+                условия будущих концовок.
+            </p>
+
+            <p>
+                <strong style="color:var(--gold);">
+                    Клавиатура
+                </strong><br>
+                1 — деревня ·
+                2 — жители ·
+                3 — чудеса ·
+                4 — алтарь ·
+                5 — храм ·
+                6 — следующий ход.
+            </p>
+
+            <p style="color:var(--text);">
+                Не пытайтесь спасать всё сразу.
+                Хороший бог умеет ждать.
+            </p>
+
+        </div>
+        `
+    );
+
+}
+
+
+/* ================================================================
+   СОСТОЯНИЕ ДЕРЕВНИ
+   ================================================================ */
+
+function showVillage() {
+
+    const v = game.village;
+    const production = calculateProduction();
+
+    openModal(
+        "СОСТОЯНИЕ ДЕРЕВНИ",
+        `
+        <div class="info-row">
+            <span>Название</span>
+            <span>${escapeHTML(v.name)}</span>
+        </div>
+
+        <div class="info-row">
+            <span>Год</span>
+            <span>${v.year}</span>
+        </div>
+
+        <div class="info-row">
+            <span>Сезон</span>
+            <span>${seasons[v.season - 1]}</span>
+        </div>
+
+        <div class="info-row">
+            <span>Население</span>
+            <span>${population()}</span>
+        </div>
+
+        <div class="info-row">
+            <span>Среднее счастье</span>
+            <span>${averageHappiness()}/100</span>
+        </div>
+
+        <div class="info-row">
+            <span>Средняя вера</span>
+            <span>${averageFaith()}/100</span>
+        </div>
+
+        <div class="info-row">
+            <span>Мораль</span>
+            <span>${v.morale}/100</span>
+        </div>
+
+        <hr style="border-color:var(--border);margin:18px 0;">
+
+        <div style="color:var(--gold);margin-bottom:10px;">
+            ПРОИЗВОДСТВО ЗА ХОД
+        </div>
+
+        <div class="info-row">
+            <span>Еда</span>
+            <span>+${production.food}</span>
+        </div>
+
+        <div class="info-row">
+            <span>Дерево</span>
+            <span>+${production.wood}</span>
+        </div>
+
+        <div class="info-row">
+            <span>Камень</span>
+            <span>+${production.stone}</span>
+        </div>
+
+        <div class="info-row">
+            <span>Золото</span>
+            <span>+${production.gold}</span>
+        </div>
+
+        <hr style="border-color:var(--border);margin:18px 0;">
+
+        <div style="color:var(--gold);margin-bottom:10px;">
+            ИСТОРИЯ
+        </div>
+
+        <div class="info-row">
+            <span>Молитв услышано</span>
+            <span>${game.god.answeredPrayers}</span>
+        </div>
+
+        <div class="info-row">
+            <span>Молитв проигнорировано</span>
+            <span>${game.god.ignoredPrayers}</span>
+        </div>
+
+        <div class="info-row">
+            <span>Даров собрано</span>
+            <span>${v.totalOfferings}</span>
+        </div>
+
+        <div class="info-row">
+            <span>Чудес совершено</span>
+            <span>${game.god.miraclesUsed}</span>
+        </div>
+        `
+    );
+
+}
+
+
+/* ================================================================
+   ЖИТЕЛИ
+   ================================================================ */
+
+function showVillagers() {
+
+    const villagers =
+        aliveVillagers();
+
+    const html = `
+
+        <div style="
+            color:var(--muted);
+            margin-bottom:15px;
+            font-size:11px;
+        ">
+            Нажмите на жителя, чтобы узнать его подробнее.
+        </div>
+
+        <div class="villager-grid">
+
+            ${villagers.map(v => `
+
+                <div
+                    class="villager-card"
+                    onclick="showVillager('${v.id}')"
+                >
+
+                    <div class="villager-top">
+
+                        <div>
+                            <div class="villager-name">
+                                ${escapeHTML(v.name)}
+                            </div>
+
+                            <div class="villager-prof">
+                                ${escapeHTML(v.profession)}
+                                · ${v.age} лет
+                            </div>
+                        </div>
+
+                        <div>
+                            ${v.sick ? "⚠" : "●"}
+                        </div>
+
+                    </div>
+
+
+                    <div class="villager-stats">
+
+                        <div class="mini-stat">
+                            <label>ЗДОРОВЬЕ</label>
+                            <strong>${v.health}</strong>
+                        </div>
+
+                        <div class="mini-stat">
+                            <label>СЧАСТЬЕ</label>
+                            <strong>${v.happiness}</strong>
+                        </div>
+
+                        <div class="mini-stat">
+                            <label>ВЕРА</label>
+                            <strong>${v.faith}</strong>
+                        </div>
+
+                    </div>
+
+                </div>
+
+            `).join("")}
+
+        </div>
+    `;
+
+    openModal(
+        `ЖИТЕЛИ · ${villagers.length}`,
+        html
+    );
+
+}
+
+
+/* ================================================================
+   ПОДРОБНОСТИ ЖИТЕЛЯ
+   ================================================================ */
+
+function showVillager(id) {
+
+    const v =
+        game.village.villagers.find(
+            x => x.id === id
+        );
+
+    if (!v) return;
+
+    const mood =
+        v.happiness >= 85
+            ? "счастлив"
+            : v.happiness >= 65
+                ? "доволен"
+                : v.happiness >= 45
+                    ? "спокоен"
+                    : v.happiness >= 25
+                        ? "недоволен"
+                        : "в отчаянии";
+
+    const faith =
+        v.faith >= 90
+            ? "непоколебимая"
+            : v.faith >= 70
+                ? "крепкая"
+                : v.faith >= 50
+                    ? "обычная"
+                    : v.faith >= 25
+                        ? "слабая"
+                        : "почти исчезла";
+
+    openModal(
+        escapeHTML(v.name).toUpperCase(),
+        `
+
+        <div style="
+            text-align:center;
+            font-size:45px;
+            color:var(--gold);
+            margin:5px 0 20px;
+        ">
+            ☻
+        </div>
+
+        <div class="info-row">
+            <span>Имя</span>
+            <span>${escapeHTML(v.name)}</span>
+        </div>
+
+        <div class="info-row">
+            <span>Возраст</span>
+            <span>${v.age}</span>
+        </div>
+
+        <div class="info-row">
+            <span>Профессия</span>
+            <span>${escapeHTML(v.profession)}</span>
+        </div>
+
+        <div class="info-row">
+            <span>Здоровье</span>
+            <span>${v.health}/100</span>
+        </div>
+
+        <div class="info-row">
+            <span>Счастье</span>
+            <span>${v.happiness}/100</span>
+        </div>
+
+        <div class="info-row">
+            <span>Вера</span>
+            <span>${v.faith}/100</span>
+        </div>
+
+        <div class="info-row">
+            <span>Настроение</span>
+            <span>${mood}</span>
+        </div>
+
+        <div class="info-row">
+            <span>Вера</span>
+            <span>${faith}</span>
+        </div>
+
+        ${
+            v.sick
+            ? `
+                <div class="event-result"
+                    style="border-color:var(--red);">
+                    Этот человек болен.
+                    Он может быть исцелён чудом.
+                </div>
+              `
+            : ""
+        }
+
+        <div style="
+            margin-top:20px;
+            color:var(--muted);
+            line-height:1.7;
+            text-align:center;
+        ">
+            Возможно, именно его молитва однажды
+            изменит судьбу всей долины.
+        </div>
+
+        `
+    );
+
+}
+
+
+/* ================================================================
+   ЧУДЕСА
+   ================================================================ */
+
+const MIRACLES = [
+
+    {
+        id:"harvest",
+        name:"Благословить урожай",
+        cost:12,
+        icon:"✦",
+        desc:"Поля дадут богатый урожай. Люди почувствуют вашу заботу."
+    },
+
+    {
+        id:"rain",
+        name:"Послать дождь",
+        cost:16,
+        icon:"☁",
+        desc:"Дождь наполнит ручьи и поможет земле пережить засуху."
+    },
+
+    {
+        id:"heal",
+        name:"Исцелить больного",
+        cost:20,
+        icon:"✚",
+        desc:"Исцеляет одного больного жителя и укрепляет его веру."
+    },
+
+    {
+        id:"omen",
+        name:"Явить знамение",
+        cost:8,
+        icon:"☼",
+        desc:"Небольшое чудо укрепит веру жителей."
+    },
+
+    {
+        id:"dream",
+        name:"Говорить во сне",
+        cost:10,
+        icon:"☾",
+        desc:"Вы посетите сон одного жителя. Эффект неизвестен."
+    },
+
+    {
+        id:"protect",
+        name:"Защитить деревню",
+        cost:25,
+        icon:"◇",
+        desc:"Невидимая сила встанет между деревней и угрозой."
+    },
+
+    {
+        id:"scare",
+        name:"Напугать врагов",
+        cost:18,
+        icon:"⚡",
+        desc:"Громовой знак заставит чужаков держаться подальше."
+    },
+
+    {
+        id:"greatHarvest",
+        name:"Великий урожай",
+        cost:40,
+        icon:"☀",
+        desc:"Огромный урожай. Сильнейшее сельское чудо."
+    }
+
+];
+
+
+function showMiracles() {
+
+    const html = `
+
+        <div style="
+            display:flex;
+            justify-content:space-between;
+            margin-bottom:15px;
+            color:var(--muted);
+        ">
+            <span>
+                Доступная вера
+            </span>
+
+            <strong style="color:var(--gold);">
+                ✦ ${game.god.faith}
+            </strong>
+        </div>
+
+
+        <div class="miracle-grid">
+
+            ${MIRACLES.map(m => {
+
+                const disabled =
+                    game.god.faith < m.cost;
+
+                return `
+
+                    <div
+                        class="miracle-card
+                        ${disabled ? "disabled" : ""}"
+                        onclick="
+                            ${disabled
+                                ? ""
+                                : `performMiracle('${m.id}')`}
+                        "
+                    >
+
+                        <div style="
+                            color:var(--gold);
+                            font-size:20px;
+                            margin-bottom:8px;
+                        ">
+                            ${m.icon}
+                        </div>
+
+                        <div class="miracle-name">
+                            ${m.name}
+                        </div>
+
+                        <div class="miracle-desc">
+                            ${m.desc}
+                        </div>
+
+                        <div class="miracle-cost">
+                            Цена: ${m.cost} ✦
+                        </div>
+
+                    </div>
+
+                `;
+
+            }).join("")}
+
+        </div>
+
+    `;
+
+    openModal(
+        "ЧУДЕСА",
+        html
+    );
+
+}
+
+
+/* ================================================================
+   ВЫПОЛНЕНИЕ ЧУДА
+   ================================================================ */
+
+function performMiracle(id) {
+
+    const miracle =
+        MIRACLES.find(m => m.id === id);
+
+    if (!miracle) return;
+
+    if (game.god.faith < miracle.cost) {
+
+        toast(
+            "Алтарь молчит",
+            "Недостаточно веры для этого чуда."
+        );
+
+        return;
+    }
+
+    game.god.faith -= miracle.cost;
+    game.god.miraclesUsed++;
+    game.village.totalBlessings++;
+
+
+    /* ------------------------------------------------------------
+       УРОЖАЙ
+       ------------------------------------------------------------ */
+
+    if (id === "harvest") {
+
+        const amount =
+            30 + game.village.templeLevel * 5;
+
+        game.village.food += amount;
+
+        game.village.morale =
+            clamp(
+                game.village.morale + 4,
+                0,
+                100
+            );
+
+        aliveVillagers().forEach(v => {
+
+            v.happiness =
+                clamp(v.happiness + 3,0,100);
+
+            v.faith =
+                clamp(v.faith + 2,0,100);
+
+        });
+
+        game.god.glory += 2;
+
+        addLog(
+            `Вы благословили поля. Урожай вырос на ${amount}.`,
+            "divine"
+        );
+
+        toast(
+            "Чудо свершилось",
+            `Получено ${amount} еды.`
+        );
+
+    }
+
+
+    /* ------------------------------------------------------------
+       ДОЖДЬ
+       ------------------------------------------------------------ */
+
+    else if (id === "rain") {
+
+        game.village.food += 20;
+        game.village.wood += 5;
+
+        aliveVillagers().forEach(v => {
+
+            v.happiness =
+                clamp(v.happiness + 4,0,100);
+
+        });
+
+        game.god.glory += 3;
+
+        addLog(
+            "Над долиной пошёл дождь.",
+            "divine"
+        );
+
+        toast(
+            "Небо услышало вас",
+            "Дождь пришёл вовремя."
+        );
+
+    }
+
+
+    /* ------------------------------------------------------------
+       ИСЦЕЛЕНИЕ
+       ------------------------------------------------------------ */
+
+    else if (id === "heal") {
+
+        const sick =
+            aliveVillagers()
+                .filter(v => v.sick);
+
+        if (!sick.length) {
+
+            game.god.faith += 5;
+
+            addLog(
+                "Больных не оказалось. Жители сочли это добрым знаком.",
+                "good"
+            );
+
+            toast(
+                "Знамение",
+                "Никого не пришлось исцелять."
+            );
+
+        } else {
+
+            const target =
+                sick.sort(
+                    (a,b) => a.health - b.health
+                )[0];
+
+            target.sick = false;
+
+            target.health =
+                clamp(
+                    target.health + 55,
+                    0,
+                    100
+                );
+
+            target.happiness =
+                clamp(
+                    target.happiness + 20,
+                    0,
+                    100
+                );
+
+            target.faith =
+                clamp(
+                    target.faith + 20,
+                    0,
+                    100
+                );
+
+            game.god.glory += 5;
+            game.god.mercy += 2;
+            game.god.answeredPrayers++;
+
+            addLog(
+                `${target.name} был исцелён.`,
+                "good"
+            );
+
+            toast(
+                "Чудо исцеления",
+                `${target.name} снова здоров.`
+            );
+
+        }
+
+    }
+
+
+    /* ------------------------------------------------------------
+       ЗНАМЕНИЕ
+       ------------------------------------------------------------ */
+
+    else if (id === "omen") {
+
+        aliveVillagers().forEach(v => {
+
+            v.faith =
+                clamp(v.faith + 5,0,100);
+
+        });
+
+        game.god.glory += 4;
+
+        addLog(
+            "На вершине храма вспыхнул белый огонь.",
+            "mystery"
+        );
+
+        toast(
+            "Знамение",
+            "Жители подняли глаза к небу."
+        );
+
+    }
+
+
+    /* ------------------------------------------------------------
+       СОН
+       ------------------------------------------------------------ */
+
+    else if (id === "dream") {
+
+        const people =
+            aliveVillagers();
+
+        if (!people.length) return;
+
+        const target = choice(people);
+
+        target.faith =
+            clamp(
+                target.faith + 15,
+                0,
+                100
+            );
+
+        target.happiness =
+            clamp(
+                target.happiness + 10,
+                0,
+                100
+            );
+
+        game.god.secretPoints++;
+
+        const dreams = [
+            "Он увидел реку, текущую вверх.",
+            "Она услышала колокола из далёкого храма.",
+            "Ему приснилось дерево, корни которого уходили в небо.",
+            "Она увидела огонь, который не гас под дождём.",
+            "Ему приснилась дверь, за которой стояло утро."
+        ];
+
+        addLog(
+            `${target.name} видел вас во сне. ${choice(dreams)}`,
+            "mystery"
+        );
+
+        toast(
+            "Сон",
+            `${target.name} проснулся с ощущением чуда.`
+        );
+
+    }
+
+
+    /* ------------------------------------------------------------
+       ЗАЩИТА
+       ------------------------------------------------------------ */
+
+    else if (id === "protect") {
+
+        game.village.morale =
+            clamp(
+                game.village.morale + 10,
+                0,
+                100
+            );
+
+        aliveVillagers().forEach(v => {
+
+            v.happiness =
+                clamp(
+                    v.happiness + 5,
+                    0,
+                    100
+                );
+
+        });
+
+        game.god.glory += 5;
+        game.god.secretPoints++;
+
+        addLog(
+            "Над деревней поднялась невидимая защита.",
+            "divine"
+        );
+
+        toast(
+            "Щит установлен",
+            "Этой ночью долина может спать спокойно."
+        );
+
+    }
+
+
+    /* ------------------------------------------------------------
+       НАПУГАТЬ
+       ------------------------------------------------------------ */
+
+    else if (id === "scare") {
+
+        game.god.wrath += 3;
+        game.god.glory += 4;
+
+        game.village.morale =
+            clamp(
+                game.village.morale + 3,
+                0,
+                100
+            );
+
+        addLog(
+            "В лесу прогремел голос грома.",
+            "divine"
+        );
+
+        toast(
+            "Гнев небес",
+            "Чужаки отступили."
+        );
+
+    }
+
+
+    /* ------------------------------------------------------------
+       ВЕЛИКИЙ УРОЖАЙ
+       ------------------------------------------------------------ */
+
+    else if (id === "greatHarvest") {
+
+        const amount =
+            100 +
+            game.village.templeLevel * 10;
+
+        game.village.food += amount;
+
+        game.god.glory += 10;
+        game.god.secretPoints += 2;
+
+        aliveVillagers().forEach(v => {
+
+            v.faith =
+                clamp(v.faith + 8,0,100);
+
+            v.happiness =
+                clamp(v.happiness + 8,0,100);
+
+        });
+
+        addLog(
+            `Великий урожай принёс ${amount} еды.`,
+            "good"
+        );
+
+        toast(
+            "Великое чудо",
+            "Поля стали золотыми."
+        );
+
+    }
+
+
+    closeModal();
+    render();
+
+}
+
+
+/* ================================================================
+   АЛТАРЬ
+   ================================================================ */
+
+function showAltar() {
+
+    openModal(
+        "АЛТАРЬ",
+        `
+
+        <div style="
+            text-align:center;
+            color:var(--gold);
+            font-size:45px;
+            margin:10px;
+        ">
+            ✦
+        </div>
+
+        <div style="
+            text-align:center;
+            color:var(--muted);
+            line-height:1.7;
+            margin-bottom:20px;
+        ">
+            Молитвы поднимаются над крышами,
+            словно тонкие нити дыма.
+        </div>
+
+        <div class="action-grid">
+
+            <button
+                class="action-btn"
+                onclick="collectOfferings()"
+            >
+                <span class="key">◆</span>
+                Собрать дары
+                <span class="desc">
+                    Принять то, что жители оставили алтарю
+                </span>
+            </button>
+
+            <button
+                class="action-btn"
+                onclick="collectPrayer()"
+            >
+                <span class="key">✦</span>
+                Вознести общую молитву
+                <span class="desc">
+                    Усилить связь между храмом и людьми
+                </span>
+            </button>
+
+        </div>
+
+        <div style="
+            margin-top:20px;
+            border-top:1px solid var(--border);
+            padding-top:15px;
+            color:var(--muted);
+            font-size:11px;
+            line-height:1.7;
+        ">
+            Чем счастливее и вернее жители,
+            тем больше силы возвращается к вам.
+        </div>
+
+        `
+    );
+
+}
+
+
+/* ================================================================
+   ДАРЫ
+   ================================================================ */
+
+function collectOfferings() {
+
+    const faith =
+        averageFaith();
+
+    const happiness =
+        averageHappiness();
+
+    const base =
+        Math.floor(population() / 2);
+
+    const bonus =
+        Math.floor(
+            (faith + happiness) / 25
+        );
+
+    const amount =
+        Math.max(
+            1,
+            base + bonus + randomInt(0,6)
+        );
+
+    game.god.faith += amount;
+    game.village.totalOfferings++;
+
+    game.god.favor =
+        clamp(
+            game.god.favor + 1,
+            0,
+            100
+        );
+
+    addLog(
+        `На алтаре оставили дары. Вы получили ${amount} веры.`,
+        "good"
+    );
+
+    toast(
+        "Дары собраны",
+        `+${amount} веры`
+    );
+
+    closeModal();
+    render();
+
+}
+
+
+/* ================================================================
+   МОЛИТВА
+   ================================================================ */
+
+function collectPrayer() {
+
+    const amount =
+        3 +
+        Math.floor(averageFaith() / 20) +
+        game.village.templeLevel;
+
+    game.god.faith += amount;
+
+    game.god.answeredPrayers++;
+
+    addLog(
+        `Общая молитва принесла ${amount} веры.`,
+        "divine"
+    );
+
+    toast(
+        "Молитва услышана",
+        `+${amount} веры`
+    );
+
+    closeModal();
+    render();
+
+}
+
+
+/* ================================================================
+   ПРОИЗВОДСТВО
+   ================================================================ */
+
+function calculateProduction() {
+
+    let food = 0;
+    let wood = 0;
+    let stone = 0;
+    let gold = 0;
+
+    aliveVillagers().forEach(v => {
+
+        let efficiency = 1;
+
+        if (v.happiness < 35)
+            efficiency *= .7;
+
+        if (v.health < 40)
+            efficiency *= .6;
+
+        if (v.sick)
+            efficiency *= .5;
+
+
+        if (v.profession === "Фермер") {
+
+            food += Math.max(
+                1,
+                Math.floor(4 * efficiency)
+            );
+
+        }
+
+        else if (v.profession === "Дровосек") {
+
+            wood += Math.max(
+                1,
+                Math.floor(3 * efficiency)
+            );
+
+        }
+
+        else if (v.profession === "Каменщик") {
+
+            stone += Math.max(
+                1,
+                Math.floor(3 * efficiency)
+            );
+
+        }
+
+        else if (v.profession === "Торговец") {
+
+            gold += Math.max(
+                1,
+                Math.floor(2 * efficiency)
+            );
+
+        }
+
+        else if (v.profession === "Рыбак") {
+
+            food += Math.max(
+                1,
+                Math.floor(3 * efficiency)
+            );
+
+        }
+
+    });
+
+    return {
+        food,
+        wood,
+        stone,
+        gold
+    };
+
+}
+
+
+/* ================================================================
+   СТОИМОСТЬ ХРАМА
+   ================================================================ */
+
+function templeCost() {
+
+    const level =
+        game.village.templeLevel;
+
+    return {
+        wood: 35 + level * 25,
+        stone: 25 + level * 20,
+        gold: 10 + level * 10
+    };
+
+}
+
+function updateTempleCost() {
+
+    const button =
+        document.getElementById("upgradeButton");
+
+    const text =
+        document.getElementById("templeCost");
+
+    if (game.village.templeLevel >= 7) {
+
+        button.disabled = true;
+        button.textContent = "ХРАМ ДОСТИГ ПРЕДЕЛА";
+
+        text.textContent =
+            "Это место уже стало частью легенд.";
+
+        return;
+    }
+
+    const cost =
+        templeCost();
+
+    const possible =
+        game.village.wood >= cost.wood &&
+        game.village.stone >= cost.stone &&
+        game.village.gold >= cost.gold;
+
+    button.disabled = !possible;
+
+    button.textContent =
+        possible
+            ? "УЛУЧШИТЬ ХРАМ"
+            : "НЕ ХВАТАЕТ РЕСУРСОВ";
+
+    text.innerHTML = `
+        Следующий уровень:
+        <br>
+        ▥ ${cost.wood} дерева
+        <br>
+        ◆ ${cost.stone} камня
+        <br>
+        ◇ ${cost.gold} золота
+    `;
+
+}
+
+
+/* ================================================================
+   УЛУЧШЕНИЕ ХРАМА
+   ================================================================ */
+
+function upgradeTemple() {
+
+    const v =
+        game.village;
+
+    if (v.templeLevel >= 7) {
+
+        toast(
+            "Храм",
+            "Ваш храм уже достиг предела."
+        );
+
+        return;
+    }
+
+    const cost =
+        templeCost();
+
+    if (
+        v.wood < cost.wood ||
+        v.stone < cost.stone ||
+        v.gold < cost.gold
+    ) {
+
+        toast(
+            "Строительство остановлено",
+            "Не хватает ресурсов."
+        );
+
+        return;
+    }
+
+    v.wood -= cost.wood;
+    v.stone -= cost.stone;
+    v.gold -= cost.gold;
+
+    v.templeLevel++;
+
+    aliveVillagers().forEach(villager => {
+
+        villager.happiness =
+            clamp(
+                villager.happiness + 3,
+                0,
+                100
+            );
+
+    });
+
+    game.god.glory += 5;
+
+    addLog(
+        `Храм поднялся до уровня ${v.templeLevel}.`,
+        "good"
+    );
+
+    toast(
+        "Храм возвышается",
+        `Теперь его уровень — ${v.templeLevel}.`
+    );
+
+    render();
+
+}
+
+
+/* ================================================================
+   ЗАВЕРШЕНИЕ ХОДА
+   ================================================================ */
+
+function endTurn() {
+
+    closeModal();
+
+    const v =
+        game.village;
+
+    const g =
+        game.god;
+
+
+    /* ------------------------------------------------------------
+       ПРОИЗВОДСТВО
+       ------------------------------------------------------------ */
+
+    const production =
+        calculateProduction();
+
+    v.food += production.food;
+    v.wood += production.wood;
+    v.stone += production.stone;
+    v.gold += production.gold;
+
+
+    addLog(
+        `Производство: +${production.food} еды, ` +
+        `+${production.wood} дерева, ` +
+        `+${production.stone} камня, ` +
+        `+${production.gold} золота.`,
+        "normal"
+    );
+
+
+    /* ------------------------------------------------------------
+       ЕДА
+       ------------------------------------------------------------ */
+
+    const foodNeed =
+        population() * 2;
+
+    if (v.food >= foodNeed) {
+
+        v.food -= foodNeed;
+
+        addLog(
+            `Жители съели ${foodNeed} еды.`,
+            "normal"
+        );
+
+    } else {
+
+        const missing =
+            foodNeed - v.food;
+
+        v.food = 0;
+
+        aliveVillagers().forEach(person => {
+
+            person.health =
+                clamp(
+                    person.health - 8,
+                    0,
+                    100
+                );
+
+            person.happiness =
+                clamp(
+                    person.happiness - 10,
+                    0,
+                    100
+                );
+
+        });
+
+        g.faith =
+            Math.max(
+                0,
+                g.faith - 3
+            );
+
+        addLog(
+            `Еды не хватило. Недостаток: ${missing}.`,
+            "bad"
+        );
+
+    }
+
+
+    /* ------------------------------------------------------------
+       ЕСТЕСТВЕННАЯ ВЕРА
+       ------------------------------------------------------------ */
+
+    let faithGain = 0;
+
+    aliveVillagers().forEach(person => {
+
+        let gain = 1;
+
+        if (person.happiness >= 70)
+            gain++;
+
+        if (person.faith >= 70)
+            gain++;
+
+        if (person.sick)
+            gain = Math.max(0,gain - 1);
+
+        faithGain += gain;
+
+    });
+
+
+    faithGain +=
+        v.templeLevel;
+
+
+    if (v.morale < 35)
+        faithGain =
+            Math.floor(faithGain / 2);
+
+
+    g.faith += faithGain;
+
+
+    addLog(
+        `Молитвы жителей принесли +${faithGain} веры.`,
+        "divine"
+    );
+
+
+    /* ------------------------------------------------------------
+       БЛАГОСКЛОННОСТЬ
+       ------------------------------------------------------------ */
+
+    if (averageHappiness() >= 70) {
+
+        g.favor =
+            clamp(
+                g.favor + 1,
+                0,
+                100
+            );
+
+    } else if (averageHappiness() < 35) {
+
+        g.favor =
+            clamp(
+                g.favor - 2,
+                0,
+                100
+            );
+
+    }
+
+
+    /* ------------------------------------------------------------
+       МОРАЛЬ
+       ------------------------------------------------------------ */
+
+    if (averageHappiness() >= 75) {
+
+        v.morale =
+            clamp(
+                v.morale + 2,
+                0,
+                100
+            );
+
+    } else if (averageHappiness() < 40) {
+
+        v.morale =
+            clamp(
+                v.morale - 3,
+                0,
+                100
+            );
+
+    }
+
+
+    /* ------------------------------------------------------------
+       ЖИЗНЬ ЖИТЕЛЕЙ
+       ------------------------------------------------------------ */
+
+    updateVillagers();
+
+
+    /* ------------------------------------------------------------
+       СЕЗОН
+       ------------------------------------------------------------ */
+
+    const oldYear =
+        v.year;
+
+    v.season++;
+
+    if (v.season > 4) {
+
+        v.season = 1;
+        v.year++;
+
+    }
+
+
+    if (v.year !== oldYear) {
+
+        yearlyEffects();
+
+    }
+
+
+    game.turn++;
+
+
+    /* ------------------------------------------------------------
+       СОБЫТИЕ
+       ------------------------------------------------------------ */
+
+    if (
+        game.turn % game.eventInterval === 0
+    ) {
+
+        triggerRandomEvent();
+
+    }
+
+
+    render();
+
+    checkEndings();
+
+}
+
+
+/* ================================================================
+   ОБНОВЛЕНИЕ ЖИТЕЛЕЙ
+   ================================================================ */
+
+function updateVillagers() {
+
+    aliveVillagers().forEach(v => {
+
+        if (!v.sick) {
+
+            v.health =
+                clamp(
+                    v.health + randomInt(0,2),
+                    0,
+                    100
+                );
+
+        } else {
+
+            if (Math.random() < .12) {
+
+                v.sick = false;
+
+                v.health =
+                    clamp(
+                        v.health + 8,
+                        0,
+                        100
+                    );
+
+                addLog(
+                    `${v.name} начал поправляться.`,
+                    "good"
+                );
+
+            }
+
+        }
+
+
+        if (v.happiness > 75) {
+
+            v.faith =
+                clamp(
+                    v.faith + 1,
+                    0,
+                    100
+                );
+
+        } else if (v.happiness < 30) {
+
+            v.faith =
+                clamp(
+                    v.faith - 2,
+                    0,
+                    100
+                );
+
+        }
+
+
+        if (v.faith < 20) {
+
+            v.happiness =
+                clamp(
+                    v.happiness - 2,
+                    0,
+                    100
+                );
+
+        }
+
+
+        v.happiness =
+            clamp(
+                v.happiness +
+                choice([-1,0,0,1]),
+                0,
+                100
+            );
+
+    });
+
+
+    checkDepartures();
+
+}
+
+
+/* ================================================================
+   УХОД ЖИТЕЛЕЙ
+   ================================================================ */
+
+function checkDepartures() {
+
+    const unhappy =
+        aliveVillagers().filter(
+            v => v.happiness <= 12
+        );
+
+    if (
+        unhappy.length &&
+        Math.random() < .25
+    ) {
+
+        const person =
+            choice(unhappy);
+
+        person.alive = false;
+
+        game.god.ignoredPrayers++;
+
+        addLog(
+            `${person.name} покинул деревню.`,
+            "bad"
+        );
+
+        toast(
+            "Человек ушёл",
+            `${person.name} больше не верит в будущее этой долины.`
+        );
+
+    }
+
+}
+
+
+/* ================================================================
+   ГОД
+   ================================================================ */
+
+function yearlyEffects() {
+
+    const v =
+        game.village;
+
+    addLog(
+        `Наступил ${v.year}-й год.`,
+        "mystery"
+    );
+
+
+    aliveVillagers().forEach(person => {
+
+        if (person.age > 0)
+            person.age++;
+
+        if (
+            v.season === 4 &&
+            Math.random() < .08
+        ) {
+
+            person.health =
+                clamp(
+                    person.health - 5,
+                    0,
+                    100
+                );
+
+        }
+
+    });
+
+
+    game.eventInterval =
+        Math.max(
+            2,
+            4 - Math.floor(v.year / 3)
+        );
+
+
+    /* ------------------------------------------------------------
+       НОВЫЙ РЕБЁНОК
+       ------------------------------------------------------------ */
+
+    if (
+        population() >= 5 &&
+        Math.random() < .35
+    ) {
+
+        const available =
+            NAMES.filter(
+                n =>
+                    !game.village.villagers
+                        .some(v => v.name === n)
+            );
+
+        if (available.length) {
+
+            const name =
+                choice(available);
+
+            const baby =
+                createVillager(
+                    name,
+                    0,
+                    "Ученик",
+                    75,
+                    70,
+                    95
+                );
+
+            v.villagers.push(baby);
+
+            v.morale =
+                clamp(
+                    v.morale + 5,
+                    0,
+                    100
+                );
+
+            game.god.faith += 6;
+
+            addLog(
+                `В деревне родился ребёнок по имени ${name}.`,
+                "good"
+            );
+
+        }
+
+    }
+
+}
+
+
+/* ================================================================
+   СЛУЧАЙНЫЕ СОБЫТИЯ
+   ================================================================ */
+
+const EVENTS = [
+
+    {
+        id:"drought",
+        name:"СУХОЙ ВЕТЕР",
+        icon:"☀",
+        description:
+            "Над полями неделями висело медное небо.",
+        weight:10
+    },
+
+    {
+        id:"wolves",
+        name:"ВОЛКИ У АМБАРА",
+        icon:"🐺",
+        description:
+            "Ночью из леса пришли голодные волки.",
+        weight:10
+    },
+
+    {
+        id:"plague",
+        name:"СЕРАЯ ЛИХОРАДКА",
+        icon:"⚠",
+        description:
+            "Утром несколько жителей проснулись с жаром.",
+        weight:8
+    },
+
+    {
+        id:"traveler",
+        name:"СТРАННИК",
+        icon:"♙",
+        description:
+            "Пыльный путник остановился возле вашего храма.",
+        weight:10
+    },
+
+    {
+        id:"birth",
+        name:"НОВЫЙ ГОЛОС",
+        icon:"✧",
+        description:
+            "Из одного дома донёсся первый плач ребёнка.",
+        weight:10
+    },
+
+    {
+        id:"rival",
+        name:"ЧУЖОЙ АЛТАРЬ",
+        icon:"◈",
+        description:
+            "На окраине леса кто-то поставил новый алтарь.",
+        weight:8
+    },
+
+    {
+        id:"caravan",
+        name:"ТОРГОВЫЙ КАРАВАН",
+        icon:"◇",
+        description:
+            "По дороге показались телеги купцов.",
+        weight:10
+    },
+
+    {
+        id:"stars",
+        name:"НОЧЬ ПАДАЮЩИХ ЗВЁЗД",
+        icon:"✦",
+        description:
+            "Небо этой ночью оказалось слишком ярким.",
+        weight:6
+    }
+
+];
+
+
+function chooseEvent() {
+
+    let total = 0;
+
+    const weighted =
+        EVENTS.map(event => {
+
+            let weight =
+                event.weight;
+
+            if (
+                game.village.year >= 3 &&
+                ["drought","plague","rival"]
+                    .includes(event.id)
+            ) {
+                weight += 5;
+            }
+
+            if (
+                game.village.year >= 5 &&
+                ["drought","plague"]
+                    .includes(event.id)
+            ) {
+                weight += 8;
+            }
+
+            total += weight;
+
+            return {
+                event,
+                weight
+            };
+
+        });
+
+
+    let roll =
+        Math.random() * total;
+
+
+    for (const item of weighted) {
+
+        roll -= item.weight;
+
+        if (roll <= 0)
+            return item.event;
+
+    }
+
+    return EVENTS[0];
+
+}
+
+
+/* ================================================================
+   ЗАПУСК СОБЫТИЯ
+   ================================================================ */
+
+function triggerRandomEvent() {
+
+    const event =
+        chooseEvent();
+
+    game.village.disastersSurvived +=
+        ["drought","wolves","plague","rival"]
+            .includes(event.id)
+            ? 1
+            : 0;
+
+
+    if (event.id === "traveler") {
+
+        showTravelerEvent(event);
+
+    } else {
+
+        resolveEvent(event);
+
+    }
+
+}
+
+
+/* ================================================================
+   ОБЫЧНЫЕ СОБЫТИЯ
+   ================================================================ */
+
+function resolveEvent(event) {
+
+    const v =
+        game.village;
+
+    const g =
+        game.god;
+
+    let result = "";
+
+
+    /* ------------------------------------------------------------
+       ЗАСУХА
+       ------------------------------------------------------------ */
+
+    if (event.id === "drought") {
+
+        const loss =
+            Math.min(
+                v.food,
+                25 + population()
+            );
+
+        v.food -= loss;
+
+        v.morale =
+            clamp(
+                v.morale - 8,
+                0,
+                100
+            );
+
+        aliveVillagers().forEach(person => {
+
+            person.happiness =
+                clamp(
+                    person.happiness - 5,
+                    0,
+                    100
+                );
+
+        });
+
+        result =
+            `Поля дали меньше обычного. ` +
+            `Потеряно ${loss} еды.`;
+
+    }
+
+
+    /* ------------------------------------------------------------
+       ВОЛКИ
+       ------------------------------------------------------------ */
+
+    else if (event.id === "wolves") {
+
+        const loss =
+            Math.min(
+                v.food,
+                randomInt(5,15)
+            );
+
+        v.food -= loss;
+
+        v.morale =
+            clamp(
+                v.morale - 5,
+                0,
+                100
+            );
+
+        result =
+            `Волки добрались до запасов. ` +
+            `Уничтожено ${loss} еды.`;
+
+    }
+
+
+    /* ------------------------------------------------------------
+       БОЛЕЗНЬ
+       ------------------------------------------------------------ */
+
+    else if (event.id === "plague") {
+
+        const people =
+            aliveVillagers();
+
+        if (people.length) {
+
+            const count =
+                Math.min(
+                    people.length,
+                    randomInt(
+                        1,
+                        Math.max(
+                            1,
+                            Math.floor(
+                                people.length / 3
+                            )
+                        )
+                    )
+                );
+
+            const targets =
+                [...people]
+                    .sort(() => Math.random() - .5)
+                    .slice(0,count);
+
+            targets.forEach(person => {
+
+                person.sick = true;
+
+                person.health =
+                    clamp(
+                        person.health - 15,
+                        0,
+                        100
+                    );
+
+                person.happiness =
+                    clamp(
+                        person.happiness - 8,
+                        0,
+                        100
+                    );
+
+            });
+
+            v.morale =
+                clamp(
+                    v.morale - 7,
+                    0,
+                    100
+                );
+
+            result =
+                `Болезнь коснулась ${count} жителей.`;
+
+        }
+
+    }
+
+
+    /* ------------------------------------------------------------
+       РОЖДЕНИЕ
+       ------------------------------------------------------------ */
+
+    else if (event.id === "birth") {
+
+        const available =
+            NAMES.filter(
+                n =>
+                    !game.village.villagers
+                        .some(v => v.name === n)
+            );
+
+        if (available.length) {
+
+            const name =
+                choice(available);
+
+            const baby =
+                createVillager(
+                    name,
+                    0,
+                    "Ученик",
+                    75,
+                    70,
+                    95
+                );
+
+            v.villagers.push(baby);
+
+            v.morale =
+                clamp(
+                    v.morale + 5,
+                    0,
+                    100
+                );
+
+            g.faith += 6;
+
+            result =
+                `В деревне родился ребёнок. ` +
+                `Его назвали ${name}.`;
+
+        }
+
+    }
+
+
+    /* ------------------------------------------------------------
+       СОПЕРНИК
+       ------------------------------------------------------------ */
+
+    else if (event.id === "rival") {
+
+        g.secretPoints++;
+
+        aliveVillagers().forEach(person => {
+
+            if (Math.random() < .25) {
+
+                person.faith =
+                    clamp(
+                        person.faith - 8,
+                        0,
+                        100
+                    );
+
+            }
+
+        });
+
+        v.morale =
+            clamp(
+                v.morale - 3,
+                0,
+                100
+            );
+
+        result =
+            "В лесу появился чужой алтарь. " +
+            "Кто-то ещё услышал молитвы долины.";
+
+    }
+
+
+    /* ------------------------------------------------------------
+       КАРАВАН
+       ------------------------------------------------------------ */
+
+    else if (event.id === "caravan") {
+
+        v.gold += 12;
+        v.food += 10;
+
+        result =
+            "Торговцы оставили часть припасов " +
+            "за безопасную дорогу.";
+
+    }
+
+
+    /* ------------------------------------------------------------
+       ЗВЁЗДЫ
+       ------------------------------------------------------------ */
+
+    else if (event.id === "stars") {
+
+        g.faith += 15;
+        g.glory += 5;
+        g.secretPoints += 2;
+
+        aliveVillagers().forEach(person => {
+
+            person.faith =
+                clamp(
+                    person.faith + 5,
+                    0,
+                    100
+                );
+
+            person.happiness =
+                clamp(
+                    person.happiness + 5,
+                    0,
+                    100
+                );
+
+        });
+
+        result =
+            "Небо рассыпалось серебром. " +
+            "Жители приняли это за добрый знак.";
+
+    }
+
+
+    addLog(
+        `${event.name}: ${result}`,
+        ["drought","wolves","plague","rival"]
+            .includes(event.id)
+            ? "bad"
+            : "good"
+    );
+
+
+    showEvent(
+        event,
+        result
+    );
+
+}
+
+
+/* ================================================================
+   СТРАННИК
+   ================================================================ */
+
+function showTravelerEvent(event) {
+
+    openModal(
+        event.name,
+        `
+
+        <div class="event-icon">
+            ${event.icon}
+        </div>
+
+        <div class="event-title">
+            Странник
+        </div>
+
+        <div class="event-description">
+            ${event.description}
+            <br><br>
+            Он просит ночлега у вашего храма.
+        </div>
+
+        <div class="action-grid">
+
+            <button
+                class="action-btn"
+                onclick="travelerChoice(true)"
+            >
+                <span class="key">1</span>
+                Приютить
+                <span class="desc">
+                    Потратить немного еды, но помочь путнику
+                </span>
+            </button>
+
+            <button
+                class="action-btn"
+                onclick="travelerChoice(false)"
+            >
+                <span class="key">2</span>
+                Отказать
+                <span class="desc">
+                    Сохранить припасы
+                </span>
+            </button>
+
+        </div>
+
+        `
+    );
+
+}
+
+
+function travelerChoice(help) {
+
+    closeModal();
+
+    if (help) {
+
+        game.village.food =
+            Math.max(
+                0,
+                game.village.food - 8
+            );
+
+        game.village.gold += 15;
+
+        game.god.faith += 8;
+        game.god.mercy++;
+
+        addLog(
+            "Вы приютили странника. Утром он оставил 15 золотых.",
+            "good"
+        );
+
+        toast(
+            "Добро возвращается",
+            "Странник оказался благодарен."
+        );
+
+    } else {
+
+        game.god.wrath++;
+
+        game.village.morale =
+            clamp(
+                game.village.morale - 2,
+                0,
+                100
+            );
+
+        addLog(
+            "Странник ушёл до рассвета.",
+            "normal"
+        );
+
+        toast(
+            "Странник ушёл",
+            "Возможно, это был просто человек. А возможно — нет."
+        );
+
+    }
+
+    render();
+
+}
+
+
+/* ================================================================
+   ПОКАЗ СОБЫТИЯ
+   ================================================================ */
+
+function showEvent(event, result) {
+
+    openModal(
+        "СОБЫТИЕ",
+        `
+
+        <div class="event-icon">
+            ${event.icon}
+        </div>
+
+        <div class="event-title">
+            ${event.name}
+        </div>
+
+        <div class="event-description">
+            ${event.description}
+        </div>
+
+        <div class="event-result">
+            ${result}
+        </div>
+
+        <button
+            class="event-close"
+            onclick="closeModal()"
+        >
+            ПРИНЯТЬ СУДЬБУ
+        </button>
+
+        `
+    );
+
+}
+
+
+/* ================================================================
+   КОНЦОВКИ
+   ================================================================ */
+
+function checkEndings() {
+
+    if (game.ending)
+        return;
+
+
+    const pop =
+        population();
+
+    const faith =
+        averageFaith();
+
+    const happiness =
+        averageHappiness();
+
+    const v =
+        game.village;
+
+    const g =
+        game.god;
+
+
+    /* ------------------------------------------------------------
+       ПЛОХАЯ
+       ------------------------------------------------------------ */
+
+    if (
+        pop <= 2 ||
+        (
+            v.morale <= 5 &&
+            faith <= 10
+        )
+    ) {
+
+        endGame("bad");
+        return;
+
+    }
+
+
+    /* ------------------------------------------------------------
+       СЕКРЕТНАЯ
+       ------------------------------------------------------------ */
+
+    if (
+        v.year >= 6 &&
+        g.secretPoints >= 8 &&
+        g.mercy >= 5 &&
+        g.wrath === 0 &&
+        v.templeLevel >= 6
+    ) {
+
+        endGame("secret");
+        return;
+
+    }
+
+
+    /* ------------------------------------------------------------
+       ХОРОШАЯ
+       ------------------------------------------------------------ */
+
+    if (
+        v.year >= 8 &&
+        pop >= 12 &&
+        faith >= 75 &&
+        happiness >= 70 &&
+        v.templeLevel >= 5
+    ) {
+
+        endGame("good");
+        return;
+
+    }
+
+
+    /* ------------------------------------------------------------
+       НЕЙТРАЛЬНАЯ
+       ------------------------------------------------------------ */
+
+    if (v.year >= 12) {
+
+        endGame("neutral");
+        return;
+
+    }
+
+}
+
+
+/* ================================================================
+   ФИНАЛ
+   ================================================================ */
+
+function endGame(type) {
+
+    game.ending = type;
+
+    saveGame();
+
+    let data;
+
+
+    if (type === "bad") {
+
+        data = {
+            icon:"☾",
+            title:"ПУСТОЙ АЛТАРЬ",
+            text:
+`Последняя молитва стихла.
+
+Люди перестали смотреть в сторону храма.
+Кто-то ушёл на восток.
+Кто-то остался, но больше ничего не ждал.
+
+Камень алтаря остался холодным.
+
+Вы были богом этой долины.
+Но не сумели стать её надеждой.`
+        };
+
+    }
+
+
+    else if (type === "neutral") {
+
+        data = {
+            icon:"✧",
+            title:"ТИХАЯ ДОЛИНА",
+            text:
+`Годы прошли.
+
+Деревня выжила.
+Она не стала богатой.
+Не стала легендой.
+
+Но дети всё ещё знают старую молитву.
+По вечерам в храме горит маленькая свеча.
+
+Возможно, этого достаточно.`
+        };
+
+    }
+
+
+    else if (type === "good") {
+
+        data = {
+            icon:"✦",
+            title:"ЗОЛОТОЙ ВЕК",
+            text:
+`Прошло восемь лет.
+
+Там, где когда-то стояли три старых дома,
+теперь шумит большая деревня.
+
+Дети бегают по площади.
+Фермеры возвращаются с полей.
+Колокола храма слышны далеко за лесом.
+
+Люди верят в вас.
+
+Но важнее другое:
+
+они научились верить друг в друга.`
+        };
+
+    }
+
+
+    else {
+
+        data = {
+            icon:"☼",
+            title:"ПЕРВАЯ ЗАРЯ",
+            text:
+`Вы никогда не требовали поклонения.
+
+Не посылали гром.
+Не карали сомневающихся.
+
+Вы отвечали на молитвы тихо.
+
+И однажды жители поняли:
+
+бог, которого они искали,
+всё это время учил их
+самостоятельно хранить свой свет.
+
+В то утро никто не принёс даров.
+
+И впервые вы не почувствовали голода.
+
+Потому что вера стала частью самой долины.`
+        };
+
+    }
+
+
+    openModal(
+        "КОНЕЦ ИСТОРИИ",
+        `
+
+        <div class="ending">
+
+            <div class="ending-symbol">
+                ${data.icon}
+            </div>
+
+            <div class="ending-title">
+                ${data.title}
+            </div>
+
+            <div class="ending-text">
+                ${data.text}
+            </div>
+
+
+            <div class="ending-stats">
+
+                <div class="ending-stat">
+                    <b>${game.god.glory}</b>
+                    <span>СЛАВА</span>
+                </div>
+
+                <div class="ending-stat">
+                    <b>${population()}</b>
+                    <span>ЖИТЕЛЕЙ</span>
+                </div>
+
+                <div class="ending-stat">
+                    <b>${averageFaith()}</b>
+                    <span>СРЕДНЯЯ ВЕРА</span>
+                </div>
+
+            </div>
+
+
+            <button
+                class="event-close"
+                onclick="newGameAfterEnding()"
+            >
+                НАЧАТЬ НОВУЮ ИСТОРИЮ
+            </button>
+
+        </div>
+
+        `
+    );
+
+}
+
+
+/* ================================================================
+   НОВАЯ ИГРА ПОСЛЕ ФИНАЛА
+   ================================================================ */
+
+function newGameAfterEnding() {
+
+    closeModal();
+
+    localStorage.removeItem(SAVE_KEY);
+
+    startNewGame();
+
+}
+
+
+/* ================================================================
+   КЛАВИАТУРА
+   ================================================================ */
+
+document.addEventListener(
+    "keydown",
+    event => {
+
+        if (!game)
+            return;
+
+        if (
+            document
+                .getElementById("modalBackdrop")
+                .classList
+                .contains("open")
+        ) {
+
+            if (event.key === "Escape") {
+                closeModal();
+            }
+
+            return;
+        }
+
+
+        if (event.key === "1")
+            showVillage();
+
+        else if (event.key === "2")
+            showVillagers();
+
+        else if (event.key === "3")
+            showMiracles();
+
+        else if (event.key === "4")
+            showAltar();
+
+        else if (event.key === "5")
+            upgradeTemple();
+
+        else if (event.key === "6")
+            endTurn();
+
+        else if (event.key === "7")
+            saveGame();
+
+        else if (event.key === "9")
+            showHelp();
+
+    }
+);
+
+
+/* ================================================================
+   ПРОВЕРКА СОХРАНЕНИЯ НА СТАРТЕ
+   ================================================================ */
+
+(function boot() {
+
+    try {
+
+        const save =
+            localStorage.getItem(SAVE_KEY);
+
+        if (!save) {
+
+            document.getElementById(
+                "continueButton"
+            ).disabled = true;
+
+            document.getElementById(
+                "continueButton"
+            ).style.opacity = ".35";
+
+        }
+
+    } catch(error) {
+
+        console.warn(
+            "localStorage unavailable"
+        );
+
+    }
+
+})();
+</script>
+
+</body>
+</html>
