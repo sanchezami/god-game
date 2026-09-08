@@ -2,9 +2,8 @@
 <html lang="ru">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport"
-      content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
-<title>ВОЗВЫШЕННЫЙ: Последний Алтарь</title>
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<title>ВОЗВЫШЕННЫЙ: Последний Алтарь — Definitive Edition</title>
 
 <style>
 *{
@@ -18,949 +17,415 @@ html,body{
     width:100%;
     height:100%;
     overflow:hidden;
-    background:#111;
-    font-family:Arial,Helvetica,sans-serif;
+    background:#090b10;
     color:#eee;
+    font-family:Inter,Arial,sans-serif;
 }
 
 body{
-    touch-action:none;
-}
-
-#game{
-    position:relative;
-    width:100%;
-    height:100%;
-    overflow:hidden;
-    background:#171b18;
-}
-
-/* =========================================================
-   WORLD
-========================================================= */
-
-#world{
-    position:absolute;
-    inset:0;
-    overflow:hidden;
-    background:
-        radial-gradient(circle at 50% 40%,rgba(255,255,255,.025),transparent 40%),
-        #101410;
-}
-
-#camera{
-    position:absolute;
-    width:2600px;
-    height:1800px;
-    left:50%;
-    top:50%;
-    transform:translate(-50%,-50%);
-    will-change:transform;
-}
-
-#map{
-    position:absolute;
-    left:0;
-    top:0;
-    width:2600px;
-    height:1800px;
-    overflow:hidden;
-    background:
-        radial-gradient(circle at 20% 20%,rgba(100,150,70,.12),transparent 20%),
-        radial-gradient(circle at 80% 70%,rgba(70,110,50,.1),transparent 25%),
-        #30462a;
-}
-
-/* ground patches */
-.ground{
-    position:absolute;
-    border-radius:50%;
-    background:#3d5a31;
-    opacity:.8;
-}
-
-.ground.g1{left:200px;top:250px;width:900px;height:500px;}
-.ground.g2{left:950px;top:150px;width:1100px;height:600px;}
-.ground.g3{left:400px;top:850px;width:1300px;height:600px;}
-.ground.g4{left:1700px;top:900px;width:700px;height:500px;}
-
-.path{
-    position:absolute;
-    background:#9a8059;
-    opacity:.75;
-    border-radius:100px;
-    box-shadow:
-        inset 0 0 0 5px rgba(70,50,30,.12),
-        0 0 15px rgba(0,0,0,.1);
-}
-
-.path.main{
-    width:2450px;
-    height:170px;
-    left:70px;
-    top:810px;
-}
-
-.path.vertical{
-    width:150px;
-    height:1400px;
-    left:1220px;
-    top:180px;
-}
-
-.path.diagonal{
-    width:1150px;
-    height:130px;
-    left:650px;
-    top:510px;
-    transform:rotate(28deg);
-}
-
-/* water */
-#lake{
-    position:absolute;
-    left:1800px;
-    top:170px;
-    width:570px;
-    height:470px;
-    border-radius:48% 52% 55% 45%;
-    background:
-        radial-gradient(circle at 30% 35%,rgba(255,255,255,.12),transparent 10%),
-        radial-gradient(circle at 70% 65%,rgba(255,255,255,.08),transparent 8%),
-        #314f62;
-    border:14px solid #233b45;
-    box-shadow:inset 0 0 35px rgba(0,0,0,.25);
-}
-
-.water-line{
-    position:absolute;
-    height:4px;
-    width:100px;
-    border-radius:10px;
-    background:rgba(255,255,255,.12);
-}
-
-/* =========================================================
-   OBJECTS
-========================================================= */
-
-.object{
-    position:absolute;
     user-select:none;
 }
 
-.tree{
-    width:90px;
-    height:120px;
-    cursor:pointer;
+#game{
+    position:fixed;
+    inset:0;
+    overflow:hidden;
+    background:#10151b;
 }
 
-.tree .trunk{
+canvas{
     position:absolute;
-    left:38px;
-    top:62px;
-    width:17px;
-    height:52px;
-    background:#64432d;
-    border-radius:8px;
-}
-
-.tree .leaf{
-    position:absolute;
-    border-radius:50%;
-    background:#203e25;
-    box-shadow:
-        inset -7px -8px 0 rgba(0,0,0,.13),
-        0 5px 10px rgba(0,0,0,.2);
-}
-
-.tree .a{
-    width:65px;
-    height:65px;
-    left:10px;
-    top:10px;
-}
-
-.tree .b{
-    width:70px;
-    height:70px;
-    left:28px;
-    top:25px;
-}
-
-.tree .c{
-    width:62px;
-    height:62px;
-    left:0;
-    top:35px;
-}
-
-.rock{
-    width:70px;
-    height:52px;
-    cursor:pointer;
-}
-
-.rock div{
-    position:absolute;
-    width:58px;
-    height:42px;
-    left:5px;
-    top:7px;
-    background:#747a72;
-    border-radius:45% 55% 35% 65%;
-    box-shadow:
-        inset -9px -8px rgba(0,0,0,.15),
-        0 5px 8px rgba(0,0,0,.15);
-}
-
-.bush{
-    width:85px;
-    height:55px;
-}
-
-.bush span{
-    position:absolute;
-    width:45px;
-    height:45px;
-    border-radius:50%;
-    background:#294b2b;
-}
-
-.bush span:nth-child(1){left:0;top:10px}
-.bush span:nth-child(2){left:25px;top:0}
-.bush span:nth-child(3){left:45px;top:12px}
-
-/* =========================================================
-   BUILDINGS
-========================================================= */
-
-.building{
-    position:absolute;
-    width:180px;
-    height:150px;
-    cursor:pointer;
-    filter:drop-shadow(0 8px 7px rgba(0,0,0,.22));
-}
-
-.building .roof{
-    position:absolute;
-    left:5px;
-    top:10px;
-    width:170px;
-    height:75px;
-    background:#5d3035;
-    clip-path:polygon(50% 0,100% 70%,92% 100%,8% 100%,0 70%);
-}
-
-.building .body{
-    position:absolute;
-    left:27px;
-    top:65px;
-    width:126px;
-    height:75px;
-    background:#a47c55;
-    border:5px solid #62462f;
-}
-
-.building .door{
-    position:absolute;
-    left:72px;
-    top:100px;
-    width:36px;
-    height:40px;
-    background:#392b27;
-    border-radius:18px 18px 0 0;
-}
-
-.building .window{
-    position:absolute;
-    left:42px;
-    top:85px;
-    width:25px;
-    height:25px;
-    background:#9bc2bc;
-    border:4px solid #60442e;
-}
-
-.building .sign{
-    position:absolute;
-    left:0;
-    top:-35px;
-    width:180px;
-    text-align:center;
-    font-size:13px;
-    font-weight:bold;
-    color:#f0dfb4;
-    text-shadow:0 2px 3px #000;
-}
-
-.temple{
-    width:330px;
-    height:310px;
-}
-
-.temple .base{
-    position:absolute;
-    left:30px;
-    top:130px;
-    width:270px;
-    height:145px;
-    background:#c0a276;
-    border:8px solid #665038;
-    border-radius:12px;
-}
-
-.temple .roof{
-    position:absolute;
-    left:15px;
-    top:55px;
-    width:300px;
-    height:120px;
-    background:#37283e;
-    clip-path:polygon(50% 0,100% 72%,92% 100%,8% 100%,0 72%);
-    border-bottom:8px solid #17131c;
-}
-
-.temple .door{
-    position:absolute;
-    left:135px;
-    top:185px;
-    width:60px;
-    height:90px;
-    background:#241b25;
-    border-radius:30px 30px 0 0;
-}
-
-.temple .symbol{
-    position:absolute;
-    left:142px;
-    top:78px;
-    width:46px;
-    height:46px;
-    border:5px solid #d8bc72;
-    border-radius:50%;
-    box-shadow:0 0 25px rgba(216,188,114,.45);
-}
-
-.temple .sign{
-    position:absolute;
-    top:0;
+    inset:0;
     width:100%;
-    text-align:center;
-    color:#f2d98d;
-    font-size:22px;
-    font-weight:bold;
-    text-shadow:0 3px 5px #000;
+    height:100%;
+    image-rendering:auto;
 }
 
-/* houses */
-.house{
-    width:150px;
-    height:130px;
-}
-
-.house .roof{
-    width:145px;
-    height:65px;
-    left:3px;
-    top:5px;
-}
-
-.house .body{
-    width:110px;
-    height:70px;
-    left:20px;
-    top:55px;
-}
-
-.house .door{
-    left:58px;
-    top:88px;
-}
-
-.house .window{
-    left:30px;
-    top:76px;
-}
-
-/* =========================================================
-   RESOURCE NODES
-========================================================= */
-
-.resource-node{
-    position:absolute;
-    width:90px;
-    height:90px;
-    cursor:pointer;
-}
-
-.resource-node .icon{
-    position:absolute;
-    left:10px;
-    top:8px;
-    width:70px;
-    height:70px;
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    font-size:45px;
-    border-radius:50%;
-    background:rgba(20,30,18,.35);
-    border:3px solid rgba(255,255,255,.12);
-    box-shadow:0 5px 15px rgba(0,0,0,.2);
-}
-
-.resource-node .amount{
-    position:absolute;
-    left:0;
-    bottom:-8px;
-    width:90px;
-    text-align:center;
-    font-size:12px;
-    color:#fff;
-    text-shadow:0 2px 3px #000;
-}
-
-/* =========================================================
-   PLAYER
-========================================================= */
-
-#player{
-    position:absolute;
-    width:62px;
-    height:82px;
-    z-index:1000;
-    pointer-events:none;
-    transition:transform .08s linear;
-}
-
-.player-shadow{
-    position:absolute;
-    left:7px;
-    top:64px;
-    width:48px;
-    height:15px;
-    background:rgba(0,0,0,.32);
-    border-radius:50%;
-}
-
-.player-body{
-    position:absolute;
-    left:12px;
-    top:23px;
-    width:38px;
-    height:42px;
-    background:#e2d2b5;
-    border:4px solid #3b2d28;
-    border-radius:16px 16px 13px 13px;
-}
-
-.player-head{
-    position:absolute;
-    left:10px;
-    top:4px;
-    width:42px;
-    height:42px;
-    background:#d8b28a;
-    border:4px solid #3b2d28;
-    border-radius:50%;
-}
-
-.player-head:before,
-.player-head:after{
-    content:"";
-    position:absolute;
-    width:8px;
-    height:8px;
-    background:#211b19;
-    border-radius:50%;
-    top:15px;
-}
-
-.player-head:before{left:8px}
-.player-head:after{right:8px}
-
-.horns{
-    position:absolute;
-    left:9px;
-    top:-10px;
-    width:44px;
-    height:25px;
-}
-
-.horns:before,
-.horns:after{
-    content:"";
-    position:absolute;
-    width:13px;
-    height:23px;
-    background:#28202e;
-    border:3px solid #17131c;
-}
-
-.horns:before{
-    left:0;
-    transform:rotate(-28deg);
-    border-radius:100% 20% 0 0;
-}
-
-.horns:after{
-    right:0;
-    transform:rotate(28deg);
-    border-radius:20% 100% 0 0;
-}
-
-.player-glow{
-    position:absolute;
-    left:-5px;
-    top:-7px;
-    width:72px;
-    height:80px;
-    border-radius:50%;
-    background:radial-gradient(circle,rgba(230,195,100,.15),transparent 65%);
-}
-
-/* =========================================================
-   VILLAGERS
-========================================================= */
-
-.villager{
-    position:absolute;
-    width:48px;
-    height:65px;
-    z-index:400;
-    cursor:pointer;
-}
-
-.villager .body{
-    position:absolute;
-    left:8px;
-    top:22px;
-    width:32px;
-    height:34px;
-    border-radius:12px;
-    background:#bd8e66;
-    border:3px solid #392b27;
-}
-
-.villager .head{
-    position:absolute;
-    left:9px;
-    top:3px;
-    width:30px;
-    height:30px;
-    border-radius:50%;
-    background:#d8b28b;
-    border:3px solid #392b27;
-}
-
-.villager .eye{
-    position:absolute;
-    width:4px;
-    height:4px;
-    background:#1e1918;
-    border-radius:50%;
-    top:13px;
-}
-
-.villager .e1{left:7px}
-.villager .e2{right:7px}
-
-.villager .name{
-    position:absolute;
-    top:-17px;
-    left:-30px;
-    width:108px;
-    text-align:center;
-    font-size:10px;
-    color:#fff;
-    text-shadow:0 2px 3px #000;
-    pointer-events:none;
-}
-
-/* =========================================================
-   UI
-========================================================= */
+/* ---------------- HUD ---------------- */
 
 #hud{
     position:absolute;
-    z-index:5000;
-    inset:0;
+    top:14px;
+    left:14px;
+    right:14px;
+    display:flex;
+    justify-content:space-between;
+    align-items:flex-start;
     pointer-events:none;
+    z-index:20;
 }
 
 .panel{
-    background:rgba(18,20,19,.90);
-    border:1px solid rgba(255,255,255,.12);
-    box-shadow:0 8px 25px rgba(0,0,0,.3);
-    backdrop-filter:blur(8px);
-    border-radius:12px;
+    background:rgba(12,15,22,.86);
+    border:1px solid rgba(255,255,255,.11);
+    box-shadow:0 12px 35px rgba(0,0,0,.35);
+    backdrop-filter:blur(12px);
+    border-radius:15px;
 }
 
-#topbar{
-    position:absolute;
-    left:14px;
-    right:14px;
-    top:12px;
-    min-height:64px;
-    padding:9px 12px;
-    display:flex;
-    align-items:center;
-    gap:12px;
-    pointer-events:auto;
+#stats{
+    width:300px;
+    padding:12px;
 }
 
 .stat{
-    min-width:90px;
-}
-
-.stat-name{
-    font-size:10px;
-    color:#a8aaa6;
-    text-transform:uppercase;
-}
-
-.stat-value{
-    font-size:18px;
-    font-weight:bold;
-}
-
-.resource{
-    display:flex;
+    display:grid;
+    grid-template-columns:74px 1fr 45px;
     align-items:center;
-    gap:6px;
-}
-
-#season{
-    margin-left:auto;
-    text-align:right;
-}
-
-#eventText{
-    position:absolute;
-    top:90px;
-    left:50%;
-    transform:translateX(-50%);
-    width:min(600px,90%);
-    padding:9px 15px;
-    text-align:center;
-    color:#ead9ad;
-    pointer-events:none;
-    font-size:13px;
-}
-
-#interaction{
-    position:absolute;
-    left:50%;
-    bottom:105px;
-    transform:translateX(-50%);
-    min-width:240px;
-    max-width:90%;
-    padding:12px;
-    text-align:center;
-    pointer-events:auto;
-    display:none;
-}
-
-#interaction.show{
-    display:block;
-}
-
-#interactionTitle{
-    font-weight:bold;
-    margin-bottom:5px;
-}
-
-#interactionDesc{
-    color:#bbb;
+    gap:8px;
     font-size:12px;
-    margin-bottom:9px;
+    margin:5px 0;
 }
 
-button{
-    border:1px solid rgba(255,255,255,.15);
-    border-radius:8px;
-    background:#403a31;
-    color:#fff;
-    padding:10px 13px;
-    cursor:pointer;
-    font-weight:bold;
+.bar{
+    height:8px;
+    border-radius:10px;
+    background:#222833;
+    overflow:hidden;
 }
 
-button:hover{
-    background:#554b3c;
+.fill{
+    height:100%;
+    width:50%;
+    transition:.25s;
 }
 
-button:active{
-    transform:translateY(1px);
+.hp{background:#d95b63}
+.energy{background:#d9b34c}
+.faith{background:#8d6bd1}
+.favor{background:#55a9d6}
+.xp{background:#6fc77d}
+
+#topInfo{
+    padding:11px 15px;
+    text-align:right;
+    min-width:210px;
 }
 
-.primary{
-    background:#705c35;
-}
-
-.danger{
-    background:#633936;
-}
-
-#bottom{
-    position:absolute;
-    left:14px;
-    right:14px;
-    bottom:12px;
-    display:flex;
-    justify-content:space-between;
-    align-items:end;
-    pointer-events:none;
-}
-
-#controls{
-    display:flex;
-    gap:7px;
-    pointer-events:auto;
-}
-
-.control{
-    width:48px;
-    height:48px;
-    padding:0;
+#timeText{
     font-size:18px;
+    font-weight:800;
 }
 
-#hint{
-    font-size:11px;
-    color:#bbb;
-    padding:8px 11px;
+#weatherText{
+    margin-top:3px;
+    font-size:12px;
+    opacity:.72;
+}
+
+#objective{
+    position:absolute;
+    top:125px;
+    left:50%;
+    transform:translateX(-50%);
+    width:min(430px,calc(100% - 30px));
+    padding:10px 14px;
+    text-align:center;
+    font-size:12px;
+    z-index:19;
     pointer-events:none;
 }
 
-/* movement joystick */
+#objective strong{
+    color:#e6c56b;
+}
+
+/* ---------------- Buttons ---------------- */
+
+#buttons{
+    position:absolute;
+    right:15px;
+    bottom:15px;
+    z-index:30;
+    display:grid;
+    grid-template-columns:repeat(3,58px);
+    gap:8px;
+}
+
+.uiBtn{
+    width:58px;
+    height:48px;
+    border:1px solid rgba(255,255,255,.12);
+    border-radius:13px;
+    background:rgba(15,19,27,.9);
+    color:#fff;
+    font-size:11px;
+    font-weight:700;
+    cursor:pointer;
+    box-shadow:0 8px 20px rgba(0,0,0,.25);
+}
+
+.uiBtn:active{
+    transform:scale(.94);
+}
+
+#interactHint{
+    position:absolute;
+    bottom:18px;
+    left:50%;
+    transform:translateX(-50%);
+    z-index:20;
+    background:rgba(9,12,17,.82);
+    padding:8px 14px;
+    border-radius:12px;
+    font-size:12px;
+    pointer-events:none;
+    opacity:.85;
+}
+
+/* ---------------- Joystick ---------------- */
 
 #joystick{
     position:absolute;
-    left:22px;
-    bottom:80px;
+    bottom:24px;
+    left:24px;
     width:130px;
     height:130px;
     border-radius:50%;
-    background:rgba(15,17,15,.38);
-    border:2px solid rgba(255,255,255,.1);
-    pointer-events:auto;
+    background:rgba(255,255,255,.055);
+    border:1px solid rgba(255,255,255,.12);
+    z-index:30;
     display:none;
 }
 
 #stick{
     position:absolute;
-    left:35px;
-    top:35px;
-    width:56px;
-    height:56px;
+    width:58px;
+    height:58px;
+    left:36px;
+    top:36px;
     border-radius:50%;
-    background:rgba(220,205,166,.22);
-    border:2px solid rgba(255,255,255,.18);
+    background:rgba(255,255,255,.18);
+    border:1px solid rgba(255,255,255,.2);
 }
 
 @media(max-width:800px){
-    #joystick{
-        display:block;
-    }
-
-    #hint{
-        display:none;
-    }
-
-    #topbar{
-        overflow-x:auto;
-        scrollbar-width:none;
-    }
-
+    #joystick{display:block}
+    #stats{width:220px}
     .stat{
-        min-width:72px;
+        grid-template-columns:55px 1fr 35px;
+        font-size:10px;
     }
-
-    #season{
-        min-width:90px;
+    #topInfo{
+        min-width:145px;
     }
-
-    #controls{
-        margin-left:auto;
+    #timeText{
+        font-size:14px;
     }
-
-    .control{
-        width:43px;
-        height:43px;
+    #objective{
+        top:110px;
     }
 }
 
-/* modal */
+/* ---------------- Modal ---------------- */
 
 #modal{
     position:absolute;
     inset:0;
-    z-index:9000;
+    z-index:100;
     display:none;
     align-items:center;
     justify-content:center;
-    background:rgba(0,0,0,.68);
-    pointer-events:auto;
+    background:rgba(0,0,0,.62);
+    padding:20px;
 }
 
 #modal.show{
     display:flex;
 }
 
-.modal-card{
-    width:min(560px,92%);
-    max-height:85%;
+.modalBox{
+    width:min(720px,100%);
+    max-height:90vh;
     overflow:auto;
+    background:#10151d;
+    border:1px solid rgba(255,255,255,.12);
+    border-radius:20px;
+    box-shadow:0 30px 80px rgba(0,0,0,.55);
     padding:22px;
-    border-radius:16px;
-    background:#20231f;
-    border:1px solid rgba(255,255,255,.13);
-    box-shadow:0 20px 70px rgba(0,0,0,.5);
 }
 
-.modal-title{
-    font-size:24px;
-    font-weight:bold;
-    margin-bottom:10px;
-}
-
-.modal-text{
-    color:#c7c8c4;
-    line-height:1.55;
-    font-size:14px;
-}
-
-.modal-actions{
+.modalHeader{
     display:flex;
-    gap:8px;
-    flex-wrap:wrap;
-    margin-top:18px;
+    justify-content:space-between;
+    align-items:center;
+    margin-bottom:16px;
 }
 
-/* toast */
+.modalHeader h2{
+    font-size:22px;
+}
 
-#toast{
-    position:absolute;
-    left:50%;
-    top:135px;
-    transform:translateX(-50%);
-    z-index:10000;
-    background:#161816;
-    border:1px solid rgba(255,255,255,.15);
-    padding:11px 16px;
+.close{
+    border:0;
+    background:#252b35;
+    color:#fff;
     border-radius:9px;
-    opacity:0;
+    width:34px;
+    height:34px;
+    cursor:pointer;
+}
+
+.grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(150px,1fr));
+    gap:10px;
+}
+
+.card{
+    background:#171d26;
+    border:1px solid rgba(255,255,255,.08);
+    border-radius:13px;
+    padding:13px;
+}
+
+.card h3{
+    font-size:14px;
+    margin-bottom:5px;
+}
+
+.card p{
+    font-size:11px;
+    line-height:1.5;
+    opacity:.7;
+}
+
+.action{
+    width:100%;
+    border:1px solid rgba(255,255,255,.12);
+    background:#222a36;
+    color:white;
+    border-radius:10px;
+    padding:10px;
+    margin-top:9px;
+    cursor:pointer;
+    font-weight:700;
+}
+
+.action:hover{
+    background:#303b4b;
+}
+
+.danger{
+    background:#4b252b;
+}
+
+.good{
+    background:#254632;
+}
+
+/* ---------------- Inventory ---------------- */
+
+.item{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    padding:10px;
+    border-radius:10px;
+    background:#151a22;
+    margin:5px 0;
+}
+
+.itemName{
+    font-weight:700;
+    font-size:12px;
+}
+
+.itemCount{
+    color:#d5bb6d;
+    font-weight:800;
+}
+
+/* ---------------- Toast ---------------- */
+
+#toasts{
+    position:absolute;
+    top:175px;
+    right:20px;
+    z-index:200;
+    width:280px;
     pointer-events:none;
-    transition:.2s;
-    box-shadow:0 8px 25px rgba(0,0,0,.4);
 }
 
-#toast.show{
-    opacity:1;
+.toast{
+    background:rgba(13,17,23,.94);
+    border:1px solid rgba(255,255,255,.1);
+    padding:11px 13px;
+    margin:6px 0;
+    border-radius:11px;
+    font-size:12px;
+    box-shadow:0 10px 30px rgba(0,0,0,.35);
+    animation:toastIn .25s ease;
 }
 
-/* day night */
-#night{
+@keyframes toastIn{
+    from{transform:translateX(30px);opacity:0}
+    to{transform:translateX(0);opacity:1}
+}
+
+/* ---------------- Start screen ---------------- */
+
+#startScreen{
     position:absolute;
     inset:0;
-    pointer-events:none;
-    z-index:3000;
-    background:rgba(18,20,50,.0);
-    transition:background 1s;
+    z-index:300;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    background:
+        radial-gradient(circle at 50% 40%,rgba(111,78,164,.25),transparent 35%),
+        linear-gradient(#07090d,#0d1118);
 }
 
-body.night #night{
-    background:rgba(18,20,60,.42);
+.startBox{
+    width:min(650px,calc(100% - 30px));
+    text-align:center;
 }
 
-/* minimap */
-
-#minimap{
-    position:absolute;
-    right:18px;
-    bottom:76px;
-    width:155px;
-    height:105px;
-    border-radius:9px;
-    overflow:hidden;
-    background:#263822;
-    border:2px solid rgba(255,255,255,.15);
-    pointer-events:none;
+.logo{
+    font-size:clamp(38px,8vw,76px);
+    font-weight:1000;
+    letter-spacing:8px;
+    text-shadow:0 0 35px rgba(154,112,220,.4);
 }
 
-.mini-road{
-    position:absolute;
-    background:#947e5b;
-    height:11px;
-    width:100%;
-    top:47px;
+.subtitle{
+    margin:10px 0 28px;
+    color:#b8adcf;
 }
 
-.mini-temple{
-    position:absolute;
-    width:18px;
-    height:18px;
-    background:#b99a64;
-    left:68px;
-    top:43px;
+.startButton{
+    border:1px solid rgba(255,255,255,.14);
+    background:#201b2d;
+    color:white;
+    border-radius:14px;
+    padding:14px 28px;
+    margin:5px;
+    cursor:pointer;
+    font-weight:800;
 }
 
-.mini-player{
-    position:absolute;
-    width:6px;
-    height:6px;
-    border-radius:50%;
-    background:#fff;
+.startButton:hover{
+    background:#302642;
 }
 
-/* health / faith above NPC */
-
-.npc-info{
-    position:absolute;
-    left:-15px;
-    top:-31px;
-    width:80px;
-    height:5px;
-    background:#251e1d;
-    border-radius:5px;
-    overflow:hidden;
+.features{
+    margin-top:30px;
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:8px;
+    opacity:.6;
 }
 
-.npc-info .bar{
-    height:100%;
-    background:#8bb36c;
+.features div{
+    padding:10px;
+    font-size:11px;
 }
 
-/* floating text */
-
-.float{
-    position:absolute;
-    z-index:7000;
-    color:#f4dc96;
-    font-weight:bold;
-    pointer-events:none;
-    animation:floatUp 1s forwards;
-    text-shadow:0 2px 4px #000;
-}
-
-@keyframes floatUp{
-    from{
-        opacity:1;
-        transform:translateY(0);
-    }
-    to{
-        opacity:0;
-        transform:translateY(-45px);
-    }
-}
-
-@media(prefers-reduced-motion:reduce){
-    *{
-        animation:none!important;
-        transition:none!important;
+@media(max-width:600px){
+    .features{
+        grid-template-columns:1fr;
+        gap:0;
     }
 }
 </style>
@@ -969,190 +434,105 @@ body.night #night{
 <body>
 
 <div id="game">
+<canvas id="world"></canvas>
 
-    <div id="world">
-        <div id="camera">
-            <div id="map">
+<div id="startScreen">
+    <div class="startBox">
+        <div class="logo">ВОЗВЫШЕННЫЙ</div>
+        <div class="subtitle">ПОСЛЕДНИЙ АЛТАРЬ — DEFINITIVE EDITION</div>
 
-                <div class="ground g1"></div>
-                <div class="ground g2"></div>
-                <div class="ground g3"></div>
-                <div class="ground g4"></div>
+        <button class="startButton" onclick="newGame()">НОВАЯ ИГРА</button>
+        <button class="startButton" onclick="continueGame()">ПРОДОЛЖИТЬ</button>
 
-                <div class="path main"></div>
-                <div class="path vertical"></div>
-                <div class="path diagonal"></div>
-
-                <div id="lake">
-                    <div class="water-line" style="left:80px;top:120px;"></div>
-                    <div class="water-line" style="left:250px;top:250px;"></div>
-                    <div class="water-line" style="left:340px;top:180px;"></div>
-                </div>
-
-                <!-- OBJECTS -->
-                <div id="objects"></div>
-
-                <!-- BUILDINGS -->
-                <div class="building temple object"
-                     id="temple"
-                     style="left:1080px;top:600px;">
-                    <div class="sign">ПОСЛЕДНИЙ АЛТАРЬ</div>
-                    <div class="roof"></div>
-                    <div class="base"></div>
-                    <div class="symbol"></div>
-                    <div class="door"></div>
-                </div>
-
-                <div class="building house object"
-                     data-building="house"
-                     style="left:580px;top:650px;">
-                    <div class="sign">ЖИЛИЩЕ</div>
-                    <div class="roof"></div>
-                    <div class="body"></div>
-                    <div class="window"></div>
-                    <div class="door"></div>
-                </div>
-
-                <div class="building house object"
-                     data-building="house"
-                     style="left:1730px;top:690px;">
-                    <div class="sign">ЖИЛИЩЕ</div>
-                    <div class="roof"></div>
-                    <div class="body"></div>
-                    <div class="window"></div>
-                    <div class="door"></div>
-                </div>
-
-                <div class="building house object"
-                     data-building="house"
-                     style="left:730px;top:1120px;">
-                    <div class="sign">ЖИЛИЩЕ</div>
-                    <div class="roof"></div>
-                    <div class="body"></div>
-                    <div class="window"></div>
-                    <div class="door"></div>
-                </div>
-
-                <div class="building house object"
-                     data-building="house"
-                     style="left:1630px;top:1130px;">
-                    <div class="sign">ЖИЛИЩЕ</div>
-                    <div class="roof"></div>
-                    <div class="body"></div>
-                    <div class="window"></div>
-                    <div class="door"></div>
-                </div>
-
-                <!-- NPC -->
-                <div id="villagers"></div>
-
-                <!-- PLAYER -->
-                <div id="player">
-                    <div class="player-glow"></div>
-                    <div class="player-shadow"></div>
-                    <div class="player-head">
-                        <div class="horns"></div>
-                    </div>
-                    <div class="player-body"></div>
-                </div>
-
-            </div>
+        <div class="features">
+            <div>🌎 Большой живой мир</div>
+            <div>👥 NPC с профессиями</div>
+            <div>⚔️ Боевая система</div>
+            <div>🏠 Строительство</div>
+            <div>🌾 Фермерство</div>
+            <div>🗺️ Подземелья</div>
         </div>
     </div>
+</div>
 
-    <div id="night"></div>
+<div id="hud">
+    <div id="stats" class="panel">
 
-    <!-- HUD -->
-    <div id="hud">
-
-        <div id="topbar" class="panel">
-
-            <div class="stat">
-                <div class="stat-name">Вера</div>
-                <div class="stat-value" id="faith">35</div>
-            </div>
-
-            <div class="stat">
-                <div class="stat-name">Благосклонность</div>
-                <div class="stat-value" id="favor">50</div>
-            </div>
-
-            <div class="stat resource">
-                <span>🍖</span>
-                <b id="food">120</b>
-            </div>
-
-            <div class="stat resource">
-                <span>🪵</span>
-                <b id="wood">80</b>
-            </div>
-
-            <div class="stat resource">
-                <span>🪨</span>
-                <b id="stone">50</b>
-            </div>
-
-            <div class="stat resource">
-                <span>🪙</span>
-                <b id="gold">25</b>
-            </div>
-
-            <div id="season">
-                <div class="stat-name">Эра</div>
-                <b id="time">Весна • День 1</b>
-            </div>
-
+        <div class="stat">
+            <span>Жизнь</span>
+            <div class="bar"><div id="hpFill" class="fill hp"></div></div>
+            <b id="hpText">100</b>
         </div>
 
-        <div id="eventText" class="panel">
-            Последний Алтарь ждёт своего бога.
+        <div class="stat">
+            <span>Энергия</span>
+            <div class="bar"><div id="energyFill" class="fill energy"></div></div>
+            <b id="energyText">100</b>
         </div>
 
-        <div id="interaction" class="panel">
-            <div id="interactionTitle"></div>
-            <div id="interactionDesc"></div>
-            <button id="interactionButton" class="primary">
-                Взаимодействовать
-            </button>
+        <div class="stat">
+            <span>Вера</span>
+            <div class="bar"><div id="faithFill" class="fill faith"></div></div>
+            <b id="faithText">50</b>
         </div>
 
-        <div id="minimap">
-            <div class="mini-road"></div>
-            <div class="mini-temple"></div>
-            <div id="miniPlayer" class="mini-player"></div>
+        <div class="stat">
+            <span>Благоск.</span>
+            <div class="bar"><div id="favorFill" class="fill favor"></div></div>
+            <b id="favorText">25</b>
         </div>
 
-        <div id="bottom">
-
-            <div id="hint">
-                WASD / стрелки — движение • E — действие • M — карта • P — пауза
-            </div>
-
-            <div id="controls">
-                <button class="control" id="saveBtn">💾</button>
-                <button class="control" id="prayBtn">🙏</button>
-                <button class="control" id="nextBtn">☀️</button>
-                <button class="control" id="menuBtn">☰</button>
-            </div>
-
-        </div>
-
-        <div id="joystick">
-            <div id="stick"></div>
+        <div class="stat">
+            <span>Опыт</span>
+            <div class="bar"><div id="xpFill" class="fill xp"></div></div>
+            <b id="levelText">1</b>
         </div>
 
     </div>
 
-    <!-- MODAL -->
-    <div id="modal">
-        <div class="modal-card">
-            <div class="modal-title" id="modalTitle"></div>
-            <div class="modal-text" id="modalText"></div>
-            <div class="modal-actions" id="modalActions"></div>
-        </div>
+    <div id="topInfo" class="panel">
+        <div id="timeText">День 1 • 08:00</div>
+        <div id="weatherText">☀️ Ясно</div>
+        <div id="seasonText">Весна • Год 1</div>
     </div>
+</div>
 
-    <div id="toast"></div>
+<div id="objective" class="panel">
+    <strong>Задание:</strong>
+    <span id="objectiveText">Осмотри свой новый храм.</span>
+</div>
+
+<div id="interactHint">
+    WASD / стрелки — движение • E — взаимодействие • Space — действие
+</div>
+
+<div id="buttons">
+    <button class="uiBtn" onclick="openInventory()">🎒<br>Инв.</button>
+    <button class="uiBtn" onclick="openCraft()">🔨<br>Крафт</button>
+    <button class="uiBtn" onclick="openBuild()">🏠<br>Стройка</button>
+    <button class="uiBtn" onclick="openQuests()">📜<br>Квесты</button>
+    <button class="uiBtn" onclick="openMap()">🗺️<br>Карта</button>
+    <button class="uiBtn" onclick="openGod()">👁️<br>Алтарь</button>
+    <button class="uiBtn" onclick="openStats()">📊<br>Статы</button>
+    <button class="uiBtn" onclick="saveGame()">💾<br>Сохран.</button>
+    <button class="uiBtn" onclick="openMenu()">⚙️<br>Меню</button>
+</div>
+
+<div id="joystick">
+    <div id="stick"></div>
+</div>
+
+<div id="toasts"></div>
+
+<div id="modal">
+    <div class="modalBox">
+        <div class="modalHeader">
+            <h2 id="modalTitle">Меню</h2>
+            <button class="close" onclick="closeModal()">×</button>
+        </div>
+        <div id="modalContent"></div>
+    </div>
+</div>
 
 </div>
 
@@ -1160,537 +540,1056 @@ body.night #night{
 "use strict";
 
 /* =========================================================
+   CORE
+========================================================= */
+
+const canvas = document.getElementById("world");
+const ctx = canvas.getContext("2d");
+
+let W = innerWidth;
+let H = innerHeight;
+
+function resize(){
+    W = innerWidth;
+    H = innerHeight;
+    canvas.width = W * devicePixelRatio;
+    canvas.height = H * devicePixelRatio;
+    canvas.style.width = W+"px";
+    canvas.style.height = H+"px";
+    ctx.setTransform(devicePixelRatio,0,0,devicePixelRatio,0,0);
+}
+
+addEventListener("resize",resize);
+resize();
+
+/* =========================================================
+   CONSTANTS
+========================================================= */
+
+const WORLD_W = 5200;
+const WORLD_H = 3600;
+
+const TILE = 64;
+
+const SAVE_KEY = "vozvyshennyy_definitive_v4";
+
+const SEASONS = ["Весна","Лето","Осень","Зима"];
+
+const WEATHER = [
+    {name:"☀️ Ясно",speed:1,energy:1},
+    {name:"☁️ Облачно",speed:.98,energy:1},
+    {name:"🌧️ Дождь",speed:.94,energy:.85},
+    {name:"⛈️ Буря",speed:.84,energy:.65},
+    {name:"🌫️ Туман",speed:.9,energy:.9}
+];
+
+const BIOMES = {
+    meadow:{
+        ground:"#5d7650",
+        accent:"#769460"
+    },
+    forest:{
+        ground:"#405b42",
+        accent:"#547351"
+    },
+    swamp:{
+        ground:"#42504a",
+        accent:"#5b6550"
+    },
+    desert:{
+        ground:"#8c7750",
+        accent:"#a28d62"
+    },
+    snow:{
+        ground:"#8b9495",
+        accent:"#b7c0c2"
+    },
+    mountain:{
+        ground:"#55565b",
+        accent:"#696a70"
+    }
+};
+
+/* =========================================================
    GAME STATE
 ========================================================= */
 
-const SAVE_KEY = "vozvyshennyy_last_altar_map_v2";
+let game = {
+    started:false,
 
-const game = {
     player:{
-        x:1240,
-        y:1000,
-        speed:4.2,
-        direction:1
+        x:2600,
+        y:1800,
+        r:22,
+        hp:100,
+        maxHp:100,
+        energy:100,
+        maxEnergy:100,
+        speed:3.3,
+        attackCooldown:0,
+        invincible:0,
+        level:1,
+        xp:0,
+        xpNeed:100,
+        damage:16,
+        defense:2
     },
 
     camera:{
-        x:0,
-        y:0
+        x:2600,
+        y:1800,
+        shake:0
     },
-
-    resources:{
-        food:120,
-        wood:80,
-        stone:50,
-        gold:25
-    },
-
-    faith:35,
-    favor:50,
-    glory:0,
 
     day:1,
+    time:8*60,
     year:1,
     season:0,
 
-    paused:false,
-    selected:null,
+    weather:0,
+    weatherTimer:800,
 
-    weather:"clear",
+    faith:50,
+    favor:25,
+    glory:0,
+    corruption:0,
 
-    stats:{
-        treesCut:0,
-        rocksMined:0,
-        prayers:0,
-        miracles:0,
-        villagersHelped:0,
-        buildingsBuilt:0
+    gold:60,
+
+    wood:40,
+    stone:25,
+    food:35,
+
+    crystals:2,
+    seeds:8,
+    fish:0,
+
+    inventory:{
+        wood:40,
+        stone:25,
+        food:35,
+        wheat:0,
+        berry:5,
+        mushroom:2,
+        iron:0,
+        crystal:2,
+        fish:0,
+        meat:0,
+        herb:4,
+        seed:8,
+        potion:2
     },
 
-    villagers:[
-        {
-            id:1,
-            name:"Мира",
-            x:770,
-            y:760,
-            faith:60,
-            happiness:72,
-            health:100,
-            job:"Фермер",
-            alive:true,
-            targetX:770,
-            targetY:760
-        },
-        {
-            id:2,
-            name:"Орн",
-            x:1780,
-            y:780,
-            faith:44,
-            happiness:61,
-            health:90,
-            job:"Дровосек",
-            alive:true,
-            targetX:1780,
-            targetY:780
-        },
-        {
-            id:3,
-            name:"Тея",
-            x:820,
-            y:1240,
-            faith:78,
-            happiness:83,
-            health:100,
-            job:"Жрица",
-            alive:true,
-            targetX:820,
-            targetY:1240
-        },
-        {
-            id:4,
-            name:"Рен",
-            x:1660,
-            y:1250,
-            faith:35,
-            happiness:55,
-            health:100,
-            job:"Каменщик",
-            alive:true,
-            targetX:1660,
-            targetY:1250
-        }
-    ],
-
     buildings:[],
-    nodes:[]
-};
+    farms:[],
+    villagers:[],
+    enemies:[],
+    projectiles:[],
+    particles:[],
+    drops:[],
+    nodes:[],
+    quests:[],
+    completedQuests:[],
+    achievements:[],
+    discoveredZones:[],
 
-const seasons = [
-    "Весна",
-    "Лето",
-    "Осень",
-    "Зима"
-];
+    activeQuest:null,
 
-const keys = {
-    up:false,
-    down:false,
-    left:false,
-    right:false
+    selectedNPC:null,
+
+    god:{
+        power:1,
+        miracles:0,
+        devotion:0,
+        upgrades:{
+            harvest:false,
+            blessing:false,
+            shield:false,
+            storm:false,
+            abundance:false,
+            resurrection:false
+        }
+    },
+
+    stats:{
+        days:0,
+        resources:0,
+        enemies:0,
+        villagersHelped:0,
+        buildings:0,
+        quests:0,
+        fish:0,
+        crops:0,
+        damage:0,
+        deaths:0,
+        miracles:0
+    },
+
+    flags:{
+        templeVisited:false,
+        firstEnemy:false,
+        firstFarm:false,
+        firstHouse:false,
+        dungeon:false,
+        boss:false
+    }
 };
 
 /* =========================================================
-   DOM
+   INPUT
 ========================================================= */
 
-const cameraEl = document.getElementById("camera");
-const mapEl = document.getElementById("map");
-const playerEl = document.getElementById("player");
-const villagersEl = document.getElementById("villagers");
-const objectsEl = document.getElementById("objects");
+const keys = {};
 
-const faithEl = document.getElementById("faith");
-const favorEl = document.getElementById("favor");
-const foodEl = document.getElementById("food");
-const woodEl = document.getElementById("wood");
-const stoneEl = document.getElementById("stone");
-const goldEl = document.getElementById("gold");
-const timeEl = document.getElementById("time");
+addEventListener("keydown",e=>{
+    keys[e.key.toLowerCase()] = true;
 
-const interaction = document.getElementById("interaction");
-const interactionTitle = document.getElementById("interactionTitle");
-const interactionDesc = document.getElementById("interactionDesc");
-const interactionButton = document.getElementById("interactionButton");
+    if(e.key==="Escape"){
+        closeModal();
+    }
 
-const modal = document.getElementById("modal");
-const modalTitle = document.getElementById("modalTitle");
-const modalText = document.getElementById("modalText");
-const modalActions = document.getElementById("modalActions");
+    if(e.key.toLowerCase()==="e"){
+        interact();
+    }
 
-const toastEl = document.getElementById("toast");
-const miniPlayer = document.getElementById("miniPlayer");
+    if(e.code==="Space"){
+        e.preventDefault();
+        attack();
+    }
+
+    if(e.key.toLowerCase()==="i"){
+        openInventory();
+    }
+
+    if(e.key.toLowerCase()==="m"){
+        openMap();
+    }
+});
+
+addEventListener("keyup",e=>{
+    keys[e.key.toLowerCase()] = false;
+});
 
 /* =========================================================
-   HELPERS
+   MOBILE JOYSTICK
 ========================================================= */
 
-function clamp(value,min,max){
-    return Math.max(min,Math.min(max,value));
+let joy={
+    active:false,
+    x:0,
+    y:0
+};
+
+const joystick=document.getElementById("joystick");
+const stick=document.getElementById("stick");
+
+joystick.addEventListener("pointerdown",e=>{
+    joy.active=true;
+    joystick.setPointerCapture(e.pointerId);
+    updateJoy(e);
+});
+
+joystick.addEventListener("pointermove",e=>{
+    if(joy.active) updateJoy(e);
+});
+
+joystick.addEventListener("pointerup",()=>{
+    joy.active=false;
+    joy.x=0;
+    joy.y=0;
+    stick.style.transform="translate(0,0)";
+});
+
+function updateJoy(e){
+    const rect=joystick.getBoundingClientRect();
+
+    let x=e.clientX-(rect.left+rect.width/2);
+    let y=e.clientY-(rect.top+rect.height/2);
+
+    const max=46;
+    const d=Math.hypot(x,y);
+
+    if(d>max){
+        x=x/d*max;
+        y=y/d*max;
+    }
+
+    joy.x=x/max;
+    joy.y=y/max;
+
+    stick.style.transform=`translate(${x}px,${y}px)`;
 }
 
-function distance(a,b){
-    return Math.hypot(a.x-b.x,a.y-b.y);
+/* =========================================================
+   UTIL
+========================================================= */
+
+function rand(a,b){
+    return Math.random()*(b-a)+a;
+}
+
+function randi(a,b){
+    return Math.floor(rand(a,b+1));
+}
+
+function clamp(v,a,b){
+    return Math.max(a,Math.min(b,v));
+}
+
+function dist(a,b,c,d){
+    return Math.hypot(a-c,b-d);
+}
+
+function chance(v){
+    return Math.random()<v;
+}
+
+function pick(arr){
+    return arr[Math.floor(Math.random()*arr.length)];
+}
+
+function formatTime(){
+    const h=Math.floor(game.time/60)%24;
+    const m=Math.floor(game.time%60);
+
+    return `${String(h).padStart(2,"0")}:${String(m).padStart(2,"0")}`;
 }
 
 function toast(text){
-    toastEl.textContent=text;
-    toastEl.classList.add("show");
-
-    clearTimeout(toast.timer);
-
-    toast.timer=setTimeout(()=>{
-        toastEl.classList.remove("show");
-    },1800);
-}
-
-function floating(text,x,y){
+    const box=document.getElementById("toasts");
     const el=document.createElement("div");
-    el.className="float";
+
+    el.className="toast";
     el.textContent=text;
 
-    el.style.left=(x-20)+"px";
-    el.style.top=(y-20)+"px";
-
-    mapEl.appendChild(el);
+    box.appendChild(el);
 
     setTimeout(()=>{
-        el.remove();
-    },1000);
+        el.style.opacity="0";
+        el.style.transform="translateX(30px)";
+        setTimeout(()=>el.remove(),300);
+    },2600);
 }
 
-function openModal(title,text,buttons=[]){
-    modalTitle.textContent=title;
-    modalText.innerHTML=text;
-    modalActions.innerHTML="";
+function gainXP(amount){
+    game.player.xp+=amount;
 
-    buttons.forEach(button=>{
-        const b=document.createElement("button");
-        b.textContent=button.text;
-        b.className=button.className||"";
-        b.addEventListener("click",()=>{
-            if(button.action) button.action();
-        });
-        modalActions.appendChild(b);
-    });
+    while(game.player.xp>=game.player.xpNeed){
+        game.player.xp-=game.player.xpNeed;
+        game.player.level++;
 
-    modal.classList.add("show");
-}
+        game.player.xpNeed=Math.floor(game.player.xpNeed*1.25);
 
-function closeModal(){
-    modal.classList.remove("show");
-}
+        game.player.maxHp+=8;
+        game.player.maxEnergy+=5;
+        game.player.damage+=2;
+        game.player.defense+=1;
 
-function random(min,max){
-    return Math.floor(Math.random()*(max-min+1))+min;
+        game.player.hp=game.player.maxHp;
+        game.player.energy=game.player.maxEnergy;
+
+        toast("⬆️ Новый уровень: "+game.player.level);
+        spawnParticles(game.player.x,game.player.y,"#f0d46d",20);
+    }
 }
 
 /* =========================================================
    WORLD GENERATION
 ========================================================= */
 
-function createTree(x,y){
-    const el=document.createElement("div");
+let worldSeed=Math.random()*100000;
 
-    el.className="tree object";
-
-    el.innerHTML=`
-        <div class="trunk"></div>
-        <div class="leaf a"></div>
-        <div class="leaf b"></div>
-        <div class="leaf c"></div>
-    `;
-
-    el.style.left=x+"px";
-    el.style.top=y+"px";
-
-    el.dataset.type="tree";
-    el.dataset.x=x;
-    el.dataset.y=y;
-
-    el.addEventListener("click",()=>{
-        selectObject({
-            type:"tree",
-            x,
-            y,
-            element:el
-        });
-    });
-
-    objectsEl.appendChild(el);
-
-    game.nodes.push({
-        type:"tree",
-        x,
-        y,
-        amount:random(3,8),
-        element:el,
-        active:true
-    });
+function noise(x,y){
+    const n=Math.sin(x*12.9898+y*78.233+worldSeed)*43758.5453;
+    return n-Math.floor(n);
 }
 
-function createRock(x,y){
-    const el=document.createElement("div");
+function biomeAt(x,y){
 
-    el.className="rock object";
+    const nx=x/WORLD_W;
+    const ny=y/WORLD_H;
 
-    el.innerHTML=`<div></div>`;
+    if(nx<.16 && ny>.2 && ny<.82) return "snow";
 
-    el.style.left=x+"px";
-    el.style.top=y+"px";
+    if(nx>.82 && ny>.18 && ny<.82) return "desert";
 
-    el.addEventListener("click",()=>{
-        selectObject({
-            type:"rock",
-            x,
-            y,
-            element:el
-        });
-    });
+    if(ny<.18) return "mountain";
 
-    objectsEl.appendChild(el);
+    if(ny>.82) return "swamp";
 
-    game.nodes.push({
-        type:"rock",
-        x,
-        y,
-        amount:random(2,6),
-        element:el,
-        active:true
-    });
+    if(noise(Math.floor(x/600),Math.floor(y/600))>.48)
+        return "forest";
+
+    return "meadow";
 }
 
-function createBush(x,y){
-    const el=document.createElement("div");
-
-    el.className="bush object";
-
-    el.innerHTML=`
-        <span></span>
-        <span></span>
-        <span></span>
-    `;
-
-    el.style.left=x+"px";
-    el.style.top=y+"px";
-
-    objectsEl.appendChild(el);
-}
+let decorations=[];
 
 function generateWorld(){
-    const trees=[
-        [120,180],[260,140],[420,230],[540,170],
-        [2150,120],[2350,250],[2050,410],[2280,530],
-        [250,1050],[390,1200],[530,1420],
-        [2070,1100],[2260,1250],[2390,1450],
-        [115,1450],[370,1560]
+
+    decorations=[];
+    game.nodes=[];
+    game.enemies=[];
+    game.drops=[];
+    game.farms=[];
+
+    for(let i=0;i<1100;i++){
+
+        let x=rand(100,WORLD_W-100);
+        let y=rand(100,WORLD_H-100);
+
+        if(dist(x,y,2600,1800)<600) continue;
+
+        let b=biomeAt(x,y);
+
+        const type=
+            b==="desert" ? pick(["cactus","rock","rock"]) :
+            b==="snow" ? pick(["snowtree","rock","ice"]) :
+            b==="mountain" ? pick(["rock","rock","ore"]) :
+            b==="swamp" ? pick(["mushroom","reed","tree"]) :
+            pick(["tree","tree","tree","rock","bush","flower"]);
+
+        decorations.push({
+            x,
+            y,
+            type,
+            size:rand(.65,1.35)
+        });
+    }
+
+    for(let i=0;i<170;i++){
+
+        let x=rand(150,WORLD_W-150);
+        let y=rand(150,WORLD_H-150);
+
+        if(dist(x,y,2600,1800)<500) continue;
+
+        let type=pick([
+            "tree",
+            "tree",
+            "rock",
+            "bush",
+            "iron",
+            "crystal",
+            "mushroom"
+        ]);
+
+        game.nodes.push({
+            id:cryptoRandom(),
+            x,
+            y,
+            type,
+            amount:randi(2,7),
+            max:randi(4,9),
+            respawn:0
+        });
+    }
+
+    for(let i=0;i<35;i++){
+
+        let x=rand(300,WORLD_W-300);
+        let y=rand(300,WORLD_H-300);
+
+        if(dist(x,y,2600,1800)<900) continue;
+
+        game.enemies.push(makeEnemy(x,y,pick([
+            "wolf",
+            "shade",
+            "slime",
+            "bandit"
+        ])));
+    }
+
+    createInitialBuildings();
+    createVillagers();
+    createQuests();
+}
+
+function cryptoRandom(){
+    return Math.random().toString(36).slice(2)+Date.now().toString(36);
+}
+
+/* =========================================================
+   BUILDINGS
+========================================================= */
+
+function createInitialBuildings(){
+
+    game.buildings=[
+        {
+            id:"temple",
+            type:"temple",
+            x:2600,
+            y:1800,
+            level:1,
+            hp:1000,
+            maxHp:1000
+        },
+        {
+            id:"storage",
+            type:"storage",
+            x:2450,
+            y:1910,
+            level:1,
+            hp:500,
+            maxHp:500
+        },
+        {
+            id:"workshop",
+            type:"workshop",
+            x:2740,
+            y:1920,
+            level:1,
+            hp:500,
+            maxHp:500
+        }
     ];
+}
 
-    trees.forEach(p=>createTree(p[0],p[1]));
+const BUILD_TYPES={
+    house:{
+        name:"Дом",
+        cost:{wood:30,stone:15,gold:10},
+        size:65
+    },
+    farm:{
+        name:"Ферма",
+        cost:{wood:20,stone:5,gold:5},
+        size:90
+    },
+    shrine:{
+        name:"Малый алтарь",
+        cost:{wood:40,stone:25,crystals:1},
+        size:55
+    },
+    well:{
+        name:"Колодец",
+        cost:{stone:30,wood:10},
+        size:40
+    },
+    workshop:{
+        name:"Мастерская",
+        cost:{wood:55,stone:35,gold:20},
+        size:70
+    },
+    tower:{
+        name:"Башня",
+        cost:{wood:60,stone:80,gold:40},
+        size:70
+    },
+    garden:{
+        name:"Сад",
+        cost:{wood:25,stone:5,seed:4},
+        size:75
+    },
+    library:{
+        name:"Библиотека",
+        cost:{wood:80,stone:80,gold:60,crystals:3},
+        size:90
+    }
+};
 
-    const rocks=[
-        [720,270],[900,180],[1050,310],
-        [1510,250],[1680,350],[1850,750],
-        [500,850],[340,930],[1990,950],
-        [2180,830],[1180,1470],[1420,1510]
-    ];
+function canPay(cost){
 
-    rocks.forEach(p=>createRock(p[0],p[1]));
+    for(const k in cost){
 
-    const bushes=[
-        [150,700],[330,600],[470,470],
-        [2070,700],[2350,800],[500,1350],
-        [2040,1400],[1480,1350],[1020,400]
-    ];
+        let current=
+            k==="wood"?game.wood:
+            k==="stone"?game.stone:
+            k==="gold"?game.gold:
+            k==="crystals"?game.crystals:
+            game.inventory[k]||0;
 
-    bushes.forEach(p=>createBush(p[0],p[1]));
+        if(current<cost[k]) return false;
+    }
+
+    return true;
+}
+
+function pay(cost){
+
+    for(const k in cost){
+
+        if(k==="wood")game.wood-=cost[k];
+        else if(k==="stone")game.stone-=cost[k];
+        else if(k==="gold")game.gold-=cost[k];
+        else if(k==="crystals")game.crystals-=cost[k];
+        else{
+            game.inventory[k]=(game.inventory[k]||0)-cost[k];
+        }
+    }
 }
 
 /* =========================================================
    VILLAGERS
 ========================================================= */
 
-function renderVillagers(){
-    villagersEl.innerHTML="";
+const NAMES=[
+    "Элиан","Мира","Торн","Сайла","Рен","Лиор",
+    "Кай","Нора","Вель","Ирис","Оррен","Фэй"
+];
 
-    game.villagers.forEach(v=>{
-        if(!v.alive) return;
+const JOBS=[
+    "Фермер",
+    "Лесоруб",
+    "Каменщик",
+    "Охотник",
+    "Жрец",
+    "Рыбак",
+    "Алхимик",
+    "Строитель"
+];
 
-        const el=document.createElement("div");
+function createVillagers(){
 
-        el.className="villager";
+    game.villagers=[];
 
-        el.innerHTML=`
-            <div class="name">${v.name}</div>
-            <div class="npc-info">
-                <div class="bar" style="width:${v.health}%"></div>
-            </div>
-            <div class="head">
-                <div class="eye e1"></div>
-                <div class="eye e2"></div>
-            </div>
-            <div class="body"></div>
-        `;
+    for(let i=0;i<7;i++){
 
-        el.style.left=v.x+"px";
-        el.style.top=v.y+"px";
+        const v={
+            id:cryptoRandom(),
+            name:NAMES[i],
+            job:JOBS[i%JOBS.length],
 
-        el.addEventListener("click",()=>{
-            selectVillager(v);
-        });
+            x:2450+rand(-250,250),
+            y:1950+rand(-200,250),
 
-        villagersEl.appendChild(el);
-    });
+            targetX:2600,
+            targetY:1800,
+
+            hp:100,
+            hunger:rand(20,80),
+            happiness:rand(45,85),
+            faith:rand(25,80),
+
+            work:rand(40,90),
+            relationship:0,
+
+            state:"idle",
+            timer:rand(0,200),
+
+            skin:i%2,
+            color:i%3
+        };
+
+        game.villagers.push(v);
+    }
 }
 
-function selectVillager(v){
-    game.selected={
-        type:"villager",
-        villager:v
-    };
+function updateVillagers(dt){
 
-    interactionTitle.textContent=v.name+" — "+v.job;
+    for(const v of game.villagers){
 
-    interactionDesc.textContent=
-        `Вера ${v.faith}% • Настроение ${v.happiness}% • Здоровье ${v.health}%`;
+        v.timer-=dt;
 
-    interactionButton.textContent="Поговорить";
+        if(v.timer<=0){
 
-    interactionButton.onclick=()=>{
-        talkToVillager(v);
-    };
+            v.timer=rand(180,450);
 
-    interaction.classList.add("show");
+            const roll=Math.random();
+
+            if(roll<.45){
+                v.state="working";
+                chooseVillagerWork(v);
+            }else if(roll<.75){
+                v.state="wandering";
+                v.targetX=2450+rand(-400,400);
+                v.targetY=1950+rand(-300,400);
+            }else{
+                v.state="praying";
+                v.targetX=2600+rand(-80,80);
+                v.targetY=1800+rand(-80,80);
+            }
+        }
+
+        let dx=v.targetX-v.x;
+        let dy=v.targetY-v.y;
+        let d=Math.hypot(dx,dy);
+
+        if(d>8){
+
+            v.x+=dx/d*.65*dt;
+            v.y+=dy/d*.65*dt;
+        }
+
+        v.hunger+=.002*dt;
+
+        if(v.hunger>90){
+            v.happiness-=.01*dt;
+        }
+
+        if(v.state==="praying" && d<80){
+            v.faith=Math.min(100,v.faith+.008*dt);
+        }
+    }
 }
 
-function talkToVillager(v){
-    const lines=[
-        `${v.name}: «Мы всё ещё держимся. Но люди хотят знать, зачем мы здесь.»`,
-        `${v.name}: «Алтарь становится сильнее. Я это чувствую.»`,
-        `${v.name}: «Сегодня в лесу что-то странное происходит...»`,
-        `${v.name}: «Если ты действительно наш бог, не забывай о людях.»`
-    ];
+function chooseVillagerWork(v){
 
-    if(v.faith>75){
-        lines.push(`${v.name}: «Я верю в тебя. Даже когда остальные сомневаются.»`);
+    if(v.job==="Фермер"){
+        const f=game.farms.find(x=>x.growth<100);
+        if(f){
+            v.targetX=f.x;
+            v.targetY=f.y;
+            return;
+        }
     }
 
-    openModal(
-        v.name,
-        `<p>${lines[random(0,lines.length-1)]}</p>
-         <br>
-         <p><b>Вера:</b> ${v.faith}%</p>
-         <p><b>Настроение:</b> ${v.happiness}%</p>
-         <p><b>Здоровье:</b> ${v.health}%</p>`,
-        [
-            {
-                text:"Благословить",
-                className:"primary",
-                action:()=>{
-                    v.faith=clamp(v.faith+8,0,100);
-                    v.happiness=clamp(v.happiness+5,0,100);
-                    game.faith+=2;
-                    game.stats.villagersHelped++;
-                    closeModal();
-                    toast("Житель получил благословение.");
-                }
-            },
-            {
-                text:"Дать еду",
-                action:()=>{
-                    if(game.resources.food<5){
-                        toast("Не хватает еды.");
-                        return;
-                    }
+    if(v.job==="Лесоруб"){
+        const n=game.nodes.find(x=>x.type==="tree"&&x.amount>0);
+        if(n){
+            v.targetX=n.x;
+            v.targetY=n.y;
+            return;
+        }
+    }
 
-                    game.resources.food-=5;
-                    v.health=clamp(v.health+12,0,100);
-                    v.happiness=clamp(v.happiness+10,0,100);
+    if(v.job==="Каменщик"){
+        const n=game.nodes.find(x=>(x.type==="rock"||x.type==="iron")&&x.amount>0);
+        if(n){
+            v.targetX=n.x;
+            v.targetY=n.y;
+            return;
+        }
+    }
 
-                    closeModal();
-                    toast("Житель накормлен.");
-                    updateUI();
-                }
-            },
-            {
-                text:"Закрыть",
-                action:closeModal
-            }
-        ]
-    );
+    v.targetX=2600+rand(-500,500);
+    v.targetY=1950+rand(-400,400);
 }
 
 /* =========================================================
-   OBJECT INTERACTION
+   ENEMIES
 ========================================================= */
 
-function selectObject(obj){
-    game.selected=obj;
+function makeEnemy(x,y,type){
 
-    if(obj.type==="tree"){
-        interactionTitle.textContent="Дерево";
-        interactionDesc.textContent="Можно получить древесину.";
-        interactionButton.textContent="Срубить";
-    }
+    const data={
+        wolf:{
+            hp:50,
+            damage:8,
+            speed:1.3,
+            range:45,
+            xp:18
+        },
+        shade:{
+            hp:70,
+            damage:12,
+            speed:1.1,
+            range:55,
+            xp:25
+        },
+        slime:{
+            hp:90,
+            damage:10,
+            speed:.8,
+            range:48,
+            xp:30
+        },
+        bandit:{
+            hp:120,
+            damage:15,
+            speed:1,
+            range:55,
+            xp:40
+        },
+        boss:{
+            hp:1000,
+            damage:30,
+            speed:.65,
+            range:80,
+            xp:500
+        }
+    }[type];
 
-    if(obj.type==="rock"){
-        interactionTitle.textContent="Каменная жила";
-        interactionDesc.textContent="Можно добыть камень.";
-        interactionButton.textContent="Добыть";
-    }
+    return {
+        id:cryptoRandom(),
+        x,
+        y,
+        type,
 
-    interactionButton.onclick=interactSelected;
+        hp:data.hp,
+        maxHp:data.hp,
+        damage:data.damage,
+        speed:data.speed,
+        range:data.range,
+        xp:data.xp,
 
-    interaction.classList.add("show");
+        attackTimer:rand(0,60),
+        wanderTimer:rand(50,150),
+        targetX:x,
+        targetY:y,
+
+        hit:0
+    };
 }
 
-function interactSelected(){
-    const s=game.selected;
+function updateEnemies(dt){
 
-    if(!s) return;
+    for(let i=game.enemies.length-1;i>=0;i--){
 
-    if(s.type==="tree"){
-        const node=game.nodes.find(n=>n.element===s.element);
+        const e=game.enemies[i];
 
-        if(!node || !node.active) return;
+        e.attackTimer-=dt;
+        e.wanderTimer-=dt;
+        e.hit-=dt;
 
-        game.resources.wood+=node.amount;
-        game.stats.treesCut++;
+        const d=dist(e.x,e.y,game.player.x,game.player.y);
 
-        floating("+"+node.amount+" 🪵",node.x,node.y);
+        if(d<430){
 
-        node.active=false;
-        node.element.style.opacity="0";
-        node.element.style.pointerEvents="none";
+            const dx=game.player.x-e.x;
+            const dy=game.player.y-e.y;
 
-        interaction.classList.remove("show");
+            if(d>e.range){
 
-        toast("Получено "+node.amount+" древесины.");
-        updateUI();
+                const len=Math.max(1,Math.hypot(dx,dy));
 
-        setTimeout(()=>{
-            node.amount=random(3,8);
-            node.active=true;
-            node.element.style.opacity="1";
-            node.element.style.pointerEvents="auto";
-        },12000);
+                e.x+=dx/len*e.speed*dt;
+                e.y+=dy/len*e.speed*dt;
+
+            }else if(e.attackTimer<=0){
+
+                enemyAttack(e);
+                e.attackTimer=e.type==="boss"?50:85;
+            }
+
+        }else{
+
+            if(e.wanderTimer<=0){
+
+                e.wanderTimer=rand(100,300);
+
+                e.targetX=e.x+rand(-250,250);
+                e.targetY=e.y+rand(-250,250);
+            }
+
+            const dx=e.targetX-e.x;
+            const dy=e.targetY-e.y;
+            const len=Math.max(1,Math.hypot(dx,dy));
+
+            if(len>10){
+                e.x+=dx/len*e.speed*.45*dt;
+                e.y+=dy/len*e.speed*.45*dt;
+            }
+        }
+
+        e.x=clamp(e.x,40,WORLD_W-40);
+        e.y=clamp(e.y,40,WORLD_H-40);
+
+        if(e.hp<=0){
+
+            game.stats.enemies++;
+
+            gainXP(e.xp);
+
+            if(chance(.5)) dropItem(e.x,e.y,"gold",randi(2,8));
+            if(chance(.25)) dropItem(e.x,e.y,"meat",1);
+            if(chance(.12)) dropItem(e.x,e.y,"crystal",1);
+
+            spawnParticles(e.x,e.y,"#a26fcf",18);
+
+            game.enemies.splice(i,1);
+
+            checkAchievements();
+        }
+    }
+}
+
+function enemyAttack(e){
+
+    if(game.player.invincible>0) return;
+
+    let dmg=Math.max(1,e.damage-game.player.defense);
+
+    game.player.hp-=dmg;
+    game.player.invincible=35;
+    game.camera.shake=7;
+
+    spawnParticles(game.player.x,game.player.y,"#d85c67",8);
+
+    if(game.player.hp<=0){
+        playerDeath();
+    }
+}
+
+function playerDeath(){
+
+    game.stats.deaths++;
+
+    game.player.hp=game.player.maxHp;
+    game.player.energy=game.player.maxEnergy;
+
+    game.player.x=2600;
+    game.player.y=1800;
+
+    game.gold=Math.floor(game.gold*.8);
+
+    toast("☠️ Ты пал. Храм вернул тебя к алтарю.");
+}
+
+/* =========================================================
+   NODES
+========================================================= */
+
+function gatherNode(n){
+
+    if(n.amount<=0){
+        toast("Здесь пока ничего нет.");
+        return;
     }
 
-    if(s.type==="rock"){
-        const node=game.nodes.find(n=>n.element===s.element);
+    if(game.player.energy<5){
+        toast("Слишком мало энергии.");
+        return;
+    }
 
-        if(!node || !node.active) return;
+    game.player.energy-=5;
 
-        game.resources.stone+=node.amount;
-        game.stats.rocksMined++;
+    let amount=randi(1,3);
 
-        floating("+"+node.amount+" 🪨",node.x,node.y);
+    if(game.god.upgrades.harvest){
+        amount++;
+    }
 
-        node.active=false;
-        node.element.style.opacity="0";
-        node.element.style.pointerEvents="none";
+    amount=Math.min(amount,n.amount);
 
-        interaction.classList.remove("show");
+    n.amount-=amount;
+    n.respawn=1200;
 
-        toast("Получено "+node.amount+" камня.");
-        updateUI();
+    game.stats.resources+=amount;
 
-        setTimeout(()=>{
-            node.amount=random(2,6);
-            node.active=true;
-            node.element.style.opacity="1";
-            node.element.style.pointerEvents="auto";
-        },15000);
+    if(n.type==="tree"){
+        game.wood+=amount;
+        game.inventory.wood=game.wood;
+        toast("🪵 Древесина +"+amount);
+    }
+
+    if(n.type==="rock"){
+        game.stone+=amount;
+        game.inventory.stone=game.stone;
+        toast("🪨 Камень +"+amount);
+    }
+
+    if(n.type==="iron"){
+        game.inventory.iron+=amount;
+        toast("⛓️ Железо +"+amount);
+    }
+
+    if(n.type==="crystal"){
+        game.crystals+=amount;
+        game.inventory.crystal=game.crystals;
+        toast("💎 Кристалл +"+amount);
+    }
+
+    if(n.type==="bush"){
+        game.inventory.berry+=amount;
+        toast("🫐 Ягоды +"+amount);
+    }
+
+    if(n.type==="mushroom"){
+        game.inventory.mushroom+=amount;
+        toast("🍄 Грибы +"+amount);
+    }
+
+    if(n.type==="reed"){
+        game.inventory.herb+=amount;
+        toast("🌿 Травы +"+amount);
+    }
+
+    spawnParticles(n.x,n.y,"#d7c875",8);
+
+    gainXP(4);
+}
+
+/* =========================================================
+   DROPS
+========================================================= */
+
+function dropItem(x,y,type,amount){
+
+    game.drops.push({
+        x,
+        y,
+        type,
+        amount,
+        life:1600
+    });
+}
+
+function updateDrops(dt){
+
+    for(let i=game.drops.length-1;i>=0;i--){
+
+        const d=game.drops[i];
+
+        d.life-=dt;
+
+        if(dist(d.x,d.y,game.player.x,game.player.y)<45){
+
+            collectDrop(d);
+            game.drops.splice(i,1);
+            continue;
+        }
+
+        if(d.life<=0){
+            game.drops.splice(i,1);
+        }
+    }
+}
+
+function collectDrop(d){
+
+    if(d.type==="gold"){
+        game.gold+=d.amount;
+        toast("🪙 Золото +"+d.amount);
+    }
+
+    if(d.type==="meat"){
+        game.inventory.meat+=d.amount;
+        toast("🥩 Мясо +"+d.amount);
+    }
+
+    if(d.type==="crystal"){
+        game.crystals+=d.amount;
+        game.inventory.crystal=game.crystals;
+        toast("💎 Кристалл +"+d.amount);
+    }
+}
+
+/* =========================================================
+   PARTICLES
+========================================================= */
+
+function spawnParticles(x,y,color,count){
+
+    for(let i=0;i<count;i++){
+
+        game.particles.push({
+            x,
+            y,
+            vx:rand(-1.8,1.8),
+            vy:rand(-2.2,.2),
+            life:rand(20,55),
+            max:55,
+            size:rand(2,5),
+            color
+        });
+    }
+}
+
+function updateParticles(dt){
+
+    for(let i=game.particles.length-1;i>=0;i--){
+
+        const p=game.particles[i];
+
+        p.life-=dt;
+        p.x+=p.vx*dt;
+        p.y+=p.vy*dt;
+        p.vy+=.035*dt;
+
+        if(p.life<=0)
+            game.particles.splice(i,1);
     }
 }
 
@@ -1698,201 +1597,1043 @@ function interactSelected(){
    PLAYER
 ========================================================= */
 
-function movePlayer(){
-    if(game.paused) return;
+function updatePlayer(dt){
 
     let dx=0;
     let dy=0;
 
-    if(keys.left) dx--;
-    if(keys.right) dx++;
-    if(keys.up) dy--;
-    if(keys.down) dy++;
+    if(keys["w"]||keys["arrowup"])dy--;
+    if(keys["s"]||keys["arrowdown"])dy++;
+    if(keys["a"]||keys["arrowleft"])dx--;
+    if(keys["d"]||keys["arrowright"])dx++;
 
-    if(dx!==0 || dy!==0){
-        const len=Math.hypot(dx,dy);
+    if(joy.active){
+        dx+=joy.x;
+        dy+=joy.y;
+    }
+
+    const len=Math.hypot(dx,dy);
+
+    if(len>0){
 
         dx/=len;
         dy/=len;
 
-        game.player.x+=dx*game.player.speed;
-        game.player.y+=dy*game.player.speed;
+        let speed=game.player.speed;
 
-        if(dx!==0){
-            game.player.direction=dx>0?1:-1;
+        speed*=WEATHER[game.weather].speed;
+
+        if(game.player.energy>0){
+
+            game.player.x+=dx*speed*dt;
+            game.player.y+=dy*speed*dt;
+
+            game.player.energy-=.012*dt;
+
+        }else{
+
+            game.player.x+=dx*speed*.5*dt;
+            game.player.y+=dy*speed*.5*dt;
         }
+    }else{
 
-        interaction.classList.remove("show");
+        game.player.energy=Math.min(
+            game.player.maxEnergy,
+            game.player.energy+.025*dt
+        );
     }
 
-    game.player.x=clamp(game.player.x,30,2500);
-    game.player.y=clamp(game.player.y,30,1720);
-}
+    game.player.x=clamp(game.player.x,40,WORLD_W-40);
+    game.player.y=clamp(game.player.y,40,WORLD_H-40);
 
-function updatePlayer(){
-    playerEl.style.left=(game.player.x-31)+"px";
-    playerEl.style.top=(game.player.y-78)+"px";
+    if(game.player.attackCooldown>0)
+        game.player.attackCooldown-=dt;
 
-    playerEl.style.transform=
-        `scaleX(${game.player.direction})`;
-
-    const miniX=game.player.x/2600*151;
-    const miniY=game.player.y/1800*101;
-
-    miniPlayer.style.left=miniX+"px";
-    miniPlayer.style.top=miniY+"px";
+    if(game.player.invincible>0)
+        game.player.invincible-=dt;
 }
 
 /* =========================================================
-   CAMERA
+   COMBAT
 ========================================================= */
 
-function updateCamera(){
-    const w=window.innerWidth;
-    const h=window.innerHeight;
+function attack(){
 
-    let x=game.player.x-w/2;
-    let y=game.player.y-h/2;
+    if(!game.started) return;
 
-    x=clamp(x,0,2600-w);
-    y=clamp(y,0,1800-h);
+    if(game.player.attackCooldown>0) return;
 
-    /*
-       Центр камеры должен совпадать с центром экрана.
-       На маленьких экранах камера остаётся привязана
-       к персонажу, поэтому карта ощущается как настоящая.
-    */
+    game.player.attackCooldown=28;
 
-    cameraEl.style.transform=
-        `translate(${-x}px,${-y}px)`;
+    const range=105;
 
-    game.camera.x=x;
-    game.camera.y=y;
-}
+    let hitSomething=false;
 
-/* =========================================================
-   NPC AI
-========================================================= */
+    for(const e of game.enemies){
 
-function updateVillagers(){
-    game.villagers.forEach(v=>{
-        if(!v.alive) return;
+        const d=dist(
+            game.player.x,
+            game.player.y,
+            e.x,
+            e.y
+        );
 
-        const dx=v.targetX-v.x;
-        const dy=v.targetY-v.y;
-        const d=Math.hypot(dx,dy);
+        if(d<=range){
 
-        if(d<5){
-            chooseVillagerTarget(v);
-            return;
+            const dmg=game.player.damage+randi(0,7);
+
+            e.hp-=dmg;
+            e.hit=8;
+
+            hitSomething=true;
+
+            game.stats.damage+=dmg;
+
+            spawnParticles(e.x,e.y,"#e4d17b",8);
+
+            gainXP(3);
         }
+    }
 
-        v.x+=(dx/d)*0.7;
-        v.y+=(dy/d)*0.7;
-    });
-
-    renderVillagers();
+    if(hitSomething){
+        game.camera.shake=4;
+    }
 }
 
-function chooseVillagerTarget(v){
-    const spots=[
-        {x:760,y:760},
-        {x:1770,y:770},
-        {x:820,y:1250},
-        {x:1660,y:1240},
-        {x:1250,y:920},
-        {x:1250,y:730},
-        {x:950,y:850},
-        {x:1500,y:850}
+/* =========================================================
+   INTERACTION
+========================================================= */
+
+function getNearest(){
+
+    let best=null;
+    let bd=Infinity;
+
+    const all=[
+        ...game.nodes,
+        ...game.villagers,
+        ...game.buildings
     ];
 
-    const target=spots[random(0,spots.length-1)];
+    for(const o of all){
 
-    v.targetX=target.x+random(-50,50);
-    v.targetY=target.y+random(-50,50);
+        let d=dist(
+            game.player.x,
+            game.player.y,
+            o.x,
+            o.y
+        );
+
+        if(d<bd && d<105){
+            bd=d;
+            best=o;
+        }
+    }
+
+    return best;
+}
+
+function interact(){
+
+    const o=getNearest();
+
+    if(!o){
+        toast("Здесь нечего делать.");
+        return;
+    }
+
+    if(o.job){
+        talkVillager(o);
+        return;
+    }
+
+    if(o.type==="tree"||
+       o.type==="rock"||
+       o.type==="iron"||
+       o.type==="crystal"||
+       o.type==="bush"||
+       o.type==="mushroom"||
+       o.type==="reed"){
+        gatherNode(o);
+        return;
+    }
+
+    if(o.type==="temple"){
+        openGod();
+        game.flags.templeVisited=true;
+        completeObjective("Посети храм.");
+        return;
+    }
+
+    if(o.type==="storage"){
+        openInventory();
+        return;
+    }
+
+    if(o.type==="workshop"){
+        openCraft();
+        return;
+    }
+
+    if(o.type==="farm"){
+        interactFarm(o);
+        return;
+    }
 }
 
 /* =========================================================
-   DAY / TURN
+   VILLAGER DIALOGUE
 ========================================================= */
 
+function talkVillager(v){
+
+    game.selectedNPC=v;
+
+    const moods=[
+        "Мне нравится, когда деревня становится больше.",
+        "Сегодня я видел странные огни в лесу.",
+        "Если мы будем держаться вместе, нас никто не сломает.",
+        "Мне кажется, храм становится сильнее.",
+        "В горах появились новые существа."
+    ];
+
+    let reward="";
+
+    if(v.hunger>80){
+        reward="Я очень голоден...";
+    }else if(v.faith<25){
+        reward="Мне трудно сохранять веру.";
+    }else{
+        reward=pick(moods);
+    }
+
+    openModal(
+        v.name+" — "+v.job,
+        `
+        <div class="card">
+            <h3>${reward}</h3>
+            <p>Счастье: ${Math.round(v.happiness)}%</p>
+            <p>Вера: ${Math.round(v.faith)}%</p>
+            <p>Отношения: ${v.relationship}</p>
+
+            <button class="action good" onclick="helpVillager()">
+                Помочь
+            </button>
+
+            <button class="action" onclick="blessVillager()">
+                Благословить
+            </button>
+
+            <button class="action" onclick="giveFood()">
+                Дать еду
+            </button>
+        </div>
+        `
+    );
+}
+
+function helpVillager(){
+
+    const v=game.selectedNPC;
+
+    if(!v)return;
+
+    if(game.gold<10){
+        toast("Нужно 10 золота.");
+        return;
+    }
+
+    game.gold-=10;
+
+    v.happiness=Math.min(100,v.happiness+15);
+    v.faith=Math.min(100,v.faith+8);
+    v.relationship+=10;
+
+    game.stats.villagersHelped++;
+
+    gainXP(15);
+
+    toast("❤️ "+v.name+" благодарит тебя.");
+
+    checkAchievements();
+
+    closeModal();
+}
+
+function blessVillager(){
+
+    const v=game.selectedNPC;
+
+    if(game.faith<8){
+        toast("Недостаточно веры.");
+        return;
+    }
+
+    game.faith-=8;
+
+    v.faith=Math.min(100,v.faith+20);
+    v.happiness=Math.min(100,v.happiness+8);
+    v.relationship+=5;
+
+    toast("✨ "+v.name+" получил благословение.");
+
+    closeModal();
+}
+
+function giveFood(){
+
+    const v=game.selectedNPC;
+
+    if(game.inventory.food<=0){
+        toast("Еды нет.");
+        return;
+    }
+
+    game.inventory.food--;
+
+    v.hunger=Math.max(0,v.hunger-35);
+    v.happiness=Math.min(100,v.happiness+12);
+    v.relationship+=4;
+
+    game.food=game.inventory.food;
+
+    toast("🍲 Ты накормил "+v.name);
+
+    closeModal();
+}
+
+/* =========================================================
+   FARMS
+========================================================= */
+
+function interactFarm(f){
+
+    if(f.growth>=100){
+
+        const amount=randi(2,5);
+
+        game.inventory.wheat+=amount;
+        game.stats.crops+=amount;
+
+        f.growth=0;
+        f.stage=0;
+
+        toast("🌾 Урожай собран: +"+amount+" пшеницы");
+
+        gainXP(15);
+
+        return;
+    }
+
+    if(game.inventory.seed>0){
+
+        game.inventory.seed--;
+
+        f.growth+=10;
+
+        toast("🌱 Ты посадил семена.");
+    }else{
+        toast("Нужны семена.");
+    }
+}
+
+/* =========================================================
+   CRAFTING
+========================================================= */
+
+const RECIPES=[
+    {
+        name:"Хлеб",
+        desc:"Восстанавливает еду деревни.",
+        cost:{wheat:2},
+        result:"food",
+        amount:3
+    },
+    {
+        name:"Зелье",
+        desc:"Восстанавливает 35 HP.",
+        cost:{herb:2,berry:1},
+        result:"potion",
+        amount:1
+    },
+    {
+        name:"Усиленный топор",
+        desc:"Постоянно увеличивает скорость сбора.",
+        cost:{wood:10,iron:5},
+        special:"axe"
+    },
+    {
+        name:"Кристальный оберег",
+        desc:"Увеличивает максимальную энергию.",
+        cost:{crystal:2,iron:3},
+        special:"energy"
+    },
+    {
+        name:"Священный камень",
+        desc:"Увеличивает силу божества.",
+        cost:{stone:25,crystal:3,gold:25},
+        special:"god"
+    }
+];
+
+function hasItems(cost){
+
+    for(const k in cost){
+
+        const value=
+            k==="wood"?game.wood:
+            k==="stone"?game.stone:
+            k==="gold"?game.gold:
+            k==="crystal"?game.crystals:
+            game.inventory[k]||0;
+
+        if(value<cost[k])return false;
+    }
+
+    return true;
+}
+
+function payItems(cost){
+
+    for(const k in cost){
+
+        if(k==="wood")game.wood-=cost[k];
+        else if(k==="stone")game.stone-=cost[k];
+        else if(k==="gold")game.gold-=cost[k];
+        else if(k==="crystal")game.crystals-=cost[k];
+        else game.inventory[k]-=cost[k];
+    }
+}
+
+function craft(i){
+
+    const r=RECIPES[i];
+
+    if(!hasItems(r.cost)){
+        toast("Не хватает ресурсов.");
+        return;
+    }
+
+    payItems(r.cost);
+
+    if(r.result==="food"){
+        game.inventory.food+=r.amount;
+    }
+
+    if(r.result==="potion"){
+        game.inventory.potion+=r.amount;
+    }
+
+    if(r.special==="axe"){
+        game.player.speed+=.25;
+        toast("🪓 Скорость сбора улучшена.");
+    }
+
+    if(r.special==="energy"){
+        game.player.maxEnergy+=15;
+        game.player.energy=game.player.maxEnergy;
+        toast("🔮 Максимальная энергия увеличена.");
+    }
+
+    if(r.special==="god"){
+        game.god.power++;
+        toast("👁️ Сила божества увеличена.");
+    }
+
+    gainXP(12);
+
+    openCraft();
+}
+
+/* =========================================================
+   BUILDING
+========================================================= */
+
+function build(type){
+
+    const info=BUILD_TYPES[type];
+
+    if(!info)return;
+
+    if(!canPay(info.cost)){
+        toast("Недостаточно ресурсов.");
+        return;
+    }
+
+    const x=game.player.x+rand(-100,100);
+    const y=game.player.y+rand(-100,100);
+
+    if(dist(x,y,2600,1800)<100){
+        toast("Слишком близко к храму.");
+        return;
+    }
+
+    pay(info.cost);
+
+    if(type==="farm"){
+
+        const f={
+            id:cryptoRandom(),
+            type:"farm",
+            x,
+            y,
+            growth:0,
+            stage:0,
+            water:100
+        };
+
+        game.farms.push(f);
+        game.buildings.push(f);
+
+    }else{
+
+        game.buildings.push({
+            id:cryptoRandom(),
+            type,
+            x,
+            y,
+            level:1,
+            hp:300,
+            maxHp:300
+        });
+    }
+
+    game.stats.buildings++;
+
+    if(type==="house")
+        game.villagers.push(makeNewVillager());
+
+    gainXP(30);
+
+    toast("🏗️ Построено: "+info.name);
+
+    checkAchievements();
+    openBuild();
+}
+
+function makeNewVillager(){
+
+    const i=game.villagers.length;
+
+    return {
+        id:cryptoRandom(),
+        name:NAMES[i%NAMES.length],
+        job:JOBS[i%JOBS.length],
+        x:2600+rand(-150,150),
+        y:1950+rand(-100,150),
+        targetX:2600,
+        targetY:1950,
+        hp:100,
+        hunger:30,
+        happiness:70,
+        faith:50,
+        work:70,
+        relationship:0,
+        state:"idle",
+        timer:100,
+        skin:i%2,
+        color:i%3
+    };
+}
+
+/* =========================================================
+   GOD / MIRACLES
+========================================================= */
+
+const MIRACLES=[
+    {
+        name:"Благословение урожая",
+        cost:20,
+        desc:"Увеличивает рост всех ферм.",
+        use(){
+            for(const f of game.farms)
+                f.growth=Math.min(100,f.growth+35);
+        }
+    },
+    {
+        name:"Солнечный день",
+        cost:25,
+        desc:"Меняет погоду на ясную и ускоряет время.",
+        use(){
+            game.weather=0;
+            game.weatherTimer=1000;
+        }
+    },
+    {
+        name:"Божественный щит",
+        cost:30,
+        desc:"Временно исцеляет тебя.",
+        use(){
+            game.player.hp=game.player.maxHp;
+            game.player.invincible=180;
+        }
+    },
+    {
+        name:"Милость небес",
+        cost:35,
+        desc:"Даёт ресурсы деревне.",
+        use(){
+            game.wood+=25;
+            game.stone+=20;
+            game.food+=15;
+            game.inventory.food+=15;
+        }
+    },
+    {
+        name:"Гнев небес",
+        cost:50,
+        desc:"Уничтожает обычных врагов поблизости.",
+        use(){
+            for(const e of game.enemies){
+                if(dist(e.x,e.y,game.player.x,game.player.y)<600){
+                    e.hp-=80;
+                }
+            }
+
+            spawnParticles(
+                game.player.x,
+                game.player.y,
+                "#b67be5",
+                80
+            );
+        }
+    }
+];
+
+function miracle(i){
+
+    const m=MIRACLES[i];
+
+    if(game.faith<m.cost){
+        toast("Недостаточно веры.");
+        return;
+    }
+
+    game.faith-=m.cost;
+
+    m.use();
+
+    game.stats.miracles++;
+    game.god.miracles++;
+    game.god.devotion++;
+
+    gainXP(25);
+
+    toast("✨ "+m.name);
+
+    closeModal();
+}
+
+/* =========================================================
+   GOD UPGRADES
+========================================================= */
+
+const GOD_UPGRADES=[
+    {
+        key:"harvest",
+        name:"Щедрая земля",
+        cost:80,
+        desc:"+1 ресурс при сборе."
+    },
+    {
+        key:"blessing",
+        name:"Голос алтаря",
+        cost:100,
+        desc:"Вера деревни растёт быстрее."
+    },
+    {
+        key:"shield",
+        name:"Божественный барьер",
+        cost:130,
+        desc:"Снижение входящего урона."
+    },
+    {
+        key:"storm",
+        name:"Повелитель бурь",
+        cost:160,
+        desc:"Разблокирует сильную погоду."
+    },
+    {
+        key:"abundance",
+        name:"Изобилие",
+        cost:220,
+        desc:"Каждый новый день даёт дополнительные ресурсы."
+    },
+    {
+        key:"resurrection",
+        name:"Последняя милость",
+        cost:350,
+        desc:"После смерти теряется меньше золота."
+    }
+];
+
+function upgradeGod(key){
+
+    const u=GOD_UPGRADES.find(x=>x.key===key);
+
+    if(!u)return;
+
+    if(game.god.upgrades[key]){
+        toast("Уже изучено.");
+        return;
+    }
+
+    if(game.glory<u.cost){
+        toast("Нужно "+u.cost+" славы.");
+        return;
+    }
+
+    game.glory-=u.cost;
+    game.god.upgrades[key]=true;
+
+    if(key==="shield"){
+        game.player.defense+=5;
+    }
+
+    toast("👁️ Получено: "+u.name);
+
+    openGod();
+}
+
+/* =========================================================
+   QUESTS
+========================================================= */
+
+function createQuests(){
+
+    game.quests=[
+        {
+            id:"first",
+            name:"Последний алтарь",
+            desc:"Осмотри храм.",
+            type:"objective",
+            target:1,
+            progress:0,
+            reward:{faith:20,xp:30,gold:20},
+            done:false
+        },
+        {
+            id:"wood",
+            name:"Основа поселения",
+            desc:"Собери 30 древесины.",
+            type:"wood",
+            target:30,
+            progress:0,
+            reward:{xp:50,gold:25,glory:10},
+            done:false
+        },
+        {
+            id:"house",
+            name:"Первый дом",
+            desc:"Построй дом.",
+            type:"house",
+            target:1,
+            progress:0,
+            reward:{xp:70,faith:15,glory:15},
+            done:false
+        },
+        {
+            id:"farm",
+            name:"Пища для всех",
+            desc:"Создай ферму.",
+            type:"farm",
+            target:1,
+            progress:0,
+            reward:{xp:60,gold:30},
+            done:false
+        },
+        {
+            id:"hunt",
+            name:"Опасность рядом",
+            desc:"Победи 5 врагов.",
+            type:"enemy",
+            target:5,
+            progress:0,
+            reward:{xp:100,glory:30,crystal:1},
+            done:false
+        },
+        {
+            id:"mine",
+            name:"Глубины земли",
+            desc:"Добудь 10 железа.",
+            type:"iron",
+            target:10,
+            progress:0,
+            reward:{xp:100,gold:60},
+            done:false
+        },
+        {
+            id:"dungeon",
+            name:"За пределами деревни",
+            desc:"Найди древнее подземелье.",
+            type:"dungeon",
+            target:1,
+            progress:0,
+            reward:{xp:200,glory:80,crystal:3},
+            done:false
+        }
+    ];
+
+    game.activeQuest=game.quests[0].id;
+}
+
+function questProgress(type,amount=1){
+
+    for(const q of game.quests){
+
+        if(q.done)continue;
+
+        if(q.type===type){
+
+            q.progress=Math.min(
+                q.target,
+                q.progress+amount
+            );
+
+            if(q.progress>=q.target){
+                finishQuest(q);
+            }
+        }
+    }
+}
+
+function finishQuest(q){
+
+    q.done=true;
+
+    game.completedQuests.push(q.id);
+    game.stats.quests++;
+
+    const r=q.reward;
+
+    if(r.xp)gainXP(r.xp);
+    if(r.gold)game.gold+=r.gold;
+    if(r.faith)game.faith=Math.min(100,game.faith+r.faith);
+    if(r.glory)game.glory+=r.glory;
+    if(r.crystal){
+        game.crystals+=r.crystal;
+        game.inventory.crystal=game.crystals;
+    }
+
+    toast("📜 Выполнено: "+q.name);
+
+    checkAchievements();
+}
+
+function completeObjective(text){
+
+    for(const q of game.quests){
+
+        if(q.type==="objective" && !q.done){
+            questProgress("objective");
+        }
+    }
+}
+
+/* =========================================================
+   ACHIEVEMENTS
+========================================================= */
+
+const ACHIEVEMENT_LIST=[
+    ["first_steps","Первые шаги",()=>game.stats.days>=1],
+    ["builder","Строитель",()=>game.stats.buildings>=5],
+    ["warrior","Воин",()=>game.stats.enemies>=20],
+    ["god","Истинный бог",()=>game.god.miracles>=10],
+    ["faith","Великая вера",()=>game.faith>=100],
+    ["wealth","Богатство",()=>game.gold>=1000],
+    ["population","Поселение",()=>game.villagers.length>=12],
+    ["farmer","Фермер",()=>game.stats.crops>=50],
+    ["explorer","Исследователь",()=>game.discoveredZones.length>=5],
+    ["legend","Легенда",()=>game.player.level>=15]
+];
+
+function checkAchievements(){
+
+    for(const [id,name,condition] of ACHIEVEMENT_LIST){
+
+        if(!game.achievements.includes(id)&&condition()){
+
+            game.achievements.push(id);
+
+            game.glory+=25;
+
+            toast("🏆 Достижение: "+name);
+        }
+    }
+}
+
+/* =========================================================
+   DAY/NIGHT
+========================================================= */
+
+let lastMinute=0;
+
+function updateTime(dt){
+
+    game.time+=dt*.09;
+
+    if(game.time>=1440){
+
+        game.time-=1440;
+
+        nextDay();
+    }
+
+    const minute=Math.floor(game.time);
+
+    if(minute!==lastMinute){
+
+        lastMinute=minute;
+
+        if(minute%15===0){
+            villageTick();
+        }
+    }
+
+    game.weatherTimer-=dt;
+
+    if(game.weatherTimer<=0){
+
+        game.weatherTimer=rand(900,1800);
+
+        let max=game.god.upgrades.storm?5:3;
+
+        game.weather=randi(0,max-1);
+
+        toast("Погода: "+WEATHER[game.weather].name);
+    }
+}
+
 function nextDay(){
-    if(game.paused) return;
 
     game.day++;
+    game.stats.days++;
 
-    if(game.day>12){
+    if(game.day>28){
+
         game.day=1;
         game.season++;
 
         if(game.season>=4){
+
             game.season=0;
             game.year++;
+
             yearEvent();
         }
     }
 
-    const population=game.villagers.filter(v=>v.alive).length;
+    game.food=Math.max(
+        0,
+        game.food-game.villagers.length*2
+    );
 
-    const foodCost=Math.max(2,population*3);
+    game.inventory.food=game.food;
 
-    game.resources.food-=foodCost;
-
-    if(game.resources.food<0){
-        game.resources.food=0;
-        game.villagers.forEach(v=>{
-            if(v.alive){
-                v.health=clamp(v.health-7,0,100);
-                v.happiness=clamp(v.happiness-8,0,100);
-            }
-        });
-
-        game.faith-=3;
-
-        toast("⚠ Поселению не хватает еды.");
-    }else{
-        game.villagers.forEach(v=>{
-            if(v.alive){
-                v.health=clamp(v.health+2,0,100);
-                v.happiness=clamp(v.happiness+2,0,100);
-            }
-        });
-    }
-
-    const averageFaith=
-        game.villagers.reduce((sum,v)=>sum+(v.alive?v.faith:0),0)/
-        Math.max(1,population);
-
-    game.faith+=Math.floor(averageFaith/30)-1;
-
-    if(game.faith>100) game.faith=100;
-    if(game.faith<0) game.faith=0;
-
-    game.favor=clamp(
-        game.favor+
-        (averageFaith>60?1:-1),
+    game.faith=clamp(
+        game.faith+game.villagers.length*.8,
         0,
         100
     );
 
-    game.glory+=Math.floor(game.faith/25);
+    game.favor=clamp(
+        game.favor+rand(-2,3),
+        0,
+        100
+    );
+
+    if(game.god.upgrades.abundance){
+
+        game.wood+=10;
+        game.stone+=8;
+        game.food+=8;
+
+        game.inventory.food=game.food;
+    }
+
+    for(const f of game.farms){
+
+        if(game.weather===2){
+            f.growth+=15;
+        }else{
+            f.growth+=8;
+        }
+
+        f.growth=clamp(f.growth,0,100);
+    }
+
+    for(const n of game.nodes){
+
+        if(n.amount<=0){
+
+            n.respawn-=1;
+
+            if(n.respawn<=0)
+                n.amount=n.max;
+        }
+    }
 
     randomEvent();
 
-    updateTimeOfDay();
-    updateUI();
-    saveGame(false);
+    checkAchievements();
+
+    saveGame();
+
+    toast("🌅 Начался новый день.");
+}
+
+function villageTick(){
+
+    let avg=0;
+
+    for(const v of game.villagers){
+
+        avg+=v.faith;
+
+        if(game.food<=0){
+            v.hunger+=3;
+            v.happiness-=2;
+        }else{
+            v.hunger=Math.max(0,v.hunger-2);
+            v.happiness=Math.min(100,v.happiness+.5);
+        }
+
+        if(v.state==="working"){
+            if(v.job==="Фермер"){
+                game.food+=.1;
+            }
+
+            if(v.job==="Лесоруб"){
+                game.wood+=.08;
+            }
+
+            if(v.job==="Каменщик"){
+                game.stone+=.05;
+            }
+        }
+    }
+
+    avg/=Math.max(1,game.villagers.length);
+
+    game.faith+=
+        (avg-50)*.001;
+
+    game.faith=clamp(game.faith,0,100);
 }
 
 function yearEvent(){
+
     const events=[
-        "Новый год начался. Люди ждут знака.",
-        "Снега растаяли. В старом лесу обнаружены следы.",
-        "На горизонте появились странные огни.",
-        "Поселение пережило ещё один год."
+        "🌕 Наступил новый год. Небеса наблюдают.",
+        "🌲 Леса стали гуще.",
+        "💎 В горах обнаружены новые кристаллы.",
+        "👁️ Сила твоего алтаря увеличилась.",
+        "⚔️ На границах появились новые угрозы."
     ];
 
-    toast(events[random(0,events.length-1)]);
+    toast(pick(events));
+
+    game.glory+=20;
 }
 
 /* =========================================================
@@ -1900,494 +2641,552 @@ function yearEvent(){
 ========================================================= */
 
 function randomEvent(){
-    if(Math.random()>0.38) return;
 
-    const events=[
-        eventTraveler,
-        eventStrangeStars,
-        eventWolves,
-        eventHarvest,
-        eventDoubt
-    ];
+    const roll=Math.random();
 
-    events[random(0,events.length-1)]();
+    if(roll<.18){
+        eventTraveler();
+    }
+    else if(roll<.30){
+        eventHarvest();
+    }
+    else if(roll<.42){
+        eventWolves();
+    }
+    else if(roll<.52){
+        eventStars();
+    }
+    else if(roll<.62){
+        eventDoubt();
+    }
 }
 
 function eventTraveler(){
+
     openModal(
         "Странник",
-        `<p>На дороге появился неизвестный путник.</p>
-         <br>
-         <p>Он просит немного еды и обещает рассказать то,
-         что видел за северными горами.</p>`,
-        [
-            {
-                text:"Дать 10 еды",
-                className:"primary",
-                action:()=>{
-                    if(game.resources.food<10){
-                        toast("Не хватает еды.");
-                        return;
-                    }
+        `
+        <div class="card">
+            <h3>У ворот появился странный торговец.</h3>
+            <p>Он предлагает обменять часть ресурсов на редкие предметы.</p>
 
-                    game.resources.food-=10;
-                    game.gold+=random(5,12);
-                    game.glory+=2;
-                    closeModal();
-                    toast("Странник оставил награду.");
-                    updateUI();
-                }
-            },
-            {
-                text:"Отказать",
-                action:()=>{
-                    game.favor-=2;
-                    closeModal();
-                }
-            }
-        ]
+            <button class="action" onclick="tradeTraveler()">
+                Отдать 20 дерева → получить 20 золота
+            </button>
+
+            <button class="action" onclick="tradeCrystal()">
+                Отдать 30 золота → получить кристалл
+            </button>
+
+            <button class="action" onclick="closeModal()">
+                Отказаться
+            </button>
+        </div>
+        `
     );
 }
 
-function eventStrangeStars(){
-    game.faith+=5;
+function tradeTraveler(){
 
-    openModal(
-        "Звёзды",
-        `<p>Ночью небо над храмом изменилось.</p>
-         <br>
-         <p>Несколько жителей утверждают,
-         что видели символ прямо среди звёзд.</p>`,
-        [
-            {
-                text:"Принять знак",
-                className:"primary",
-                action:()=>{
-                    game.faith+=7;
-                    game.glory+=5;
-                    closeModal();
-                    updateUI();
-                }
-            },
-            {
-                text:"Игнорировать",
-                action:()=>{
-                    game.favor-=2;
-                    closeModal();
-                    updateUI();
-                }
-            }
-        ]
-    );
+    if(game.wood<20){
+        toast("Не хватает дерева.");
+        return;
+    }
+
+    game.wood-=20;
+    game.gold+=20;
+
+    toast("🤝 Сделка совершена.");
+    closeModal();
 }
 
-function eventWolves(){
-    game.villagers.forEach(v=>{
-        if(v.alive){
-            v.health=clamp(v.health-3,0,100);
-            v.happiness=clamp(v.happiness-3,0,100);
-        }
-    });
+function tradeCrystal(){
 
-    game.favor-=2;
+    if(game.gold<30){
+        toast("Не хватает золота.");
+        return;
+    }
 
-    toast("В лесу появились волки.");
+    game.gold-=30;
+    game.crystals++;
+    game.inventory.crystal=game.crystals;
+
+    toast("💎 Получен кристалл.");
+    closeModal();
 }
 
 function eventHarvest(){
-    game.resources.food+=random(15,35);
-    toast("🌾 Урожай оказался лучше ожиданий.");
+
+    game.food+=15;
+    game.inventory.food=game.food;
+
+    toast("🌾 Урожайный день: +15 еды.");
+}
+
+function eventWolves(){
+
+    for(let i=0;i<4;i++){
+
+        game.enemies.push(
+            makeEnemy(
+                2600+rand(-700,700),
+                1900+rand(-600,600),
+                "wolf"
+            )
+        );
+    }
+
+    toast("🐺 Волки приблизились к поселению!");
+}
+
+function eventStars(){
+
+    game.faith=clamp(game.faith+15,0,100);
+    game.crystals++;
+
+    game.inventory.crystal=game.crystals;
+
+    toast("✨ Странные звёзды благословили землю.");
 }
 
 function eventDoubt(){
-    game.faith-=5;
 
-    const candidates=game.villagers.filter(v=>v.alive);
+    game.faith=Math.max(0,game.faith-10);
 
-    if(candidates.length){
-        const v=candidates[random(0,candidates.length-1)];
-        v.faith=clamp(v.faith-12,0,100);
-        v.happiness=clamp(v.happiness-8,0,100);
+    for(const v of game.villagers){
+        v.faith=Math.max(0,v.faith-5);
     }
 
-    toast("Некоторые жители начали сомневаться.");
+    toast("🌑 Среди жителей появились сомнения.");
 }
 
 /* =========================================================
-   MIRACLE / ALTAR
+   DUNGEON
 ========================================================= */
 
-function pray(){
-    if(game.paused) return;
+let dungeon={
+    active:false,
+    x:4500,
+    y:2800,
+    level:1,
+    cleared:false
+};
 
-    game.stats.prayers++;
+function enterDungeon(){
 
-    game.faith+=4;
-    game.favor+=2;
-
-    floating("+4 Веры",game.player.x,game.player.y);
-
-    toast("Ты вознёс молитву.");
-
-    updateUI();
-}
-
-function miracle(){
-    if(game.faith<15){
-        toast("Недостаточно веры.");
+    if(game.flags.dungeon){
+        toast("Подземелье уже очищено.");
         return;
     }
 
-    game.faith-=15;
-    game.favor+=5;
-    game.stats.miracles++;
+    dungeon.active=true;
 
-    game.villagers.forEach(v=>{
-        if(v.alive){
-            v.faith=clamp(v.faith+5,0,100);
-            v.happiness=clamp(v.happiness+7,0,100);
-        }
-    });
+    game.player.x=dungeon.x;
+    game.player.y=dungeon.y;
 
-    game.resources.food+=20;
-    game.glory+=5;
+    for(let i=0;i<12;i++){
 
-    floating("✨ ЧУДО",game.player.x,game.player.y);
+        game.enemies.push(
+            makeEnemy(
+                dungeon.x+rand(-350,350),
+                dungeon.y+rand(-250,250),
+                pick(["shade","slime","bandit"])
+            )
+        );
+    }
 
-    toast("Алтарь ответил на молитву.");
+    toast("🕯️ Ты вошёл в древнее подземелье.");
 
-    updateUI();
+    questProgress("dungeon");
 }
 
-/* =========================================================
-   BUILDING
-========================================================= */
+function dungeonBoss(){
 
-function build(){
-    openModal(
-        "Строительство",
-        `<p>Выбери сооружение.</p>
-         <br>
-         <p>🏠 Дом — 25 🪵 + 15 🪨</p>
-         <p>🌾 Поле — 20 🪵</p>
-         <p>🔔 Святилище — 40 🪵 + 30 🪨</p>`,
-        [
-            {
-                text:"🏠 Построить дом",
-                action:()=>buildHouse()
-            },
-            {
-                text:"🌾 Построить поле",
-                action:()=>buildFarm()
-            },
-            {
-                text:"🔔 Построить святилище",
-                className:"primary",
-                action:()=>buildShrine()
-            },
-            {
-                text:"Закрыть",
-                action:closeModal
-            }
-        ]
+    if(game.flags.boss)return;
+
+    game.enemies.push(
+        makeEnemy(
+            dungeon.x,
+            dungeon.y,
+            "boss"
+        )
     );
+
+    game.flags.boss=true;
+
+    toast("👹 ХРАНИТЕЛЬ ПОДЗЕМЕЛЬЯ ПРОСНУЛСЯ!");
 }
 
-function canAfford(cost){
-    return Object.entries(cost).every(([key,value])=>{
-        return game.resources[key]>=value;
-    });
+/* =========================================================
+   MAP
+========================================================= */
+
+function openMap(){
+
+    openModal(
+        "Карта мира",
+        `
+        <canvas id="mapCanvas"
+            width="900"
+            height="560"
+            style="width:100%;background:#10151a;border-radius:15px">
+        </canvas>
+
+        <div class="card" style="margin-top:12px">
+            <h3>Исследовано: ${game.discoveredZones.length}/7 зон</h3>
+            <p>
+                Центральная долина, Лес Теней, Болота,
+                Северные горы, Пустоши, древние руины
+                и подземелье.
+            </p>
+        </div>
+        `
+    );
+
+    setTimeout(drawMap,50);
 }
 
-function pay(cost){
-    Object.entries(cost).forEach(([key,value])=>{
-        game.resources[key]-=value;
-    });
-}
+function drawMap(){
 
-function buildHouse(){
-    const cost={wood:25,stone:15};
+    const c=document.getElementById("mapCanvas");
 
-    if(!canAfford(cost)){
-        toast("Недостаточно ресурсов.");
-        return;
+    if(!c)return;
+
+    const m=c.getContext("2d");
+
+    const sx=c.width/WORLD_W;
+    const sy=c.height/WORLD_H;
+
+    m.fillStyle="#18211c";
+    m.fillRect(0,0,c.width,c.height);
+
+    for(let x=0;x<WORLD_W;x+=400){
+
+        for(let y=0;y<WORLD_H;y+=400){
+
+            const b=biomeAt(x,y);
+
+            const colors={
+                meadow:"#536f4e",
+                forest:"#344e3b",
+                swamp:"#414f49",
+                desert:"#816d4c",
+                snow:"#889496",
+                mountain:"#55565b"
+            };
+
+            m.fillStyle=colors[b];
+            m.fillRect(
+                x*sx,
+                y*sy,
+                410*sx,
+                410*sy
+            );
+        }
     }
 
-    pay(cost);
+    for(const b of game.buildings){
 
-    const positions=[
-        [400,760],
-        [430,1120],
-        [1900,720],
-        [1900,1100],
-        [1000,1200],
-        [1450,1200]
-    ];
+        m.fillStyle=b.type==="temple"?"#d7bd6a":"#b97c65";
 
-    const p=positions[game.buildings.length%positions.length];
+        m.beginPath();
+        m.arc(
+            b.x*sx,
+            b.y*sy,
+            6,
+            0,
+            Math.PI*2
+        );
+        m.fill();
+    }
 
-    const el=document.createElement("div");
+    m.fillStyle="#e5e5e5";
 
-    el.className="building house object";
+    m.beginPath();
+    m.arc(
+        game.player.x*sx,
+        game.player.y*sy,
+        7,
+        0,
+        Math.PI*2
+    );
+    m.fill();
+}
 
-    el.style.left=p[0]+"px";
-    el.style.top=p[1]+"px";
+/* =========================================================
+   INVENTORY
+========================================================= */
 
-    el.innerHTML=`
-        <div class="sign">НОВЫЙ ДОМ</div>
-        <div class="roof"></div>
-        <div class="body"></div>
-        <div class="window"></div>
-        <div class="door"></div>
+function openInventory(){
+
+    let html="";
+
+    const names={
+        wood:"🪵 Древесина",
+        stone:"🪨 Камень",
+        food:"🍞 Еда",
+        wheat:"🌾 Пшеница",
+        berry:"🫐 Ягоды",
+        mushroom:"🍄 Грибы",
+        iron:"⛓️ Железо",
+        crystal:"💎 Кристаллы",
+        fish:"🐟 Рыба",
+        meat:"🥩 Мясо",
+        herb:"🌿 Травы",
+        seed:"🌱 Семена",
+        potion:"🧪 Зелья"
+    };
+
+    for(const k in game.inventory){
+
+        html+=`
+        <div class="item">
+            <span class="itemName">${names[k]||k}</span>
+            <span class="itemCount">${Math.floor(game.inventory[k])}</span>
+        </div>
+        `;
+    }
+
+    html+=`
+        <div class="item">
+            <span class="itemName">🪙 Золото</span>
+            <span class="itemCount">${game.gold}</span>
+        </div>
+
+        <div class="item">
+            <span class="itemName">✨ Слава</span>
+            <span class="itemCount">${game.glory}</span>
+        </div>
     `;
 
-    objectsEl.appendChild(el);
-
-    game.buildings.push({
-        type:"house",
-        x:p[0],
-        y:p[1]
-    });
-
-    game.stats.buildingsBuilt++;
-
-    closeModal();
-
-    toast("🏠 Дом построен.");
-    updateUI();
-}
-
-function buildFarm(){
-    const cost={wood:20};
-
-    if(!canAfford(cost)){
-        toast("Не хватает древесины.");
-        return;
-    }
-
-    pay(cost);
-
-    game.resources.food+=35;
-    game.stats.buildingsBuilt++;
-
-    closeModal();
-
-    toast("🌾 Поле создано. Урожай собран.");
-    updateUI();
-}
-
-function buildShrine(){
-    const cost={wood:40,stone:30};
-
-    if(!canAfford(cost)){
-        toast("Недостаточно ресурсов.");
-        return;
-    }
-
-    pay(cost);
-
-    game.faith+=10;
-    game.favor+=8;
-    game.glory+=8;
-
-    game.stats.buildingsBuilt++;
-
-    closeModal();
-
-    toast("🔔 Святилище усилило веру.");
-    updateUI();
-}
-
-/* =========================================================
-   ALTAR CLICK
-========================================================= */
-
-document.getElementById("temple").addEventListener("click",()=>{
     openModal(
-        "Последний Алтарь",
-        `<p>Это сердце поселения.</p>
-         <br>
-         <p>Здесь собирается вера жителей.</p>
-         <br>
-         <p><b>Вера:</b> ${game.faith}</p>
-         <p><b>Благосклонность:</b> ${game.favor}</p>
-         <p><b>Слава:</b> ${game.glory}</p>`,
-        [
-            {
-                text:"🙏 Вознести молитву",
-                className:"primary",
-                action:()=>{
-                    pray();
-                    closeModal();
-                }
-            },
-            {
-                text:"✨ Совершить чудо",
-                action:()=>{
-                    miracle();
-                    closeModal();
-                }
-            },
-            {
-                text:"Закрыть",
-                action:closeModal
-            }
-        ]
+        "Инвентарь",
+        `<div>${html}</div>`
     );
-});
-
-/* =========================================================
-   UI
-========================================================= */
-
-function updateUI(){
-    faithEl.textContent=Math.round(game.faith);
-    favorEl.textContent=Math.round(game.favor);
-
-    foodEl.textContent=Math.floor(game.resources.food);
-    woodEl.textContent=Math.floor(game.resources.wood);
-    stoneEl.textContent=Math.floor(game.resources.stone);
-    goldEl.textContent=Math.floor(game.resources.gold);
-
-    timeEl.textContent=
-        `${seasons[game.season]} • День ${game.day} • Год ${game.year}`;
-
-    document.getElementById("eventText").textContent=
-        game.weather==="rain"
-        ? "Дождь идёт над Последним Алтарём."
-        : "Последний Алтарь наблюдает за поселением.";
 }
 
 /* =========================================================
-   TIME OF DAY
+   CRAFT UI
 ========================================================= */
 
-function updateTimeOfDay(){
-    const night =
-        game.day>=9 ||
-        game.day<=2;
+function costText(cost){
 
-    document.body.classList.toggle("night",night);
+    return Object.entries(cost)
+        .map(([k,v])=>`${k}: ${v}`)
+        .join(" • ");
 }
 
-/* =========================================================
-   SAVE
-========================================================= */
+function openCraft(){
 
-function saveGame(show=true){
-    try{
-        const data={
-            player:{
-                x:game.player.x,
-                y:game.player.y
-            },
-            resources:game.resources,
-            faith:game.faith,
-            favor:game.favor,
-            glory:game.glory,
-            day:game.day,
-            year:game.year,
-            season:game.season,
-            stats:game.stats,
-            villagers:game.villagers.map(v=>({
-                id:v.id,
-                name:v.name,
-                x:v.x,
-                y:v.y,
-                faith:v.faith,
-                happiness:v.happiness,
-                health:v.health,
-                job:v.job,
-                alive:v.alive,
-                targetX:v.targetX,
-                targetY:v.targetY
-            })),
-            buildings:game.buildings
-        };
+    let html='<div class="grid">';
 
-        localStorage.setItem(
-            SAVE_KEY,
-            JSON.stringify(data)
-        );
+    RECIPES.forEach((r,i)=>{
 
-        if(show) toast("Игра сохранена.");
-    }catch(error){
-        console.error(error);
-        if(show) toast("Не удалось сохранить.");
-    }
-}
-
-function loadGame(){
-    try{
-        const raw=localStorage.getItem(SAVE_KEY);
-
-        if(!raw) return false;
-
-        const data=JSON.parse(raw);
-
-        if(data.player){
-            game.player.x=Number(data.player.x)||1240;
-            game.player.y=Number(data.player.y)||1000;
-        }
-
-        if(data.resources){
-            game.resources={...game.resources,...data.resources};
-        }
-
-        game.faith=Number(data.faith)||35;
-        game.favor=Number(data.favor)||50;
-        game.glory=Number(data.glory)||0;
-
-        game.day=Number(data.day)||1;
-        game.year=Number(data.year)||1;
-        game.season=Number(data.season)||0;
-
-        if(data.stats){
-            game.stats={...game.stats,...data.stats};
-        }
-
-        if(Array.isArray(data.villagers)){
-            game.villagers=data.villagers;
-        }
-
-        if(Array.isArray(data.buildings)){
-            game.buildings=data.buildings;
-        }
-
-        restoreBuildings();
-
-        renderVillagers();
-        updateUI();
-
-        toast("Сохранение загружено.");
-
-        return true;
-
-    }catch(error){
-        console.error(error);
-        return false;
-    }
-}
-
-function restoreBuildings(){
-    game.buildings.forEach(b=>{
-        const el=document.createElement("div");
-
-        el.className="building house object";
-
-        el.style.left=b.x+"px";
-        el.style.top=b.y+"px";
-
-        el.innerHTML=`
-            <div class="sign">ДОМ</div>
-            <div class="roof"></div>
-            <div class="body"></div>
-            <div class="window"></div>
-            <div class="door"></div>
+        html+=`
+        <div class="card">
+            <h3>${r.name}</h3>
+            <p>${r.desc}</p>
+            <p style="margin-top:7px">Цена: ${costText(r.cost)}</p>
+            <button class="action" onclick="craft(${i})">
+                Создать
+            </button>
+        </div>
         `;
-
-        objectsEl.appendChild(el);
     });
+
+    html+="</div>";
+
+    openModal("Мастерская",html);
+}
+
+/* =========================================================
+   BUILD UI
+========================================================= */
+
+function openBuild(){
+
+    let html='<div class="grid">';
+
+    for(const [key,b] of Object.entries(BUILD_TYPES)){
+
+        html+=`
+        <div class="card">
+            <h3>${b.name}</h3>
+            <p>Цена: ${costText(b.cost)}</p>
+            <button class="action" onclick="build('${key}')">
+                Построить
+            </button>
+        </div>
+        `;
+    }
+
+    html+="</div>";
+
+    openModal("Строительство",html);
+}
+
+/* =========================================================
+   QUEST UI
+========================================================= */
+
+function openQuests(){
+
+    let html="";
+
+    for(const q of game.quests){
+
+        html+=`
+        <div class="card" style="margin-bottom:8px">
+            <h3>
+                ${q.done?"✅":"📜"} ${q.name}
+            </h3>
+
+            <p>${q.desc}</p>
+
+            <p style="margin-top:7px">
+                Прогресс:
+                ${q.progress}/${q.target}
+            </p>
+
+            <p>
+                Награда:
+                ${q.reward.xp||0} XP
+                ${q.reward.gold?` • ${q.reward.gold} золота`:""}
+                ${q.reward.glory?` • ${q.reward.glory} славы`:""}
+            </p>
+        </div>
+        `;
+    }
+
+    openModal("Задания",html);
+}
+
+/* =========================================================
+   GOD UI
+========================================================= */
+
+function openGod(){
+
+    let html=`
+    <div class="card">
+        <h3>👁️ Последний Алтарь</h3>
+        <p>Сила божества: ${game.god.power}</p>
+        <p>Благосклонность: ${Math.round(game.favor)}</p>
+        <p>Вера: ${Math.round(game.faith)}</p>
+        <p>Слава: ${game.glory}</p>
+    </div>
+
+    <h3 style="margin:18px 0 9px">Милости</h3>
+
+    <div class="grid">
+    `;
+
+    MIRACLES.forEach((m,i)=>{
+
+        html+=`
+        <div class="card">
+            <h3>${m.name}</h3>
+            <p>${m.desc}</p>
+            <p style="margin-top:7px">
+                Цена: ${m.cost} веры
+            </p>
+            <button class="action" onclick="miracle(${i})">
+                Применить
+            </button>
+        </div>
+        `;
+    });
+
+    html+=`
+    </div>
+
+    <h3 style="margin:18px 0 9px">Возвышение</h3>
+
+    <div class="grid">
+    `;
+
+    GOD_UPGRADES.forEach(u=>{
+
+        html+=`
+        <div class="card">
+            <h3>${u.name}</h3>
+            <p>${u.desc}</p>
+            <p style="margin-top:7px">
+                Цена: ${u.cost} славы
+            </p>
+
+            <button
+                class="action"
+                onclick="upgradeGod('${u.key}')"
+                ${game.god.upgrades[u.key]?"disabled":""}>
+                ${game.god.upgrades[u.key]?"Изучено":"Изучить"}
+            </button>
+        </div>
+        `;
+    });
+
+    html+="</div>";
+
+    openModal("Алтарь",html);
+}
+
+/* =========================================================
+   STATS
+========================================================= */
+
+function openStats(){
+
+    const s=game.stats;
+
+    openModal(
+        "Статистика",
+        `
+        <div class="grid">
+
+            <div class="card">
+                <h3>👤 Персонаж</h3>
+                <p>Уровень: ${game.player.level}</p>
+                <p>Урон: ${game.player.damage}</p>
+                <p>Защита: ${game.player.defense}</p>
+                <p>HP: ${game.player.maxHp}</p>
+            </div>
+
+            <div class="card">
+                <h3>🏘️ Поселение</h3>
+                <p>Жителей: ${game.villagers.length}</p>
+                <p>Зданий: ${game.buildings.length}</p>
+                <p>Ферм: ${game.farms.length}</p>
+            </div>
+
+            <div class="card">
+                <h3>⚔️ Приключения</h3>
+                <p>Врагов: ${s.enemies}</p>
+                <p>Урон: ${Math.floor(s.damage)}</p>
+                <p>Смертей: ${s.deaths}</p>
+            </div>
+
+            <div class="card">
+                <h3>🌾 Хозяйство</h3>
+                <p>Ресурсов собрано: ${Math.floor(s.resources)}</p>
+                <p>Урожай: ${s.crops}</p>
+                <p>Дней: ${s.days}</p>
+            </div>
+
+            <div class="card">
+                <h3>✨ Божественное</h3>
+                <p>Милостей: ${s.miracles}</p>
+                <p>Слава: ${game.glory}</p>
+                <p>Сила: ${game.god.power}</p>
+            </div>
+
+            <div class="card">
+                <h3>🏆 Достижения</h3>
+                <p>${game.achievements.length}/${ACHIEVEMENT_LIST.length}</p>
+            </div>
+
+        </div>
+        `
+    );
 }
 
 /* =========================================================
@@ -2395,250 +3194,1936 @@ function restoreBuildings(){
 ========================================================= */
 
 function openMenu(){
+
     openModal(
-        "ВОЗВЫШЕННЫЙ",
-        `<p><b>Последний Алтарь</b></p>
-         <br>
-         <p>Вера: ${game.faith}</p>
-         <p>Благосклонность: ${game.favor}</p>
-         <p>Слава: ${game.glory}</p>
-         <br>
-         <p>Жителей: ${game.villagers.filter(v=>v.alive).length}</p>
-         <p>Построено: ${game.stats.buildingsBuilt}</p>
-         <p>Деревьев добыто: ${game.stats.treesCut}</p>
-         <p>Камня добыто: ${game.stats.rocksMined}</p>
-         <p>Молитв: ${game.stats.prayers}</p>
-         <p>Чудес: ${game.stats.miracles}</p>`,
-        [
-            {
-                text:"💾 Сохранить",
-                action:()=>{
-                    saveGame();
-                    closeModal();
-                }
-            },
-            {
-                text:"🔨 Строительство",
-                className:"primary",
-                action:build
-            },
-            {
-                text:"🙏 Чудо",
-                action:()=>{
-                    miracle();
-                    closeModal();
-                }
-            },
-            {
-                text:"Продолжить",
-                action:closeModal
-            }
-        ]
+        "Меню",
+        `
+        <div class="grid">
+
+            <div class="card">
+                <h3>💾 Сохранение</h3>
+                <p>Игра автоматически сохраняется каждый новый день.</p>
+                <button class="action" onclick="saveGame()">
+                    Сохранить сейчас
+                </button>
+            </div>
+
+            <div class="card">
+                <h3>🕯️ Подземелье</h3>
+                <p>Исследуй древние руины и найди Хранителя.</p>
+                <button class="action" onclick="enterDungeon();closeModal()">
+                    Войти
+                </button>
+            </div>
+
+            <div class="card">
+                <h3>⚔️ Босс</h3>
+                <p>Призвать Хранителя подземелья.</p>
+                <button class="action danger" onclick="dungeonBoss();closeModal()">
+                    Призвать
+                </button>
+            </div>
+
+            <div class="card">
+                <h3>🔄 Новая игра</h3>
+                <p>Начать всё заново.</p>
+                <button class="action danger" onclick="newGame()">
+                    Начать заново
+                </button>
+            </div>
+
+        </div>
+        `
     );
 }
 
 /* =========================================================
-   KEYBOARD
+   MODAL
 ========================================================= */
 
-window.addEventListener("keydown",e=>{
-    if(e.key==="w" || e.key==="ArrowUp") keys.up=true;
-    if(e.key==="s" || e.key==="ArrowDown") keys.down=true;
-    if(e.key==="a" || e.key==="ArrowLeft") keys.left=true;
-    if(e.key==="d" || e.key==="ArrowRight") keys.right=true;
+function openModal(title,content){
 
-    if(e.key.toLowerCase()==="e"){
-        if(game.selected){
-            interactSelected();
+    document.getElementById("modalTitle").textContent=title;
+    document.getElementById("modalContent").innerHTML=content;
+    document.getElementById("modal").classList.add("show");
+}
+
+function closeModal(){
+
+    document.getElementById("modal").classList.remove("show");
+}
+
+/* =========================================================
+   OBJECTIVE
+========================================================= */
+
+function updateObjective(){
+
+    let q=game.quests.find(x=>!x.done);
+
+    if(!q){
+
+        document.getElementById("objectiveText").textContent=
+            "Ты завершил основную цепочку. Теперь мир принадлежит тебе.";
+        return;
+    }
+
+    document.getElementById("objectiveText").textContent=
+        q.desc+
+        ` (${q.progress}/${q.target})`;
+}
+
+/* =========================================================
+   CAMERA
+========================================================= */
+
+function updateCamera(dt){
+
+    let targetX=game.player.x;
+    let targetY=game.player.y;
+
+    game.camera.x+=(targetX-game.camera.x)*.09*dt;
+    game.camera.y+=(targetY-game.camera.y)*.09*dt;
+
+    if(game.camera.shake>0){
+        game.camera.shake-=dt;
+    }
+}
+
+function sx(x){
+    return x-game.camera.x+W/2;
+}
+
+function sy(y){
+    return y-game.camera.y+H/2;
+}
+
+/* =========================================================
+   RENDER
+========================================================= */
+
+function render(){
+
+    ctx.clearRect(0,0,W,H);
+
+    drawWorld();
+
+    drawDecorations();
+    drawBuildings();
+    drawFarms();
+    drawNodes();
+    drawDrops();
+    drawEnemies();
+    drawVillagers();
+    drawPlayer();
+    drawParticles();
+
+    drawNight();
+
+    drawDungeonPortal();
+
+    updateHUD();
+}
+
+/* =========================================================
+   WORLD
+========================================================= */
+
+function drawWorld(){
+
+    const tile=96;
+
+    const startX=Math.floor(
+        (game.camera.x-W/2)/tile
+    )*tile;
+
+    const endX=game.camera.x+W/2+tile;
+
+    const startY=Math.floor(
+        (game.camera.y-H/2)/tile
+    )*tile;
+
+    const endY=game.camera.y+H/2+tile;
+
+    for(let x=startX;x<endX;x+=tile){
+
+        for(let y=startY;y<endY;y+=tile){
+
+            const b=biomeAt(x+48,y+48);
+            const data=BIOMES[b];
+
+            ctx.fillStyle=data.ground;
+
+            ctx.fillRect(
+                sx(x),
+                sy(y),
+                tile+1,
+                tile+1
+            );
+
+            const n=noise(
+                Math.floor(x/tile),
+                Math.floor(y/tile)
+            );
+
+            if(n>.65){
+
+                ctx.fillStyle=data.accent;
+
+                ctx.globalAlpha=.2;
+
+                ctx.beginPath();
+
+                ctx.arc(
+                    sx(x+rand(10,86)),
+                    sy(y+rand(10,86)),
+                    rand(5,18),
+                    0,
+                    Math.PI*2
+                );
+
+                ctx.fill();
+
+                ctx.globalAlpha=1;
+            }
         }
     }
 
-    if(e.key.toLowerCase()==="p"){
-        game.paused=!game.paused;
-        toast(game.paused?"Игра поставлена на паузу.":"Игра продолжена.");
-    }
-
-    if(e.key.toLowerCase()==="m"){
-        openMenu();
-    }
-});
-
-window.addEventListener("keyup",e=>{
-    if(e.key==="w" || e.key==="ArrowUp") keys.up=false;
-    if(e.key==="s" || e.key==="ArrowDown") keys.down=false;
-    if(e.key==="a" || e.key==="ArrowLeft") keys.left=false;
-    if(e.key==="d" || e.key==="ArrowRight") keys.right=false;
-});
-
-/* =========================================================
-   JOYSTICK
-========================================================= */
-
-const joystick=document.getElementById("joystick");
-const stick=document.getElementById("stick");
-
-let joystickActive=false;
-
-joystick.addEventListener("pointerdown",e=>{
-    joystickActive=true;
-    joystick.setPointerCapture(e.pointerId);
-    updateJoystick(e);
-});
-
-joystick.addEventListener("pointermove",e=>{
-    if(joystickActive) updateJoystick(e);
-});
-
-joystick.addEventListener("pointerup",resetJoystick);
-joystick.addEventListener("pointercancel",resetJoystick);
-
-function updateJoystick(e){
-    const rect=joystick.getBoundingClientRect();
-
-    const centerX=rect.left+rect.width/2;
-    const centerY=rect.top+rect.height/2;
-
-    let dx=e.clientX-centerX;
-    let dy=e.clientY-centerY;
-
-    const max=42;
-
-    const len=Math.hypot(dx,dy);
-
-    if(len>max){
-        dx=dx/len*max;
-        dy=dy/len*max;
-    }
-
-    stick.style.left=(35+dx)+"px";
-    stick.style.top=(35+dy)+"px";
-
-    keys.left=dx<-10;
-    keys.right=dx>10;
-    keys.up=dy<-10;
-    keys.down=dy>10;
-}
-
-function resetJoystick(){
-    joystickActive=false;
-
-    stick.style.left="35px";
-    stick.style.top="35px";
-
-    keys.left=false;
-    keys.right=false;
-    keys.up=false;
-    keys.down=false;
+    drawRoads();
+    drawLake();
 }
 
 /* =========================================================
-   BUTTONS
+   ROADS
 ========================================================= */
 
-document.getElementById("saveBtn").addEventListener("click",()=>{
+function drawRoads(){
+
+    ctx.lineCap="round";
+
+    ctx.strokeStyle="rgba(171,137,92,.42)";
+    ctx.lineWidth=54;
+
+    ctx.beginPath();
+    ctx.moveTo(sx(1200),sy(1200));
+    ctx.lineTo(sx(2600),sy(1800));
+    ctx.lineTo(sx(3900),sy(1300));
+    ctx.stroke();
+
+    ctx.beginPath();
+    ctx.moveTo(sx(2600),sy(1800));
+    ctx.lineTo(sx(4500),sy(2800));
+    ctx.stroke();
+
+    ctx.strokeStyle="rgba(225,199,146,.18)";
+    ctx.lineWidth=8;
+
+    ctx.beginPath();
+    ctx.moveTo(sx(1200),sy(1200));
+    ctx.lineTo(sx(2600),sy(1800));
+    ctx.lineTo(sx(3900),sy(1300));
+    ctx.stroke();
+
+    ctx.beginPath();
+    ctx.moveTo(sx(2600),sy(1800));
+    ctx.lineTo(sx(4500),sy(2800));
+    ctx.stroke();
+}
+
+/* =========================================================
+   LAKE
+========================================================= */
+
+function drawLake(){
+
+    const x=1550;
+    const y=900;
+    const w=750;
+    const h=400;
+
+    ctx.fillStyle="#385e69";
+
+    ctx.beginPath();
+
+    ctx.ellipse(
+        sx(x+w/2),
+        sy(y+h/2),
+        w/2,
+        h/2,
+        -.1,
+        0,
+        Math.PI*2
+    );
+
+    ctx.fill();
+
+    ctx.strokeStyle="rgba(180,220,225,.25)";
+    ctx.lineWidth=5;
+
+    for(let i=0;i<7;i++){
+
+        ctx.beginPath();
+
+        ctx.ellipse(
+            sx(x+100+i*80),
+            sy(y+80+i*25),
+            100,
+            15,
+            -.1,
+            0,
+            Math.PI*2
+        );
+
+        ctx.stroke();
+    }
+}
+
+/* =========================================================
+   DECORATIONS
+========================================================= */
+
+function drawDecorations(){
+
+    for(const d of decorations){
+
+        const x=sx(d.x);
+        const y=sy(d.y);
+
+        if(x<-100||x>W+100||y<-100||y>H+100)
+            continue;
+
+        const s=d.size;
+
+        if(d.type==="tree"||d.type==="snowtree"){
+
+            ctx.fillStyle=d.type==="snowtree"?"#5c625f":"#403c2d";
+            ctx.fillRect(
+                x-7*s,
+                y+12*s,
+                14*s,
+                34*s
+            );
+
+            ctx.fillStyle=d.type==="snowtree"?"#c8d2d2":"#29492f";
+
+            ctx.beginPath();
+            ctx.arc(x,y,31*s,0,Math.PI*2);
+            ctx.fill();
+
+            ctx.beginPath();
+            ctx.arc(x-18*s,y+15*s,24*s,0,Math.PI*2);
+            ctx.fill();
+
+            ctx.beginPath();
+            ctx.arc(x+20*s,y+13*s,23*s,0,Math.PI*2);
+            ctx.fill();
+
+        }else if(d.type==="rock"||d.type==="ore"){
+
+            ctx.fillStyle=d.type==="ore"?"#5d6b71":"#55585a";
+
+            ctx.beginPath();
+            ctx.moveTo(x-25*s,y+15*s);
+            ctx.lineTo(x-12*s,y-20*s);
+            ctx.lineTo(x+20*s,y-26*s);
+            ctx.lineTo(x+30*s,y+12*s);
+            ctx.lineTo(x+5*s,y+26*s);
+            ctx.closePath();
+            ctx.fill();
+
+            if(d.type==="ore"){
+                ctx.fillStyle="#9d72bb";
+                ctx.fillRect(x-3*s,y-6*s,6*s,6*s);
+            }
+
+        }else if(d.type==="bush"){
+
+            ctx.fillStyle="#355b38";
+
+            ctx.beginPath();
+            ctx.arc(x,y,22*s,0,Math.PI*2);
+            ctx.arc(x-17*s,y+7*s,16*s,0,Math.PI*2);
+            ctx.arc(x+17*s,y+7*s,16*s,0,Math.PI*2);
+            ctx.fill();
+
+            ctx.fillStyle="#9d5c6d";
+
+            ctx.beginPath();
+            ctx.arc(x-7*s,y,3*s,0,Math.PI*2);
+            ctx.arc(x+8*s,y+7*s,3*s,0,Math.PI*2);
+            ctx.fill();
+
+        }else if(d.type==="flower"){
+
+            ctx.fillStyle="#d9bd73";
+
+            ctx.beginPath();
+            ctx.arc(x,y,5*s,0,Math.PI*2);
+            ctx.fill();
+
+        }else if(d.type==="cactus"){
+
+            ctx.fillStyle="#4f7351";
+
+            ctx.fillRect(
+                x-8*s,
+                y-35*s,
+                16*s,
+                70*s
+            );
+
+            ctx.fillRect(
+                x+7*s,
+                y-5*s,
+                23*s,
+                10*s
+            );
+
+        }else if(d.type==="mushroom"){
+
+            ctx.fillStyle="#d16b66";
+
+            ctx.beginPath();
+            ctx.arc(x,y,16*s,Math.PI,Math.PI*2);
+            ctx.fill();
+
+            ctx.fillStyle="#ded0ae";
+
+            ctx.fillRect(
+                x-5*s,
+                y,
+                10*s,
+                22*s
+            );
+        }
+    }
+}
+
+/* =========================================================
+   NODES
+========================================================= */
+
+function drawNodes(){
+
+    for(const n of game.nodes){
+
+        if(n.amount<=0)continue;
+
+        const x=sx(n.x);
+        const y=sy(n.y);
+
+        if(x<-70||x>W+70||y<-70||y>H+70)
+            continue;
+
+        if(n.type==="tree"){
+
+            ctx.fillStyle="#493b2d";
+            ctx.fillRect(x-6,y+7,12,30);
+
+            ctx.fillStyle="#345c38";
+            ctx.beginPath();
+            ctx.arc(x,y,25,0,Math.PI*2);
+            ctx.fill();
+
+        }else if(n.type==="rock"||n.type==="iron"){
+
+            ctx.fillStyle=n.type==="iron"?"#687783":"#606266";
+
+            ctx.beginPath();
+            ctx.moveTo(x-25,y+14);
+            ctx.lineTo(x-15,y-18);
+            ctx.lineTo(x+17,y-24);
+            ctx.lineTo(x+28,y+13);
+            ctx.lineTo(x+2,y+25);
+            ctx.closePath();
+            ctx.fill();
+
+            if(n.type==="iron"){
+                ctx.fillStyle="#9a6d74";
+                ctx.fillRect(x-5,y-6,9,8);
+            }
+
+        }else if(n.type==="crystal"){
+
+            ctx.fillStyle="#8e69ba";
+
+            ctx.beginPath();
+            ctx.moveTo(x,y-28);
+            ctx.lineTo(x+16,y+5);
+            ctx.lineTo(x,y+27);
+            ctx.lineTo(x-17,y+4);
+            ctx.closePath();
+            ctx.fill();
+
+        }else if(n.type==="bush"){
+
+            ctx.fillStyle="#3e6c40";
+            ctx.beginPath();
+            ctx.arc(x,y,23,0,Math.PI*2);
+            ctx.fill();
+
+            ctx.fillStyle="#bb6375";
+            ctx.beginPath();
+            ctx.arc(x-8,y,4,0,Math.PI*2);
+            ctx.arc(x+7,y+6,4,0,Math.PI*2);
+            ctx.fill();
+
+        }else if(n.type==="mushroom"){
+
+            ctx.fillStyle="#c76b69";
+            ctx.beginPath();
+            ctx.arc(x,y,15,Math.PI,Math.PI*2);
+            ctx.fill();
+
+            ctx.fillStyle="#ddd1a8";
+            ctx.fillRect(x-5,y,10,20);
+
+        }else if(n.type==="reed"){
+
+            ctx.strokeStyle="#70865b";
+            ctx.lineWidth=5;
+
+            for(let i=-2;i<=2;i++){
+                ctx.beginPath();
+                ctx.moveTo(x+i*5,y+20);
+                ctx.lineTo(x+i*7,y-22);
+                ctx.stroke();
+            }
+        }
+    }
+}
+
+/* =========================================================
+   BUILDINGS
+========================================================= */
+
+function drawBuildings(){
+
+    for(const b of game.buildings){
+
+        const x=sx(b.x);
+        const y=sy(b.y);
+
+        if(x<-130||x>W+130||y<-130||y>H+130)
+            continue;
+
+        if(b.type==="temple"){
+
+            ctx.fillStyle="#2c2538";
+
+            ctx.beginPath();
+            ctx.moveTo(x-90,y+65);
+            ctx.lineTo(x-70,y-15);
+            ctx.lineTo(x-38,y-60);
+            ctx.lineTo(x,y-85);
+            ctx.lineTo(x+38,y-60);
+            ctx.lineTo(x+70,y-15);
+            ctx.lineTo(x+90,y+65);
+            ctx.closePath();
+            ctx.fill();
+
+            ctx.fillStyle="#876da8";
+            ctx.fillRect(x-55,y+10,110,55);
+
+            ctx.fillStyle="#d9bc68";
+
+            ctx.beginPath();
+            ctx.arc(x,y-30,17,0,Math.PI*2);
+            ctx.fill();
+
+            ctx.fillStyle="#17131d";
+            ctx.fillRect(x-18,y+25,36,40);
+
+            ctx.shadowBlur=30;
+            ctx.shadowColor="#a779dc";
+
+            ctx.fillStyle="#b783df";
+            ctx.beginPath();
+            ctx.arc(x,y-30,8,0,Math.PI*2);
+            ctx.fill();
+
+            ctx.shadowBlur=0;
+
+        }else{
+
+            let w=
+                b.type==="farm"?75:
+                b.type==="tower"?58:
+                b.type==="library"?90:
+                62;
+
+            let h=
+                b.type==="farm"?50:
+                b.type==="tower"?100:
+                b.type==="library"?70:
+                58;
+
+            const colors={
+                house:"#7d594b",
+                storage:"#5c6472",
+                workshop:"#725c49",
+                shrine:"#6d547f",
+                well:"#68737a",
+                tower:"#555c69",
+                garden:"#4d724b",
+                library:"#514765"
+            };
+
+            ctx.fillStyle=colors[b.type]||"#666";
+
+            ctx.fillRect(
+                x-w/2,
+                y-h/2,
+                w,
+                h
+            );
+
+            if(b.type!=="farm"&&b.type!=="garden"){
+
+                ctx.fillStyle="#4a3029";
+
+                ctx.beginPath();
+                ctx.moveTo(x-w/2-5,y-h/2);
+                ctx.lineTo(x,y-h/2-32);
+                ctx.lineTo(x+w/2+5,y-h/2);
+                ctx.closePath();
+                ctx.fill();
+
+                ctx.fillStyle="#2d2220";
+                ctx.fillRect(x-12,y+5,24,30);
+            }
+
+            if(b.type==="farm"){
+
+                ctx.strokeStyle="#8a673c";
+                ctx.lineWidth=5;
+
+                for(let i=-2;i<=2;i++){
+                    ctx.beginPath();
+                    ctx.moveTo(x-30,y+i*9);
+                    ctx.lineTo(x+30,y+i*9);
+                    ctx.stroke();
+                }
+            }
+
+            if(b.type==="well"){
+
+                ctx.strokeStyle="#b8b1a3";
+                ctx.lineWidth=8;
+
+                ctx.beginPath();
+                ctx.arc(x,y,20,0,Math.PI*2);
+                ctx.stroke();
+            }
+        }
+    }
+}
+
+/* =========================================================
+   FARMS
+========================================================= */
+
+function drawFarms(){
+
+    for(const f of game.farms){
+
+        const x=sx(f.x);
+        const y=sy(f.y);
+
+        const p=f.growth/100;
+
+        ctx.fillStyle="#7b5c3c";
+
+        ctx.fillRect(
+            x-40,
+            y-28,
+            80,
+            56
+        );
+
+        ctx.fillStyle="#6e9a52";
+
+        const rows=4;
+
+        for(let r=0;r<rows;r++){
+
+            for(let c=0;c<5;c++){
+
+                const px=x-31+c*16;
+                const py=y-20+r*13;
+
+                const h=5+15*p;
+
+                ctx.fillRect(
+                    px,
+                    py-h,
+                    5,
+                    h
+                );
+            }
+        }
+
+        if(p>=1){
+
+            ctx.fillStyle="#dfc76c";
+
+            ctx.fillRect(
+                x-45,
+                y-45,
+                90,
+                4
+            );
+        }
+    }
+}
+
+/* =========================================================
+   ENEMIES DRAW
+========================================================= */
+
+function drawEnemies(){
+
+    for(const e of game.enemies){
+
+        const x=sx(e.x);
+        const y=sy(e.y);
+
+        if(x<-80||x>W+80||y<-80||y>H+80)
+            continue;
+
+        const hit=e.hit>0;
+
+        ctx.save();
+
+        if(hit)ctx.globalAlpha=.65;
+
+        if(e.type==="wolf"){
+
+            ctx.fillStyle="#6e6868";
+
+            ctx.beginPath();
+            ctx.ellipse(x,y,29,19,0,0,Math.PI*2);
+            ctx.fill();
+
+            ctx.fillStyle="#777";
+
+            ctx.beginPath();
+            ctx.moveTo(x+18,y-11);
+            ctx.lineTo(x+38,y-26);
+            ctx.lineTo(x+32,y-3);
+            ctx.closePath();
+            ctx.fill();
+
+            ctx.fillStyle="#e4a45f";
+            ctx.beginPath();
+            ctx.arc(x+26,y-4,3,0,Math.PI*2);
+            ctx.fill();
+
+        }else if(e.type==="shade"){
+
+            ctx.fillStyle="#5d4974";
+
+            ctx.beginPath();
+            ctx.arc(x,y,26,0,Math.PI*2);
+            ctx.fill();
+
+            ctx.fillStyle="#c78de5";
+
+            ctx.beginPath();
+            ctx.arc(x-8,y-3,4,0,Math.PI*2);
+            ctx.arc(x+8,y-3,4,0,Math.PI*2);
+            ctx.fill();
+
+        }else if(e.type==="slime"){
+
+            ctx.fillStyle="#668d72";
+
+            ctx.beginPath();
+            ctx.ellipse(x,y+6,28,23,0,0,Math.PI*2);
+            ctx.fill();
+
+            ctx.fillStyle="#d6dfb1";
+
+            ctx.beginPath();
+            ctx.arc(x-8,y,4,0,Math.PI*2);
+            ctx.arc(x+8,y,4,0,Math.PI*2);
+            ctx.fill();
+
+        }else if(e.type==="bandit"){
+
+            ctx.fillStyle="#5e5964";
+            ctx.fillRect(x-20,y-15,40,45);
+
+            ctx.fillStyle="#b27d69";
+
+            ctx.beginPath();
+            ctx.arc(x,y-24,18,0,Math.PI*2);
+            ctx.fill();
+
+            ctx.fillStyle="#27242b";
+            ctx.fillRect(x-16,y-29,32,10);
+
+        }else{
+
+            ctx.fillStyle="#382d45";
+
+            ctx.beginPath();
+            ctx.arc(x,y,60,0,Math.PI*2);
+            ctx.fill();
+
+            ctx.fillStyle="#b56ce0";
+
+            ctx.beginPath();
+            ctx.arc(x-20,y-8,9,0,Math.PI*2);
+            ctx.arc(x+20,y-8,9,0,Math.PI*2);
+            ctx.fill();
+
+            ctx.strokeStyle="#a47bc2";
+            ctx.lineWidth=4;
+
+            ctx.beginPath();
+            ctx.arc(x,y,75,0,Math.PI*2);
+            ctx.stroke();
+        }
+
+        ctx.restore();
+
+        drawHealthBar(
+            x,
+            y-45-(e.type==="boss"?60:0),
+            70,
+            e.hp/e.maxHp
+        );
+    }
+}
+
+/* =========================================================
+   HEALTH BAR
+========================================================= */
+
+function drawHealthBar(x,y,w,p){
+
+    ctx.fillStyle="rgba(0,0,0,.6)";
+    ctx.fillRect(x-w/2,y,w,5);
+
+    ctx.fillStyle="#d95d66";
+    ctx.fillRect(
+        x-w/2,
+        y,
+        w*clamp(p,0,1),
+        5
+    );
+}
+
+/* =========================================================
+   VILLAGERS DRAW
+========================================================= */
+
+function drawVillagers(){
+
+    for(const v of game.villagers){
+
+        const x=sx(v.x);
+        const y=sy(v.y);
+
+        if(x<-60||x>W+60||y<-60||y>H+60)
+            continue;
+
+        ctx.fillStyle=v.color===0?"#7e9ab2":
+                    v.color===1?"#b184a3":
+                    "#9c9c70";
+
+        ctx.beginPath();
+        ctx.arc(x,y-14,13,0,Math.PI*2);
+        ctx.fill();
+
+        ctx.fillStyle="#4d5664";
+        ctx.fillRect(x-13,y,26,31);
+
+        ctx.fillStyle="#222";
+        ctx.fillRect(x-9,y-4,5,4);
+        ctx.fillRect(x+4,y-4,5,4);
+
+        if(v.state==="praying"){
+
+            ctx.strokeStyle="#d8c37a";
+            ctx.lineWidth=2;
+
+            ctx.beginPath();
+            ctx.arc(x,y-17,21,0,Math.PI*2);
+            ctx.stroke();
+        }
+
+        if(game.selectedNPC===v){
+
+            ctx.strokeStyle="#e3c86e";
+            ctx.lineWidth=3;
+
+            ctx.beginPath();
+            ctx.arc(x,y-7,28,0,Math.PI*2);
+            ctx.stroke();
+        }
+    }
+}
+
+/* =========================================================
+   PLAYER DRAW
+========================================================= */
+
+function drawPlayer(){
+
+    const x=sx(game.player.x);
+    const y=sy(game.player.y);
+
+    ctx.save();
+
+    if(game.player.invincible>0){
+
+        ctx.globalAlpha=
+            Math.floor(game.player.invincible/5)%2===0
+            ?.45
+            :1;
+    }
+
+    ctx.shadowBlur=22;
+    ctx.shadowColor="#9270c9";
+
+    ctx.fillStyle="#4f3d65";
+
+    ctx.beginPath();
+    ctx.arc(x,y-10,22,0,Math.PI*2);
+    ctx.fill();
+
+    ctx.fillStyle="#c99b83";
+
+    ctx.beginPath();
+    ctx.arc(x,y-27,15,0,Math.PI*2);
+    ctx.fill();
+
+    /* horns */
+
+    ctx.fillStyle="#ded1b0";
+
+    ctx.beginPath();
+    ctx.moveTo(x-12,y-38);
+    ctx.lineTo(x-23,y-62);
+    ctx.lineTo(x-4,y-47);
+    ctx.closePath();
+    ctx.fill();
+
+    ctx.beginPath();
+    ctx.moveTo(x+12,y-38);
+    ctx.lineTo(x+23,y-62);
+    ctx.lineTo(x+4,y-47);
+    ctx.closePath();
+    ctx.fill();
+
+    ctx.shadowBlur=0;
+
+    ctx.fillStyle="#1e1825";
+
+    ctx.fillRect(x-9,y-30,5,4);
+    ctx.fillRect(x+4,y-30,5,4);
+
+    ctx.fillStyle="#302538";
+    ctx.fillRect(x-17,y-3,34,39);
+
+    if(game.player.attackCooldown>17){
+
+        ctx.strokeStyle="#d9c46d";
+        ctx.lineWidth=5;
+
+        ctx.beginPath();
+        ctx.arc(
+            x,
+            y,
+            65,
+            -.8,
+            .8
+        );
+        ctx.stroke();
+    }
+
+    ctx.restore();
+}
+
+/* =========================================================
+   DROPS DRAW
+========================================================= */
+
+function drawDrops(){
+
+    for(const d of game.drops){
+
+        const x=sx(d.x);
+        const y=sy(d.y);
+
+        let color=
+            d.type==="gold"?"#e3c75d":
+            d.type==="crystal"?"#ad78dc":
+            "#b87a63";
+
+        ctx.fillStyle=color;
+
+        ctx.beginPath();
+        ctx.arc(x,y,8,0,Math.PI*2);
+        ctx.fill();
+    }
+}
+
+/* =========================================================
+   PARTICLES DRAW
+========================================================= */
+
+function drawParticles(){
+
+    for(const p of game.particles){
+
+        const x=sx(p.x);
+        const y=sy(p.y);
+
+        ctx.globalAlpha=clamp(p.life/p.max,0,1);
+
+        ctx.fillStyle=p.color;
+
+        ctx.beginPath();
+        ctx.arc(x,y,p.size,0,Math.PI*2);
+        ctx.fill();
+    }
+
+    ctx.globalAlpha=1;
+}
+
+/* =========================================================
+   DUNGEON PORTAL
+========================================================= */
+
+function drawDungeonPortal(){
+
+    const x=sx(dungeon.x);
+    const y=sy(dungeon.y);
+
+    if(x<-100||x>W+100||y<-100||y>H+100)
+        return;
+
+    ctx.save();
+
+    ctx.shadowBlur=30;
+    ctx.shadowColor="#7b52a4";
+
+    ctx.strokeStyle="#8c65ad";
+    ctx.lineWidth=8;
+
+    ctx.beginPath();
+    ctx.arc(x,y,45,0,Math.PI*2);
+    ctx.stroke();
+
+    ctx.fillStyle="rgba(85,50,100,.35)";
+
+    ctx.beginPath();
+    ctx.arc(x,y,35,0,Math.PI*2);
+    ctx.fill();
+
+    ctx.restore();
+}
+
+/* =========================================================
+   NIGHT
+========================================================= */
+
+function drawNight(){
+
+    let h=game.time/60;
+
+    let darkness=0;
+
+    if(h<5)darkness=.55;
+    else if(h<7)darkness=.55-(h-5)*.27;
+    else if(h>20)darkness=Math.min(.58,(h-20)*.12);
+
+    if(darkness<=0)return;
+
+    ctx.fillStyle=`rgba(5,7,20,${darkness})`;
+    ctx.fillRect(0,0,W,H);
+
+    if(h<5||h>21){
+
+        ctx.fillStyle="rgba(220,225,255,.75)";
+
+        for(let i=0;i<70;i++){
+
+            const xx=(noise(i,7)*W);
+            const yy=(noise(i,17)*H);
+
+            ctx.fillRect(xx,yy,1.5,1.5);
+        }
+    }
+}
+
+/* =========================================================
+   HUD
+========================================================= */
+
+function updateHUD(){
+
+    const p=game.player;
+
+    document.getElementById("hpFill").style.width=
+        (p.hp/p.maxHp*100)+"%";
+
+    document.getElementById("energyFill").style.width=
+        (p.energy/p.maxEnergy*100)+"%";
+
+    document.getElementById("faithFill").style.width=
+        game.faith+"%";
+
+    document.getElementById("favorFill").style.width=
+        game.favor+"%";
+
+    document.getElementById("xpFill").style.width=
+        (p.xp/p.xpNeed*100)+"%";
+
+    document.getElementById("hpText").textContent=
+        Math.floor(p.hp);
+
+    document.getElementById("energyText").textContent=
+        Math.floor(p.energy);
+
+    document.getElementById("faithText").textContent=
+        Math.floor(game.faith);
+
+    document.getElementById("favorText").textContent=
+        Math.floor(game.favor);
+
+    document.getElementById("levelText").textContent=
+        p.level;
+
+    document.getElementById("timeText").textContent=
+        `День ${game.day} • ${formatTime()}`;
+
+    document.getElementById("weatherText").textContent=
+        WEATHER[game.weather].name;
+
+    document.getElementById("seasonText").textContent=
+        `${SEASONS[game.season]} • Год ${game.year}`;
+
+    updateObjective();
+}
+
+/* =========================================================
+   DISCOVERY
+========================================================= */
+
+function discover(){
+
+    const zoneX=Math.floor(game.player.x/700);
+    const zoneY=Math.floor(game.player.y/700);
+
+    const id=zoneX+"_"+zoneY;
+
+    if(!game.discoveredZones.includes(id)){
+
+        game.discoveredZones.push(id);
+
+        gainXP(10);
+
+        toast("🗺️ Новая область исследована.");
+
+        checkAchievements();
+    }
+}
+
+/* =========================================================
+   SAVE
+========================================================= */
+
+function saveGame(){
+
+    try{
+
+        localStorage.setItem(
+            SAVE_KEY,
+            JSON.stringify({
+                ...game,
+                worldSeed
+            })
+        );
+
+        toast("💾 Игра сохранена.");
+
+    }catch(e){
+        console.error(e);
+        toast("Не удалось сохранить.");
+    }
+}
+
+function loadGame(){
+
+    try{
+
+        const raw=localStorage.getItem(SAVE_KEY);
+
+        if(!raw)return false;
+
+        const data=JSON.parse(raw);
+
+        game={
+            ...game,
+            ...data,
+            player:{
+                ...game.player,
+                ...data.player
+            },
+            camera:{
+                ...game.camera,
+                ...data.camera
+            },
+            god:{
+                ...game.god,
+                ...data.god,
+                upgrades:{
+                    ...game.god.upgrades,
+                    ...(data.god?.upgrades||{})
+                }
+            },
+            stats:{
+                ...game.stats,
+                ...data.stats
+            },
+            flags:{
+                ...game.flags,
+                ...data.flags
+            }
+        };
+
+        if(data.worldSeed)
+            worldSeed=data.worldSeed;
+
+        generateWorld();
+
+        if(data.buildings)
+            game.buildings=data.buildings;
+
+        if(data.farms)
+            game.farms=data.farms;
+
+        if(data.villagers)
+            game.villagers=data.villagers;
+
+        if(data.quests)
+            game.quests=data.quests;
+
+        game.started=true;
+
+        document.getElementById("startScreen").style.display="none";
+
+        toast("💾 Сохранение загружено.");
+
+        return true;
+
+    }catch(e){
+
+        console.error(e);
+
+        toast("Сохранение повреждено.");
+
+        return false;
+    }
+}
+
+/* =========================================================
+   NEW GAME
+========================================================= */
+
+function newGame(){
+
+    if(localStorage.getItem(SAVE_KEY)){
+
+        if(!confirm("Начать новую игру? Старое сохранение будет заменено.")){
+            return;
+        }
+    }
+
+    worldSeed=Math.random()*100000;
+
+    game={
+        started:true,
+
+        player:{
+            x:2600,
+            y:1800,
+            r:22,
+            hp:100,
+            maxHp:100,
+            energy:100,
+            maxEnergy:100,
+            speed:3.3,
+            attackCooldown:0,
+            invincible:0,
+            level:1,
+            xp:0,
+            xpNeed:100,
+            damage:16,
+            defense:2
+        },
+
+        camera:{
+            x:2600,
+            y:1800,
+            shake:0
+        },
+
+        day:1,
+        time:8*60,
+        year:1,
+        season:0,
+
+        weather:0,
+        weatherTimer:800,
+
+        faith:50,
+        favor:25,
+        glory:0,
+        corruption:0,
+
+        gold:60,
+
+        wood:40,
+        stone:25,
+        food:35,
+
+        crystals:2,
+        seeds:8,
+        fish:0,
+
+        inventory:{
+            wood:40,
+            stone:25,
+            food:35,
+            wheat:0,
+            berry:5,
+            mushroom:2,
+            iron:0,
+            crystal:2,
+            fish:0,
+            meat:0,
+            herb:4,
+            seed:8,
+            potion:2
+        },
+
+        buildings:[],
+        farms:[],
+        villagers:[],
+        enemies:[],
+        projectiles:[],
+        particles:[],
+        drops:[],
+        nodes:[],
+        quests:[],
+        completedQuests:[],
+        achievements:[],
+        discoveredZones:[],
+
+        activeQuest:null,
+        selectedNPC:null,
+
+        god:{
+            power:1,
+            miracles:0,
+            devotion:0,
+            upgrades:{
+                harvest:false,
+                blessing:false,
+                shield:false,
+                storm:false,
+                abundance:false,
+                resurrection:false
+            }
+        },
+
+        stats:{
+            days:0,
+            resources:0,
+            enemies:0,
+            villagersHelped:0,
+            buildings:0,
+            quests:0,
+            fish:0,
+            crops:0,
+            damage:0,
+            deaths:0,
+            miracles:0
+        },
+
+        flags:{
+            templeVisited:false,
+            firstEnemy:false,
+            firstFarm:false,
+            firstHouse:false,
+            dungeon:false,
+            boss:false
+        }
+    };
+
+    dungeon={
+        active:false,
+        x:4500,
+        y:2800,
+        level:1,
+        cleared:false
+    };
+
+    generateWorld();
+
+    document.getElementById("startScreen").style.display="none";
+
+    toast("🌒 Добро пожаловать в Последний Алтарь.");
+
     saveGame();
-});
+}
 
-document.getElementById("prayBtn").addEventListener("click",()=>{
-    pray();
-});
+function continueGame(){
 
-document.getElementById("nextBtn").addEventListener("click",()=>{
-    nextDay();
-});
-
-document.getElementById("menuBtn").addEventListener("click",()=>{
-    openMenu();
-});
-
-/* =========================================================
-   CLOSE INTERACTION
-========================================================= */
-
-document.addEventListener("pointerdown",e=>{
-    if(
-        !e.target.closest(".object") &&
-        !e.target.closest(".villager") &&
-        !e.target.closest("#interaction") &&
-        !e.target.closest("#controls") &&
-        !e.target.closest("#modal")
-    ){
-        interaction.classList.remove("show");
+    if(!loadGame()){
+        newGame();
     }
-});
+}
 
 /* =========================================================
-   GAME LOOP
+   FISHING
 ========================================================= */
 
-let lastTime=performance.now();
-let npcTimer=0;
+function tryFishing(){
+
+    const lakeX=1900;
+    const lakeY=1100;
+
+    if(dist(game.player.x,game.player.y,lakeX,lakeY)>500){
+        toast("Здесь нет воды.");
+        return;
+    }
+
+    if(game.player.energy<10){
+        toast("Слишком мало энергии.");
+        return;
+    }
+
+    game.player.energy-=10;
+
+    if(chance(.55)){
+
+        const amount=randi(1,3);
+
+        game.inventory.fish+=amount;
+        game.stats.fish+=amount;
+
+        toast("🐟 Поймано рыбы: "+amount);
+
+        gainXP(12);
+
+    }else{
+
+        toast("🐟 Рыба сорвалась.");
+    }
+}
+
+/* =========================================================
+   SPECIAL SPACE ACTION
+========================================================= */
+
+function specialAction(){
+
+    const n=getNearest();
+
+    if(n && (
+        n.type==="tree"||
+        n.type==="rock"||
+        n.type==="iron"||
+        n.type==="crystal"||
+        n.type==="bush"
+    )){
+        gatherNode(n);
+        return;
+    }
+
+    tryFishing();
+}
+
+/* =========================================================
+   UPDATE
+========================================================= */
+
+let lastFrame=performance.now();
 
 function loop(now){
-    const dt=Math.min(50,now-lastTime);
-    lastTime=now;
 
-    if(!game.paused){
-        movePlayer();
+    const dt=Math.min(2.5,(now-lastFrame)/16.67);
 
-        npcTimer+=dt;
+    lastFrame=now;
 
-        if(npcTimer>100){
-            npcTimer=0;
-            updateVillagers();
+    if(game.started){
+
+        updateTime(dt);
+        updatePlayer(dt);
+        updateVillagers(dt);
+        updateEnemies(dt);
+        updateDrops(dt);
+        updateParticles(dt);
+        updateCamera(dt);
+
+        discover();
+
+        if(game.enemies.length<18 && chance(.003)){
+            spawnRandomEnemy();
         }
-    }
 
-    updatePlayer();
-    updateCamera();
+        if(game.flags.boss &&
+           !game.flags.dungeon &&
+           game.enemies.every(e=>e.type!=="boss")){
+
+            game.flags.dungeon=true;
+
+            game.glory+=150;
+            game.crystals+=5;
+
+            game.inventory.crystal=game.crystals;
+
+            gainXP(500);
+
+            toast("🏆 Хранитель повержен!");
+
+            checkAchievements();
+        }
+
+        render();
+    }
 
     requestAnimationFrame(loop);
 }
 
+function spawnRandomEnemy(){
+
+    const angle=rand(0,Math.PI*2);
+    const d=rand(650,1000);
+
+    const x=clamp(
+        game.player.x+Math.cos(angle)*d,
+        100,
+        WORLD_W-100
+    );
+
+    const y=clamp(
+        game.player.y+Math.sin(angle)*d,
+        100,
+        WORLD_H-100
+    );
+
+    game.enemies.push(
+        makeEnemy(
+            x,
+            y,
+            pick(["wolf","shade","slime"])
+        )
+    );
+}
+
 /* =========================================================
-   AUTOSAVE
+   GLOBAL ACTIONS
+========================================================= */
+
+document.addEventListener("click",e=>{
+
+    if(e.target.closest(".action"))return;
+
+});
+
+canvas.addEventListener("pointerdown",e=>{
+
+    if(!game.started)return;
+
+    if(e.button===0){
+        attack();
+    }
+});
+
+setInterval(()=>{
+
+    if(game.started){
+        saveGame();
+    }
+
+},60000);
+
+/* =========================================================
+   INITIALIZE
+========================================================= */
+
+generateWorld();
+
+requestAnimationFrame(loop);
+
+/* =========================================================
+   EXTRA SHORTCUTS
+========================================================= */
+
+addEventListener("keydown",e=>{
+
+    if(e.key.toLowerCase()==="f"){
+        specialAction();
+    }
+
+    if(e.key.toLowerCase()==="q"){
+        openQuests();
+    }
+
+    if(e.key.toLowerCase()==="b"){
+        openBuild();
+    }
+
+    if(e.key.toLowerCase()==="c"){
+        openCraft();
+    }
+
+    if(e.key.toLowerCase()==="g"){
+        openGod();
+    }
+});
+
+/* =========================================================
+   RESPAWN NODE TIMER
 ========================================================= */
 
 setInterval(()=>{
-    if(!game.paused){
-        saveGame(false);
+
+    for(const n of game.nodes){
+
+        if(n.amount<=0){
+
+            n.respawn--;
+
+            if(n.respawn<=0){
+
+                n.amount=n.max;
+                n.respawn=0;
+            }
+        }
     }
-},30000);
+
+},1000);
 
 /* =========================================================
-   INIT
+   PASSIVE GOD SYSTEM
 ========================================================= */
 
-function init(){
-    generateWorld();
+setInterval(()=>{
 
-    const loaded=loadGame();
+    if(!game.started)return;
 
-    if(!loaded){
-        renderVillagers();
-        updateUI();
+    let praying=0;
+
+    for(const v of game.villagers){
+
+        if(v.state==="praying"){
+            praying++;
+        }
     }
 
-    updateTimeOfDay();
-    updatePlayer();
-    updateCamera();
+    if(praying>0){
 
-    /*
-       Каждый новый запуск начинает с живой карты,
-       а сохранение восстанавливает прогресс.
-    */
+        game.faith+=
+            praying*.12*
+            (game.god.upgrades.blessing?1.5:1);
 
-    toast(
-        loaded
-        ? "Добро пожаловать обратно."
-        : "Добро пожаловать к Последнему Алтарю."
+        game.favor+=.03;
+
+        game.glory+=.05;
+    }
+
+    game.faith=clamp(game.faith,0,100);
+    game.favor=clamp(game.favor,0,100);
+
+},1000);
+
+/* =========================================================
+   VILLAGER RESOURCE JOBS
+========================================================= */
+
+setInterval(()=>{
+
+    if(!game.started)return;
+
+    for(const v of game.villagers){
+
+        if(v.job==="Фермер" && game.farms.length){
+
+            const farm=pick(game.farms);
+
+            if(farm.growth<100){
+                farm.growth+=randi(1,4);
+            }
+        }
+
+        if(v.job==="Лесоруб"){
+            game.wood+=randi(0,2);
+        }
+
+        if(v.job==="Каменщик"){
+            game.stone+=randi(0,1);
+        }
+
+        if(v.job==="Рыбак" && chance(.25)){
+            game.inventory.fish++;
+        }
+
+        if(v.job==="Охотник" && chance(.18)){
+            game.inventory.meat++;
+        }
+
+        if(v.job==="Жрец"){
+            game.faith+=.2;
+        }
+    }
+
+    game.inventory.wood=game.wood;
+    game.inventory.stone=game.stone;
+    game.inventory.food=game.food;
+
+},5000);
+
+/* =========================================================
+   AUTO QUEST CHECKS
+========================================================= */
+
+setInterval(()=>{
+
+    if(!game.started)return;
+
+    questProgress("wood",
+        Math.max(
+            0,
+            Math.min(
+                30-game.quests.find(q=>q.id==="wood").progress,
+                game.stats.resources
+            )
+        )
     );
 
-    requestAnimationFrame(loop);
+    if(game.buildings.some(b=>b.type==="house")){
+        questProgress("house",1);
+    }
+
+    if(game.farms.length){
+        questProgress("farm",1);
+    }
+
+    if(game.inventory.iron>=10){
+        questProgress("iron",
+            10-game.quests.find(q=>q.id==="mine").progress
+        );
+    }
+
+},3000);
+
+/* =========================================================
+   VISUAL WEATHER
+========================================================= */
+
+function drawWeather(){
+
+    if(!game.started)return;
+
+    if(game.weather===2){
+
+        ctx.strokeStyle="rgba(170,190,210,.18)";
+        ctx.lineWidth=1;
+
+        for(let i=0;i<100;i++){
+
+            const x=noise(i,33)*W;
+            const y=noise(i,88)*H;
+
+            ctx.beginPath();
+            ctx.moveTo(x,y);
+            ctx.lineTo(x-5,y+15);
+            ctx.stroke();
+        }
+    }
+
+    if(game.weather===3){
+
+        ctx.strokeStyle="rgba(160,180,210,.25)";
+        ctx.lineWidth=1;
+
+        for(let i=0;i<160;i++){
+
+            const x=noise(i,13)*W;
+            const y=noise(i,52)*H;
+
+            ctx.beginPath();
+            ctx.moveTo(x,y);
+            ctx.lineTo(x-7,y+20);
+            ctx.stroke();
+        }
+    }
+
+    if(game.weather===4){
+
+        ctx.fillStyle="rgba(220,220,220,.07)";
+        ctx.fillRect(0,0,W,H);
+    }
 }
 
-init();
+const oldRender=render;
+
+render=function(){
+
+    oldRender();
+
+    drawWeather();
+
+    drawCompass();
+};
+
+/* =========================================================
+   COMPASS
+========================================================= */
+
+function drawCompass(){
+
+    const cx=W/2;
+    const y=75;
+
+    ctx.fillStyle="rgba(10,13,18,.65)";
+    ctx.fillRect(cx-100,y-14,200,28);
+
+    ctx.font="11px Arial";
+    ctx.textAlign="center";
+
+    const directions=[
+        ["N",0],
+        ["E",Math.PI/2],
+        ["S",Math.PI],
+        ["W",Math.PI*1.5]
+    ];
+
+    for(const [label,a] of directions){
+
+        let angle=Math.atan2(
+            Math.sin(a),
+            Math.cos(a)
+        );
+
+        let playerAngle=0;
+
+        let rel=angle-playerAngle;
+
+        const px=cx+Math.sin(rel)*85;
+
+        ctx.fillStyle=
+            label==="N"?"#d7bd70":"rgba(255,255,255,.55)";
+
+        ctx.fillText(
+            label,
+            px,
+            y+4
+        );
+    }
+
+    ctx.textAlign="left";
+};
+
+/* =========================================================
+   DEBUG-FREE START
+========================================================= */
+
+window.newGame=newGame;
+window.continueGame=continueGame;
+window.saveGame=saveGame;
+window.openInventory=openInventory;
+window.openCraft=openCraft;
+window.openBuild=openBuild;
+window.openQuests=openQuests;
+window.openMap=openMap;
+window.openGod=openGod;
+window.openStats=openStats;
+window.openMenu=openMenu;
+window.closeModal=closeModal;
+window.craft=craft;
+window.build=build;
+window.miracle=miracle;
+window.upgradeGod=upgradeGod;
+window.helpVillager=helpVillager;
+window.blessVillager=blessVillager;
+window.giveFood=giveFood;
+window.enterDungeon=enterDungeon;
+window.dungeonBoss=dungeonBoss;
+window.tradeTraveler=tradeTraveler;
+window.tradeCrystal=tradeCrystal;
+
+/* =========================================================
+   FINAL GAME CHECKS
+========================================================= */
+
+function integrityCheck(){
+
+    if(!Array.isArray(game.villagers))
+        game.villagers=[];
+
+    if(!Array.isArray(game.buildings))
+        game.buildings=[];
+
+    if(!Array.isArray(game.farms))
+        game.farms=[];
+
+    if(!Array.isArray(game.nodes))
+        game.nodes=[];
+
+    if(!Array.isArray(game.enemies))
+        game.enemies=[];
+
+    game.player.hp=clamp(
+        game.player.hp,
+        0,
+        game.player.maxHp
+    );
+
+    game.player.energy=clamp(
+        game.player.energy,
+        0,
+        game.player.maxEnergy
+    );
+
+    game.faith=clamp(game.faith,0,100);
+    game.favor=clamp(game.favor,0,100);
+}
+
+setInterval(integrityCheck,2000);
+
+/* =========================================================
+   MOBILE DOUBLE TAP ATTACK
+========================================================= */
+
+let lastTap=0;
+
+canvas.addEventListener("touchend",e=>{
+
+    const now=Date.now();
+
+    if(now-lastTap<300){
+        attack();
+    }
+
+    lastTap=now;
+});
+
+/* =========================================================
+   START MESSAGE
+========================================================= */
+
+toast("🌑 Мир ждёт своего бога.");
 
 </script>
+
 </body>
 </html>
